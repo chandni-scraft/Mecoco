@@ -108,19 +108,40 @@ class HeaderMenu extends Component {
 
     if (!item || item == this.#state.activeItem) return;
 
-    const isDefaultSlot = event.target.slot === '';
+    const listItem = item.closest('.menu-list__list-item');
+    const isDefaultSlot = !listItem || !listItem.hasAttribute('slot');
 
     this.dataset.overflowExpanded = (!isDefaultSlot).toString();
+    if (this.refs.overflowMenu) {
+      if (isDefaultSlot) {
+        this.refs.overflowMenu.removeAttribute('data-expanded');
+      } else {
+        this.refs.overflowMenu.setAttribute('data-expanded', 'true');
+      }
+    }
 
     const previouslyActiveItem = this.#state.activeItem;
+    const previousListItem = previouslyActiveItem?.closest('.menu-list__list-item');
 
     if (previouslyActiveItem) {
       previouslyActiveItem.ariaExpanded = 'false';
+      previouslyActiveItem.removeAttribute('data-animating');
+    }
+
+    if (previousListItem) {
+      previousListItem.classList.remove('menu-list__list-item--expanded');
+      previousListItem.removeAttribute('data-expanded');
+      previousListItem.removeAttribute('data-animating');
     }
 
     this.#state.activeItem = item;
     this.ariaExpanded = 'true';
     item.ariaExpanded = 'true';
+
+    if (listItem) {
+      listItem.classList.add('menu-list__list-item--expanded');
+      listItem.setAttribute('data-expanded', 'true');
+    }
 
     let submenu = findSubmenu(item);
     let overflowMenuHeight = this.overflowMenu?.offsetHeight ?? 0;
@@ -200,17 +221,27 @@ class HeaderMenu extends Component {
       this.#outsideClickController = null;
     }
 
+    const listItem = item.closest('.menu-list__list-item');
+
     this.style.setProperty('--submenu-height', '0px');
     this.style.setProperty('--submenu-opacity', '0');
     this.dataset.overflowExpanded = 'false';
+    this.refs.overflowMenu?.removeAttribute('data-expanded');
 
     this.#state.activeItem = null;
     this.ariaExpanded = 'false';
     item.ariaExpanded = 'false';
     item.setAttribute('data-animating', '');
 
+    if (listItem) {
+      listItem.classList.remove('menu-list__list-item--expanded');
+      listItem.removeAttribute('data-expanded');
+      listItem.setAttribute('data-animating', '');
+    }
+
     setTimeout(() => {
       item.removeAttribute('data-animating');
+      listItem?.removeAttribute('data-animating');
     }, Math.max(0, this.animationDelay - 150)); // Start header transition 150ms before submenu finishes
   };
 
