@@ -1,0 +1,529 @@
+{% doc %}
+  @prompt
+    At Meecoco, we believe in the power of dry fruits as a nutritious and delicious part of a balanced diet. We are dedicated to sourcing the finest quality dry fruits from around the world and offering them to our customers at an affordable price.
+    Our team is passionate about health and wellness, and we are committed to providing our customers with the best possible shopping experience. From our carefully selected products to our exceptional customer service, we strive to exceed your expectations.
+    We believe that dry fruits should be accessible to everyone, which is why we offer a wide range of products, including modern and conventional options, as well as different packaging sizes to meet every need.
+    Thank you for choosing Meecoco as your go-to source for dry fruits. We look forward to serving you and helping you on your journey to a healthier, happier life.
+    Eat Right 😊
+    
+    
+    this is content based on cotnent can you please degn a page
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-about-page-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-about-hero-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+
+  .ai-about-logo-{{ ai_gen_id }} {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: {{ block.settings.accent_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-about-logo-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-about-logo-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-about-logo-placeholder-{{ ai_gen_id }} svg {
+    width: 60px;
+    height: 60px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-about-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 20px;
+    font-weight: 700;
+  }
+
+  .ai-about-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 40px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .ai-about-content-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 60px;
+    margin-bottom: 80px;
+  }
+
+  .ai-about-section-{{ ai_gen_id }} {
+    background-color: {{ block.settings.card_background }};
+    padding: 40px;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-about-section-icon-{{ ai_gen_id }} {
+    width: 60px;
+    height: 60px;
+    background-color: {{ block.settings.accent_color }};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .ai-about-section-icon-{{ ai_gen_id }} svg {
+    width: 30px;
+    height: 30px;
+    color: white;
+  }
+
+  .ai-about-section-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.section_title_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 15px;
+    font-weight: 600;
+  }
+
+  .ai-about-section-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.text_size }}px;
+    color: {{ block.settings.text_color }};
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .ai-about-values-{{ ai_gen_id }} {
+    background-color: {{ block.settings.values_background }};
+    padding: 60px 40px;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    text-align: center;margin-bottom: 60px;
+  }
+
+  .ai-about-values-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.section_title_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 40px;
+    font-weight: 600;
+  }
+
+  .ai-about-values-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+  }
+
+  .ai-about-value-item-{{ ai_gen_id }} {
+    text-align: center;}
+
+  .ai-about-value-emoji-{{ ai_gen_id }} {
+    font-size: 40px;
+    margin-bottom: 15px;
+    display: block;
+  }
+
+  .ai-about-value-title-{{ ai_gen_id }} {
+    font-size: 18px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 10px;
+    font-weight: 600;
+  }
+
+  .ai-about-value-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.text_size }}px;
+    color: {{ block.settings.text_color }};
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .ai-about-cta-{{ ai_gen_id }} {
+    text-align: center;
+    background-color: {{ block.settings.cta_background }};
+    padding: 50px 40px;
+    border-radius: {{ block.settings.card_border_radius }}px;
+  }
+
+  .ai-about-cta-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.section_title_size }}px;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 20px;
+    font-weight: 600;
+  }
+
+  .ai-about-cta-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.text_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 30px;
+    line-height: 1.6;
+  }
+
+  .ai-about-cta-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: {{ block.settings.button_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-about-cta-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_color }};
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-about-page-{{ ai_gen_id }} {
+      padding: 40px 15px;
+    }
+
+    .ai-about-content-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      margin-bottom: 60px;
+    }
+
+    .ai-about-section-{{ ai_gen_id }} {
+      padding: 30px 20px;
+    }
+
+    .ai-about-values-{{ ai_gen_id }} {
+      padding: 40px 20px;
+    }
+
+    .ai-about-values-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;gap: 25px;
+    }
+
+    .ai-about-cta-{{ ai_gen_id }} {
+      padding: 40px 20px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-about-page-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-about-hero-{{ ai_gen_id }}">
+    <div class="ai-about-logo-{{ ai_gen_id }}">
+      {% if block.settings.logo %}
+        <img
+          src="{{ block.settings.logo | image_url: width: 200}}"
+          alt="{{ block.settings.company_name | escape }}"
+          width="200"
+          height="200"
+          loading="lazy"
+        >
+      {% else %}
+        <div class="ai-about-logo-placeholder-{{ ai_gen_id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+      {% endif %}
+    </div>
+    <h1 class="ai-about-title-{{ ai_gen_id }}">{{ block.settings.company_name }}</h1>
+    <p class="ai-about-subtitle-{{ ai_gen_id }}">{{ block.settings.company_tagline }}</p>
+  </div>
+
+  <div class="ai-about-content-{{ ai_gen_id }}">
+    <div class="ai-about-section-{{ ai_gen_id }}">
+      <div class="ai-about-section-icon-{{ ai_gen_id }}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </div>
+      <h2 class="ai-about-section-title-{{ ai_gen_id }}">Our Mission</h2>
+      <p class="ai-about-section-text-{{ ai_gen_id }}">{{ block.settings.mission_text }}</p>
+    </div>
+
+    <div class="ai-about-section-{{ ai_gen_id }}">
+      <div class="ai-about-section-icon-{{ ai_gen_id }}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      </div>
+      <h2 class="ai-about-section-title-{{ ai_gen_id }}">Quality Promise</h2>
+      <p class="ai-about-section-text-{{ ai_gen_id }}">{{ block.settings.quality_text }}</p>
+    </div>
+
+    <div class="ai-about-section-{{ ai_gen_id }}">
+      <div class="ai-about-section-icon-{{ ai_gen_id }}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <h2 class="ai-about-section-title-{{ ai_gen_id }}">Our Team</h2>
+      <p class="ai-about-section-text-{{ ai_gen_id }}">{{ block.settings.team_text }}</p>
+    </div>
+  </div>
+
+  <div class="ai-about-values-{{ ai_gen_id }}">
+    <h2 class="ai-about-values-title-{{ ai_gen_id }}">Our Values</h2>
+    <div class="ai-about-values-grid-{{ ai_gen_id }}">
+      <div class="ai-about-value-item-{{ ai_gen_id }}">
+        <span class="ai-about-value-emoji-{{ ai_gen_id }}">🌱</span>
+        <h3 class="ai-about-value-title-{{ ai_gen_id }}">Natural Quality</h3>
+        <p class="ai-about-value-text-{{ ai_gen_id }}">Sourcing the finest dry fruits from around the world</p>
+      </div>
+      <div class="ai-about-value-item-{{ ai_gen_id }}">
+        <span class="ai-about-value-emoji-{{ ai_gen_id }}">💰</span>
+        <h3 class="ai-about-value-title-{{ ai_gen_id }}">Affordable Pricing</h3>
+        <p class="ai-about-value-text-{{ ai_gen_id }}">Making healthy nutrition accessible to everyone</p>
+      </div>
+      <div class="ai-about-value-item-{{ ai_gen_id }}">
+        <span class="ai-about-value-emoji-{{ ai_gen_id }}">🤝</span>
+        <h3 class="ai-about-value-title-{{ ai_gen_id }}">Exceptional Service</h3>
+        <p class="ai-about-value-text-{{ ai_gen_id }}">Committed to exceeding your expectations</p>
+      </div>
+      <div class="ai-about-value-item-{{ ai_gen_id }}">
+        <span class="ai-about-value-emoji-{{ ai_gen_id }}">📦</span>
+        <h3 class="ai-about-value-title-{{ ai_gen_id }}">Variety & Choice</h3>
+        <p class="ai-about-value-text-{{ ai_gen_id }}">Modern and conventional options in various sizes</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ai-about-cta-{{ ai_gen_id }}">
+    <h2 class="ai-about-cta-title-{{ ai_gen_id }}">Ready to Start Your Healthy Journey?</h2>
+    <p class="ai-about-cta-text-{{ ai_gen_id }}">Thank you for choosing Meecoco as your go-to source for dry fruits. We look forward to serving you and helping you on your journey to a healthier, happier life.</p>
+    <p style="font-size: 24px; margin: 20px 0;">Eat Right 😊</p>
+    {% if block.settings.cta_link %}
+      <a href="{{ block.settings.cta_link }}" class="ai-about-cta-button-{{ ai_gen_id }}">
+        {{ block.settings.cta_button_text }}
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "About Us Page",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Company Information"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Company logo"
+    },
+    {
+      "type": "text",
+      "id": "company_name",
+      "label": "Company name",
+      "default": "Meecoco"
+    },
+    {
+      "type": "textarea",
+      "id": "company_tagline",
+      "label": "Company tagline",
+      "default": "Premium dry fruits for a healthier lifestyle"
+    },
+    {
+      "type": "header",
+      "content": "Content Sections"
+    },
+    {
+      "type": "textarea",
+      "id": "mission_text",
+      "label": "Mission text",
+      "default": "At Meecoco, we believe in the power of dry fruits as a nutritious and delicious part of a balanced diet. We are dedicated to sourcing the finest quality dry fruits from around the world and offering them to our customers at an affordable price."
+    },
+    {
+      "type": "textarea",
+      "id": "quality_text",
+      "label": "Quality promise text",
+      "default": "We are committed to providing our customers with the best possible shopping experience. From our carefully selected products to our exceptional customer service, we strive to exceed your expectations."
+    },
+    {
+      "type": "textarea",
+      "id": "team_text",
+      "label": "Team description",
+      "default": "Our team is passionate about health and wellness, and we believe that dry fruits should be accessible to everyone. We offer a wide range of products, including modern and conventional options, as well as different packaging sizes to meet every need."
+    },
+    {
+      "type": "header",
+      "content": "Call to Action"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA button link"
+    },
+    {
+      "type": "text",
+      "id": "cta_button_text",
+      "label": "CTA button text",
+      "default": "Shop Our Products"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Page background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "values_background",
+      "label": "Values section background",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "cta_background",
+      "label": "CTA section background",
+      "default": "#f1f3f4"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#2c3e50"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#27ae60"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button background",
+      "default": "#27ae60"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Button hover color",
+      "default": "#219a52"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Main title size",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "section_title_size",
+      "min": 18,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "label": "Section title size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Body text size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Us Page"
+    }
+  ]
+}
+{% endschema %}

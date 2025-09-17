@@ -1,0 +1,194 @@
+{% comment %}
+Hero Video/Image Section
+Features:
+- Full-viewport (100vh) hero with either video or image background per breakpoint
+- Toggle between "video" or "image" for desktop and mobile separately
+- If mobile media is not provided, desktop media will be used on mobile
+- Videos autoplay, muted, loop, playsinline, and cover the hero (object-fit: cover)
+- Accessible heading and fallback poster image when using video
+- Works in Shopify sections (drop into sections/hero-video-section.liquid)
+{% endcomment %}
+
+<section id="hero-media-section-{{ section.id }}" class="hero-media-section">
+  <div class="hero-media__inner">
+    <h2 class="visually-hidden">{{ section.settings.heading }}</h2>
+
+    <!-- Desktop media: either video or image based on toggle -->
+    {% if section.settings.desktop_media_type == 'video' and section.settings.desktop_video != blank %}
+      <video
+        id="hero-media-desktop-{{ section.id }}"
+        class="hero-media hero-media--desktop hero-media--video"
+        autoplay muted loop playsinline preload="metadata"
+        poster="{{ section.settings.desktop_poster | img_url: '2048x' }}"
+        aria-hidden="true"
+      >
+        <source src="{{ section.settings.desktop_video }}" type="video/mp4">
+      </video>
+     {% endif %}
+
+    <!-- Mobile media: either video or image based on toggle. If missing, JS will fallback to desktop media. -->
+    {% if section.settings.mobile_media_type == 'video' and section.settings.mobile_video != blank %}
+      <video
+        id="hero-media-mobile-{{ section.id }}"
+        class="hero-media hero-media--mobile hero-media--video"
+        autoplay muted loop playsinline preload="metadata"
+        poster="{{ section.settings.mobile_poster | img_url: '1024x' }}"
+        aria-hidden="true"
+      >
+        <source src="{{ section.settings.mobile_video }}" type="video/mp4">
+      </video>
+     {% else %}
+      <!-- placeholders that will be populated from desktop media via JS if needed -->
+      <div id="hero-media-mobile-{{ section.id }}" class="hero-media hero-media--mobile hero-media--placeholder" aria-hidden="true" style="display:none;"></div>
+    {% endif %}
+
+    <!-- Content overlay (title, subtitle, button) -->
+    <div class="hero-media__content">
+      <h1 class="hero-media__title">{{ section.settings.title }}</h1>
+      {% if section.settings.subtitle != blank %}
+        <p class="hero-media__subtitle">{{ section.settings.subtitle }}</p>
+      {% endif %}
+      {% if section.settings.button_text != blank and section.settings.button_link != blank %}
+        <a class="hero-media__button" href="{{ section.settings.button_link }}">{{ section.settings.button_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <style>
+    /* Basic reset for the section */
+    #hero-media-section-{{ section.id }} { position: relative; overflow: hidden; height: 100vh; width: 100vw; }
+    #hero-media-section-{{ section.id }} .hero-media__inner { position: absolute; inset: 0; }
+
+    /* Media elements fill the container and maintain cover */
+    .hero-media { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 100%; min-height: 100%; width: auto; height: auto; object-fit: cover; z-index: 0; }
+    .hero-media.hero-media--image { width: 100%; height: 100%; object-fit: cover; display:block; }
+    .hero-media.hero-media--placeholder { background-size: cover; background-position: center; width:100%; height:100%; position:absolute; top:0; left:0; z-index:0; }
+
+    /* Desktop/mobile control via media queries */
+    .hero-media--desktop { display: none; }
+    .hero-media--mobile { display: none; }
+
+    /* Desktop: show desktop media (>= 750px) */
+    @media (min-width: 750px) {
+      .hero-media--desktop { display: block; }
+      .hero-media--mobile { display: none; }
+    }
+
+    /* Mobile: show mobile media (< 750px) */
+    @media (max-width: 749px) {
+      .hero-media--mobile { display: block;         top: 50%;
+        object-fit: contain;
+        display: block;}
+      .hero-media--desktop { display: none; }
+          #hero-media-section-{{ section.id }} { position: relative; overflow: hidden; height: 25vh; width: 100vw; }
+
+    }
+
+    /* Overlay content */
+    .hero-media__content { position: relative; z-index: 5; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; padding: 2rem; text-align:center; color: {{ section.settings.text_color }}; }
+    .hero-media__title { font-size: clamp(28px, 6vw, 64px); margin:0 0 0.5rem; }
+    .hero-media__subtitle { margin:0 0 1rem; font-size: clamp(14px, 2.5vw, 20px); }
+    .hero-media__button { display:inline-block; padding:0.8rem 1.4rem; border-radius:8px; text-decoration:none; background: {{ section.settings.button_bg_color }}; color: {{ section.settings.button_text_color }}; }
+
+    /* Visually hidden for accessibility */
+    .visually-hidden { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; }
+  </style>
+
+  <script>
+    (function(){
+      var desktopVideo = document.getElementById('hero-media-desktop-{{ section.id }}');
+      var mobileNode = document.getElementById('hero-media-mobile-{{ section.id }}');
+
+      function isElementVideo(el){ return el && el.tagName && el.tagName.toLowerCase() === 'video'; }
+      function isElementImg(el){ return el && el.tagName && el.tagName.toLowerCase() === 'img'; }
+
+      function ensureMobileHasMedia(){
+        var mobileVisible = window.matchMedia('(max-width: 749px)').matches;
+        if(!mobileVisible) return; // only run when mobile viewport
+
+        // If mobile placeholder exists, populate from desktop media
+        var placeholder = document.querySelector('#hero-media-mobile-{{ section.id }}.hero-media--placeholder');
+        if(placeholder && desktopVideo){
+          // desktop is video — create a mobile video using desktop source
+          var desktopSource = desktopVideo.querySelector('source');
+          if(desktopSource && desktopSource.src){
+            var v = document.createElement('video');
+            v.setAttribute('autoplay',''); v.setAttribute('muted',''); v.setAttribute('loop',''); v.setAttribute('playsinline',''); v.setAttribute('preload','metadata');
+            v.className = 'hero-media hero-media--mobile hero-media--video';
+            var s = document.createElement('source'); s.src = desktopSource.src; s.type = desktopSource.type || 'video/mp4';
+            v.appendChild(s);
+            var poster = desktopVideo.getAttribute('poster'); if(poster) v.setAttribute('poster', poster);
+            placeholder.parentNode.replaceChild(v, placeholder);
+            tryPlay(v);
+            return;
+          }
+        }
+
+        // If placeholder exists and desktop image exists, use it as background image
+        if(placeholder){
+          var desktopImg = document.getElementById('hero-media-desktop-{{ section.id }}');
+          if(desktopImg && desktopImg.tagName.toLowerCase() === 'img'){
+            placeholder.style.backgroundImage = 'url("' + desktopImg.src + '")';
+            placeholder.style.display = 'block';
+            return;
+          }
+        }
+
+        // If mobile element exists but is hidden and desktop exists, ensure it's visible
+        var mobileEl = document.getElementById('hero-media-mobile-{{ section.id }}');
+        if(mobileEl && mobileEl.style.display === 'none'){
+          mobileEl.style.display = '';
+        }
+      }
+
+      function tryPlay(video){
+        if(!video) return;
+        var playPromise = video.play();
+        if(playPromise !== undefined){
+          playPromise.catch(function(){
+            video.muted = true;
+            setTimeout(function(){ try { video.play(); } catch(e){} }, 500);
+          });
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function(){
+        ensureMobileHasMedia();
+        // try to play any videos present
+        tryPlay(document.getElementById('hero-media-desktop-{{ section.id }}'));
+        tryPlay(document.getElementById('hero-media-mobile-{{ section.id }}'));
+      });
+
+      window.addEventListener('resize', ensureMobileHasMedia);
+    })();
+  </script>
+
+  {% schema %}
+  {
+    "name": "Hero Media ",
+    "settings": [
+      { "type": "text", "id": "heading", "label": "Accessibility heading", "default": "Hero media" },
+      { "type": "text", "id": "title", "label": "Visible title", "default": "Welcome" },
+      { "type": "text", "id": "subtitle", "label": "Subtitle" },
+
+      { "type": "select", "id": "desktop_media_type", "label": "Desktop media type", "options": [ {"value":"video","label":"Video"}, {"value":"image","label":"Image"}], "default": "video" },
+      { "type": "url", "id": "desktop_video", "label": "Desktop video URL (mp4 recommended)" },
+      { "type": "image_picker", "id": "desktop_poster", "label": "Desktop poster image" },
+      { "type": "image_picker", "id": "desktop_image", "label": "Desktop image (used when media type = Image)" },
+
+      { "type": "select", "id": "mobile_media_type", "label": "Mobile media type", "options": [ {"value":"video","label":"Video"}, {"value":"image","label":"Image"}], "default": "video" },
+      { "type": "url", "id": "mobile_video", "label": "Mobile video URL (optional)" },
+      { "type": "image_picker", "id": "mobile_poster", "label": "Mobile poster image" },
+      { "type": "image_picker", "id": "mobile_image", "label": "Mobile image (used when media type = Image)" },
+
+      { "type": "text", "id": "button_text", "label": "Button text", "default": "Shop now" },
+      { "type": "url", "id": "button_link", "label": "Button link" },
+
+      { "type": "color", "id": "text_color", "label": "Text color", "default": "#ffffff" },
+      { "type": "color", "id": "button_bg_color", "label": "Button background", "default": "#000000" },
+      { "type": "color", "id": "button_text_color", "label": "Button text color", "default": "#ffffff" }
+    ],
+    "presets": [ { "name": "Hero media (desktop + mobile)", "category": "Hero" } ]
+  }
+  {% endschema %}
+</section>
