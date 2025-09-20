@@ -1,7 +1,7 @@
 /**
- * Shopify Admin API Script to Create Product Badges Meta Field
+ * Shopify Admin API Script to Create Product Badges Meta Fields
  * 
- * This script creates the product badges meta field definition in your Shopify store.
+ * This script creates 9 individual meta field definitions for user-friendly product badges.
  * Run this using the Shopify Admin API or Shopify CLI.
  * 
  * Prerequisites:
@@ -10,68 +10,221 @@
  * - Node.js environment
  */
 
-const metaFieldDefinition = {
-  "meta_field": {
-    "namespace": "custom",
-    "key": "product_badges",
-    "name": "Product Badges",
-    "description": "Custom badges to display on product cards in collections. Each badge can have text, background color, text color, and border color.",
-    "type": "list.list.single_line_text",
-    "access": {
-      "admin": "merchant_write",
-      "storefront": "public_read"
-    },
-    "validations": [
-      {
-        "name": "json",
-        "value": "{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":50},\"background_color\":{\"type\":\"string\",\"pattern\":\"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$\"},\"text_color\":{\"type\":\"string\",\"pattern\":\"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$\"},\"border_color\":{\"type\":\"string\",\"pattern\":\"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$\"}},\"required\":[\"text\"]}}"
-      }
-    ],
-    "default": "[]"
-  }
-};
-
-// Example usage with Shopify CLI
-console.log('To create the meta field using Shopify CLI, run:');
-console.log('');
-console.log('shopify app generate extension --type=admin_action');
-console.log('');
-console.log('Then use this meta field definition in your extension:');
-console.log(JSON.stringify(metaFieldDefinition, null, 2));
-
-// Example usage with Admin API
-console.log('');
-console.log('To create via Admin API:');
-console.log('POST /admin/api/2023-10/metafields.json');
-console.log('Content-Type: application/json');
-console.log('');
-console.log(JSON.stringify(metaFieldDefinition, null, 2));
-
-// Example badge data for testing
-const exampleBadgeData = [
+const metaFieldDefinitions = [
+  // Badge 1
   {
-    "text": "New Arrival",
-    "background_color": "#00C851",
-    "text_color": "#FFFFFF"
+    "meta_field": {
+      "namespace": "custom",
+      "key": "badge_1_text",
+      "name": "Badge 1 - Text",
+      "description": "First badge text (e.g., 'New', 'Sale', 'Best Seller')",
+      "type": "single_line_text",
+      "access": {
+        "admin": "merchant_write",
+        "storefront": "public_read"
+      },
+      "validations": [
+        {
+          "name": "length",
+          "value": "50"
+        }
+      ]
+    }
   },
   {
-    "text": "Best Seller",
-    "background_color": "#FF6B35",
-    "text_color": "#FFFFFF"
+    "meta_field": {
+      "namespace": "custom",
+      "key": "badge_1_background_color",
+      "name": "Badge 1 - Background Color",
+      "description": "Background color for first badge (e.g., #FF0000)",
+      "type": "single_line_text",
+      "access": {
+        "admin": "merchant_write",
+        "storefront": "public_read"
+      },
+      "validations": [
+        {
+          "name": "regex",
+          "value": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+        }
+      ]
+    }
   },
   {
-    "text": "Limited Edition",
-    "background_color": "#8B5CF6",
-    "text_color": "#FFFFFF",
-    "border_color": "#6D28D9"
+    "meta_field": {
+      "namespace": "custom",
+      "key": "badge_1_text_color",
+      "name": "Badge 1 - Text Color",
+      "description": "Text color for first badge (e.g., #FFFFFF)",
+      "type": "single_line_text",
+      "access": {
+        "admin": "merchant_write",
+        "storefront": "public_read"
+      },
+      "validations": [
+        {
+          "name": "regex",
+          "value": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+        }
+      ]
+    }
+  },
+  // Badge 2
+  {
+    "meta_field": {
+      "namespace": "custom",
+      "key": "badge_2_text",
+      "name": "Badge 2 - Text",
+      "description": "Second badge text (e.g., 'Limited Edition', 'Free Shipping')",
+      "type": "single_line_text",
+      "access": {
+        "admin": "merchant_write",
+        "storefront": "public_read"
+      },
+      "validations": [
+        {
+          "name": "length",
+          "value": "50"
+        }
+      ]
+    }
+  },
+  {
+    "meta_field": {
+      "namespace": "custom",
+      "key": "badge_2_background_color",
+      "name": "Badge 2 - Background Color",
+      "description": "Background color for second badge (e.g., #00FF00)",
+      "type": "single_line_text",
+      "access": {
+        "admin": "merchant_write",
+        "storefront": "public_read"
+      },
+      "validations": [
+        {
+          "name": "regex",
+          "value": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+        }
+      ]
+    }
+  },
+  {
+    "meta_field": {
+      "namespace": "custom",
+      "key": "badge_2_text_color",
+      "name": "Badge 2 - Text Color",
+      "description": "Text color for second badge (e.g., #000000)",
+      "type": "single_line_text",
+      "access": {
+        "admin": "merchant_write",
+        "storefront": "public_read"
+      },
+      "validations": [
+        {
+          "name": "regex",
+          "value": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+        }
+      ]
+    }
+  },
+  // Badge 3
+  {
+    "meta_field": {
+      "namespace": "custom",
+      "key": "badge_3_text",
+      "name": "Badge 3 - Text",
+      "description": "Third badge text (e.g., 'Premium', 'Exclusive')",
+      "type": "single_line_text",
+      "access": {
+        "admin": "merchant_write",
+        "storefront": "public_read"
+      },
+      "validations": [
+        {
+          "name": "length",
+          "value": "50"
+        }
+      ]
+    }
+  },
+  {
+    "meta_field": {
+      "namespace": "custom",
+      "key": "badge_3_background_color",
+      "name": "Badge 3 - Background Color",
+      "description": "Background color for third badge (e.g., #8B5CF6)",
+      "type": "single_line_text",
+      "access": {
+        "admin": "merchant_write",
+        "storefront": "public_read"
+      },
+      "validations": [
+        {
+          "name": "regex",
+          "value": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+        }
+      ]
+    }
+  },
+  {
+    "meta_field": {
+      "namespace": "custom",
+      "key": "badge_3_text_color",
+      "name": "Badge 3 - Text Color",
+      "description": "Text color for third badge (e.g., #FFFFFF)",
+      "type": "single_line_text",
+      "access": {
+        "admin": "merchant_write",
+        "storefront": "public_read"
+      },
+      "validations": [
+        {
+          "name": "regex",
+          "value": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+        }
+      ]
+    }
   }
 ];
 
+// Example usage with Shopify CLI
+console.log('To create the meta fields using Shopify CLI, run:');
 console.log('');
-console.log('Example badge data for testing:');
+console.log('shopify app generate extension --type=admin_action');
+console.log('');
+console.log('Then use these meta field definitions in your extension:');
+console.log(JSON.stringify(metaFieldDefinitions, null, 2));
+
+// Example usage with Admin API
+console.log('');
+console.log('To create via Admin API, make 9 separate POST requests:');
+console.log('POST /admin/api/2023-10/metafields.json');
+console.log('Content-Type: application/json');
+console.log('');
+metaFieldDefinitions.forEach((definition, index) => {
+  console.log(`Request ${index + 1}:`);
+  console.log(JSON.stringify(definition, null, 2));
+  console.log('');
+});
+
+// Example badge data for testing
+const exampleBadgeData = {
+  "badge_1_text": "New Arrival",
+  "badge_1_background_color": "#00C851",
+  "badge_1_text_color": "#FFFFFF",
+  "badge_2_text": "Best Seller",
+  "badge_2_background_color": "#FF6B35",
+  "badge_2_text_color": "#FFFFFF",
+  "badge_3_text": "Limited Edition",
+  "badge_3_background_color": "#8B5CF6",
+  "badge_3_text_color": "#FFFFFF"
+};
+
+console.log('');
+console.log('Example badge data for testing (add to product meta fields):');
 console.log(JSON.stringify(exampleBadgeData, null, 2));
 
 module.exports = {
-  metaFieldDefinition,
+  metaFieldDefinitions,
   exampleBadgeData
 };

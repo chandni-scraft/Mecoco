@@ -32,30 +32,55 @@
   {%- endif -%}
 
   {%- comment -%} Custom meta field badges {%- endcomment -%}
-  {%- if product.metafields.custom.product_badges -%}
-    {%- assign custom_badges = product.metafields.custom.product_badges.value -%}
-    {%- if custom_badges != blank -%}
-      {%- for badge in custom_badges -%}
-        {%- if badge.text != blank -%}
-          <div
-            class="product-badges__badge product-badges__badge--rectangle product-badges__badge--custom"
-            style="
-              {%- if badge.background_color != blank -%}
-                background-color: {{ badge.background_color }};
-              {%- endif -%}
-              {%- if badge.text_color != blank -%}
-                color: {{ badge.text_color }};
-              {%- endif -%}
-              {%- if badge.border_color != blank -%}
-                border: 1px solid {{ badge.border_color }};
-              {%- endif -%}
-            "
-          >
-            {{ badge.text }}
-          </div>
+  {%- comment -%} Badge 1 {%- endcomment -%}
+  {%- if product.metafields.custom.badge_1_text != blank -%}
+    <div
+      class="product-badges__badge product-badges__badge--rectangle product-badges__badge--custom"
+      style="
+        {%- if product.metafields.custom.badge_1_background_color != blank -%}
+          background-color: {{ product.metafields.custom.badge_1_background_color }};
         {%- endif -%}
-      {%- endfor -%}
-    {%- endif -%}
+        {%- if product.metafields.custom.badge_1_text_color != blank -%}
+          color: {{ product.metafields.custom.badge_1_text_color }};
+        {%- endif -%}
+      "
+    >
+      {{ product.metafields.custom.badge_1_text }}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Badge 2 {%- endcomment -%}
+  {%- if product.metafields.custom.badge_2_text != blank -%}
+    <div
+      class="product-badges__badge product-badges__badge--rectangle product-badges__badge--custom"
+      style="
+        {%- if product.metafields.custom.badge_2_background_color != blank -%}
+          background-color: {{ product.metafields.custom.badge_2_background_color }};
+        {%- endif -%}
+        {%- if product.metafields.custom.badge_2_text_color != blank -%}
+          color: {{ product.metafields.custom.badge_2_text_color }};
+        {%- endif -%}
+      "
+    >
+      {{ product.metafields.custom.badge_2_text }}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Badge 3 {%- endcomment -%}
+  {%- if product.metafields.custom.badge_3_text != blank -%}
+    <div
+      class="product-badges__badge product-badges__badge--rectangle product-badges__badge--custom"
+      style="
+        {%- if product.metafields.custom.badge_3_background_color != blank -%}
+          background-color: {{ product.metafields.custom.badge_3_background_color }};
+        {%- endif -%}
+        {%- if product.metafields.custom.badge_3_text_color != blank -%}
+          color: {{ product.metafields.custom.badge_3_text_color }};
+        {%- endif -%}
+      "
+    >
+      {{ product.metafields.custom.badge_3_text }}
+    </div>
   {%- endif -%}
 </div>
 

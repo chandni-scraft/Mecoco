@@ -27,11 +27,8 @@ A Shopify theme enhanced with a custom product badges system that allows merchan
 
 ### 2. Set Up Product Badges
 1. Go to **Settings** > **Custom data** > **Products**
-2. Create a new meta field:
-   - **Name**: Product Badges
-   - **Namespace and key**: `custom.product_badges`
-   - **Type**: List of single line text
-3. Add badges to your products using the JSON format (see examples below)
+2. Create 9 individual meta fields for 3 badges (see detailed setup guide)
+3. Add badges to your products using simple text fields (no JSON required!)
 
 ### 3. Configure Badge Settings
 1. Go to **Online Store** > **Themes** > **Customize**
@@ -41,47 +38,28 @@ A Shopify theme enhanced with a custom product badges system that allows merchan
 ## Badge Examples
 
 ### Simple Badge
-```json
-[
-  {
-    "text": "New"
-  }
-]
-```
+- **Badge 1 - Text**: `New`
+- **Badge 1 - Background Color**: (leave blank)
+- **Badge 1 - Text Color**: (leave blank)
 
 ### Badge with Custom Colors
-```json
-[
-  {
-    "text": "Premium",
-    "background_color": "#FFD700",
-    "text_color": "#000000",
-    "border_color": "#FFA500"
-  }
-]
-```
+- **Badge 1 - Text**: `Premium`
+- **Badge 1 - Background Color**: `#FFD700`
+- **Badge 1 - Text Color**: `#000000`
 
 ### Multiple Badges
-```json
-[
-  {
-    "text": "New Arrival",
-    "background_color": "#00C851",
-    "text_color": "#FFFFFF"
-  },
-  {
-    "text": "Best Seller",
-    "background_color": "#FF6B35",
-    "text_color": "#FFFFFF"
-  },
-  {
-    "text": "Limited Edition",
-    "background_color": "#8B5CF6",
-    "text_color": "#FFFFFF",
-    "border_color": "#6D28D9"
-  }
-]
-```
+- **Badge 1:**
+  - Text: `New Arrival`
+  - Background Color: `#00C851`
+  - Text Color: `#FFFFFF`
+- **Badge 2:**
+  - Text: `Best Seller`
+  - Background Color: `#FF6B35`
+  - Text Color: `#FFFFFF`
+- **Badge 3:**
+  - Text: `Limited Edition`
+  - Background Color: `#8B5CF6`
+  - Text Color: `#FFFFFF`
 
 ## File Structure
 
