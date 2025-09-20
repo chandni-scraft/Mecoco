@@ -1,6 +1,1382 @@
+{% doc %}
+  @prompt
+    Create a "Shop by Concern" responsive product strip with tabbed filter pills (up to 6) driven by collection handles, a horizontal row of product cards that on desktop shows 4 cards per row, tablet 2–3 columns, and mobile as a snap-scrolling carousel with arrows; each card should include a responsive image (lazy-loaded, alt text), small top-right badge, truncated two-line title, price with compare-price support, star-rating placeholder, product attribute pills, variant dropdown (hidden when only one variant), quantity control (–/+ plus numeric input, min 1), accessible Add to Cart that uses AJAX and shows an inline toast or “Added” state, client-side validation, keyboard-focusable controls and ARIA for tabs and live regions, progressive enhancement so the first collection is server-rendered if JS is disabled, use theme CSS variables with an option to override colors, include settings for section title/subtitle/number of products/load more toggle, controls to show/hide badges/ratings/variant dropdown and adjust card radius/shadow, use section.id-scoped classes to avoid collisions, lazy load images with srcset/sizes where possible, limit initial fetches and support "Load more" pagination, keep JS compact and scoped, and include a short developer note describing where to change collection handles and product limits.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .shop-by-concern-{{ ai_gen_id }} {
+    padding: 40px 0;
+    background-color: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
+  }
+
+  .shop-by-concern-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .shop-by-concern-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .shop-by-concern-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: 600;
+    margin: 0 0 10px;
+    color: {{ block.settings.title_color | default: 'rgb(var(--color-foreground-heading))' }};
+  }
+
+  .shop-by-concern-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    margin: 0;
+    color: {{ block.settings.subtitle_color | default: 'rgb(var(--color-foreground))' }};
+  }
+
+  .shop-by-concern-tabs-{{ ai_gen_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .shop-by-concern-tab-{{ ai_gen_id }} {
+    background: none;
+    border: 2px solid {{ block.settings.tab_border_color | default: 'rgb(var(--color-border))' }};
+    border-radius: {{ block.settings.tab_radius }}px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    color: {{ block.settings.tab_text_color | default: 'rgb(var(--color-foreground))' }};
+    background-color: {{ block.settings.tab_bg_color | default: 'transparent' }};
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .shop-by-concern-tab-{{ ai_gen_id }}:hover,
+  .shop-by-concern-tab-{{ ai_gen_id }}:focus {
+    background-color: {{ block.settings.tab_hover_bg_color | default: 'rgb(var(--color-primary))' }};
+    color: {{ block.settings.tab_hover_text_color | default: 'rgb(var(--color-background))' }};
+    border-color: {{ block.settings.tab_hover_border_color | default: 'rgb(var(--color-primary))' }};
+    outline: none;
+  }
+
+  .shop-by-concern-tab-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.tab_active_bg_color | default: 'rgb(var(--color-primary))' }};
+    color: {{ block.settings.tab_active_text_color | default: 'rgb(var(--color-background))' }};
+    border-color: {{ block.settings.tab_active_border_color | default: 'rgb(var(--color-primary))' }};
+  }
+
+  .shop-by-concern-products-{{ ai_gen_id }} {
+    position: relative;
+  }
+
+  .shop-by-concern-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .shop-by-concern-card-{{ ai_gen_id }} {
+    background: {{ block.settings.card_bg_color | default: 'rgb(var(--color-background))' }};
+    border-radius: {{ block.settings.card_radius }}px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    {% if block.settings.card_shadow %}
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    {% endif %}
+  }
+
+  .shop-by-concern-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-4px);
+    {% if block.settings.card_shadow %}
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    {% endif %}
+  }
+
+  .shop-by-concern-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+  }
+
+  .shop-by-concern-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .shop-by-concern-card-{{ ai_gen_id }}:hover .shop-by-concern-image-{{ ai_gen_id }} {
+    transform: scale(1.05);
+  }
+
+  .shop-by-concern-badge-{{ ai_gen_id }} {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: {{ block.settings.badge_bg_color | default: 'rgb(var(--color-primary))' }};
+    color: {{ block.settings.badge_text_color | default: 'rgb(var(--color-background))' }};
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .shop-by-concern-content-{{ ai_gen_id }} {
+    padding: 16px;
+  }
+
+  .shop-by-concern-product-title-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: {{ block.settings.product_title_color | default: 'rgb(var(--color-foreground-heading))' }};
+  }
+
+  .shop-by-concern-price-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .shop-by-concern-price-{{ ai_gen_id }} {
+    font-size: 18px;
+    font-weight: 600;
+    color: {{ block.settings.price_color | default: 'rgb(var(--color-primary))' }};
+  }
+
+  .shop-by-concern-compare-price-{{ ai_gen_id }} {
+    font-size: 14px;
+    color: rgb(var(--color-foreground));
+    opacity: 0.7;
+    text-decoration: line-through;
+  }
+
+  .shop-by-concern-rating-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  .shop-by-concern-stars-{{ ai_gen_id }} {
+    display: flex;
+    gap: 2px;
+  }
+
+  .shop-by-concern-star-{{ ai_gen_id }} {
+    width: 12px;
+    height: 12px;
+    fill: #ffd700;
+  }
+
+  .shop-by-concern-rating-text-{{ ai_gen_id }} {
+    font-size: 12px;
+    color: rgb(var(--color-foreground));
+    opacity: 0.7;
+  }
+
+  .shop-by-concern-attributes-{{ ai_gen_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  .shop-by-concern-attribute-{{ ai_gen_id }} {
+    background: rgb(var(--color-border));
+    color: rgb(var(--color-foreground));
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .shop-by-concern-variant-select-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid rgb(var(--color-border));
+    border-radius: 4px;
+    background: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+
+  .shop-by-concern-quantity-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .shop-by-concern-quantity-label-{{ ai_gen_id }} {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .shop-by-concern-quantity-controls-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    border: 1px solid rgb(var(--color-border));
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .shop-by-concern-quantity-btn-{{ ai_gen_id }} {
+    background: rgb(var(--color-background));
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgb(var(--color-foreground));
+    transition: background-color 0.2s ease;
+  }
+
+  .shop-by-concern-quantity-btn-{{ ai_gen_id }}:hover {
+    background: rgb(var(--color-border));
+  }
+
+  .shop-by-concern-quantity-input-{{ ai_gen_id }} {
+    border: none;
+    padding: 8px;
+    width: 50px;
+    text-align: center;
+    background: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
+    font-size: 14px;
+  }
+
+  .shop-by-concern-add-to-cart-{{ ai_gen_id }} {
+    width: 100%;
+    background: {{ block.settings.button_bg_color | default: 'rgb(var(--color-primary))' }};
+    color: {{ block.settings.button_text_color | default: 'rgb(var(--color-background))' }};
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .shop-by-concern-add-to-cart-{{ ai_gen_id }}:hover {
+    background: {{ block.settings.button_hover_bg_color | default: 'rgb(var(--color-primary-hover))' }};
+    transform: translateY(-1px);
+  }
+
+  .shop-by-concern-add-to-cart-{{ ai_gen_id }}:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .shop-by-concern-add-to-cart-{{ ai_gen_id }}.added {
+    background: #28a745;
+  }
+
+  .shop-by-concern-toast-{{ ai_gen_id }} {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .shop-by-concern-toast-{{ ai_gen_id }}.show {
+    transform: translateX(0);
+  }
+
+  .shop-by-concern-load-more-{{ ai_gen_id }} {
+    text-align: center;
+    margin-top: 32px;
+  }
+
+  .shop-by-concern-load-more-btn-{{ ai_gen_id }} {
+    background: transparent;
+    color: rgb(var(--color-primary));
+    border: 2px solid rgb(var(--color-primary));
+    padding: 12px 32px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .shop-by-concern-load-more-btn-{{ ai_gen_id }}:hover {
+    background: rgb(var(--color-primary));
+    color: rgb(var(--color-background));
+  }
+
+  .shop-by-concern-loading-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 40px;
+    color: rgb(var(--color-foreground));
+    opacity: 0.7;
+  }
+
+  .shop-by-concern-empty-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 40px;
+    color: rgb(var(--color-foreground));
+    opacity: 0.7;
+  }
+
+  .shop-by-concern-carousel-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shop-by-concern-carousel-track-{{ ai_gen_id }} {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 10px;
+  }
+
+  .shop-by-concern-carousel-track-{{ ai_gen_id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .shop-by-concern-carousel-track-{{ ai_gen_id }} .shop-by-concern-card-{{ ai_gen_id }} {
+    flex: 0 0 280px;
+    scroll-snap-align: start;
+  }
+
+  .shop-by-concern-carousel-nav-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+  }
+
+  .shop-by-concern-carousel-nav-{{ ai_gen_id }}:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .shop-by-concern-carousel-prev-{{ ai_gen_id }} {
+    left: -20px;
+  }
+
+  .shop-by-concern-carousel-next-{{ ai_gen_id }} {
+    right: -20px;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .shop-by-concern-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .shop-by-concern-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .shop-by-concern-tabs-{{ ai_gen_id }} {
+      gap: 8px;
+    }
+
+    .shop-by-concern-tab-{{ ai_gen_id }} {
+      padding: 8px 16px;
+      font-size: 12px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .shop-by-concern-container-{{ ai_gen_id }} {
+      padding: 0 16px;
+    }
+
+    .shop-by-concern-grid-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .shop-by-concern-carousel-{{ ai_gen_id }} {
+      display: block;
+    }
+
+    .shop-by-concern-carousel-nav-{{ ai_gen_id }} {
+      display: flex;
+    }
+  }
+
+  @media screen and (min-width: 481px) {
+    .shop-by-concern-carousel-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .shop-by-concern-carousel-nav-{{ ai_gen_id }} {
+      display: none;
+    }
+  }
+
+  .visually-hidden {
+    position: absolute !important;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0 0 0 0);
+    word-wrap: normal !important;
+  }
+{% endstyle %}
+
+<shop-by-concern-{{ ai_gen_id }}
+  class="shop-by-concern-{{ ai_gen_id }}"
+  data-products-per-page="{{ block.settings.products_per_page }}"
+  data-show-load-more="{{ block.settings.show_load_more }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="shop-by-concern-container-{{ ai_gen_id }}">
+    {% if block.settings.title != blank or block.settings.subtitle != blank %}
+      <div class="shop-by-concern-header-{{ ai_gen_id }}">
+        {% if block.settings.title != blank %}
+          <h2 class="shop-by-concern-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+        {% endif %}
+        {% if block.settings.subtitle != blank %}
+          <p class="shop-by-concern-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div role="tablist" class="shop-by-concern-tabs-{{ ai_gen_id }}" aria-label="Product categories">
+      {% for i in (1..6) %}
+        {% assign collection_key = 'collection_' | append: i %}
+        {% assign tab_label_key = 'tab_label_' | append: i %}
+        {% assign collection = block.settings[collection_key] %}
+        {% assign tab_label = block.settings[tab_label_key] %}
+        
+        {% if collection != blank %}
+          <button
+            role="tab"
+            class="shop-by-concern-tab-{{ ai_gen_id }} {% if forloop.first %}active{% endif %}"
+            data-collection-handle="{{ collection.handle }}"
+            data-tab-index="{{ forloop.index0 }}"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            aria-controls="products-panel-{{ ai_gen_id }}"
+            id="tab-{{ forloop.index0 }}-{{ ai_gen_id }}"
+          >
+            {{ tab_label | default: collection.title }}
+          </button>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div
+      id="products-panel-{{ ai_gen_id }}"
+      role="tabpanel"
+      aria-labelledby="tab-0-{{ ai_gen_id }}"
+      class="shop-by-concern-products-{{ ai_gen_id }}"
+    >
+      <div class="shop-by-concern-grid-{{ ai_gen_id }}" id="products-grid-{{ ai_gen_id }}">
+        {% assign first_collection = block.settings.collection_1 %}
+        {% if first_collection != blank %}
+          {% for product in first_collection.products limit: block.settings.products_per_page %}
+            {% render 'shop-by-concern-product-card', product: product, block: block, ai_gen_id: ai_gen_id %}
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <div class="shop-by-concern-carousel-{{ ai_gen_id }}" id="products-carousel-{{ ai_gen_id }}">
+        <button class="shop-by-concern-carousel-nav-{{ ai_gen_id }} shop-by-concern-carousel-prev-{{ ai_gen_id }}" aria-label="Previous products">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        <div class="shop-by-concern-carousel-track-{{ ai_gen_id }}" id="carousel-track-{{ ai_gen_id }}">
+          {% if first_collection != blank %}
+            {% for product in first_collection.products limit: block.settings.products_per_page %}
+              {% render 'shop-by-concern-product-card', product: product, block: block, ai_gen_id: ai_gen_id %}
+            {% endfor %}
+          {% endif %}
+        </div>
+        <button class="shop-by-concern-carousel-nav-{{ ai_gen_id }} shop-by-concern-carousel-next-{{ ai_gen_id }}" aria-label="Next products">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <div class="shop-by-concern-loading-{{ ai_gen_id }}" id="loading-{{ ai_gen_id }}" style="display: none;">
+        Loading products...
+      </div>
+
+      <div class="shop-by-concern-empty-{{ ai_gen_id }}" id="empty-{{ ai_gen_id }}" style="display: none;">
+        No products found in this category.
+      </div>
+
+      {% if block.settings.show_load_more %}
+        <div class="shop-by-concern-load-more-{{ ai_gen_id }}" id="load-more-{{ ai_gen_id }}" style="display: none;">
+          <button class="shop-by-concern-load-more-btn-{{ ai_gen_id }}">
+            Load More Products
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="shop-by-concern-toast-{{ ai_gen_id }}" id="toast-{{ ai_gen_id }}">
+    Product added to cart!
+  </div>
+</shop-by-concern-{{ ai_gen_id }}>
+
+{% comment %}
+  Inline product card template to avoid external snippet dependency
+{% endcomment %}
+{% capture product_card_template %}
+  <div class="shop-by-concern-card-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
+    <div class="shop-by-concern-image-wrapper-{{ ai_gen_id }}">
+      {% if product.featured_image %}
+        <img
+          class="shop-by-concern-image-{{ ai_gen_id }}"
+          src="{{ product.featured_image | image_url: width: 400 }}"
+          alt="{{ product.featured_image.alt | escape }}"
+          loading="lazy"
+          width="400"
+          height="400"
+          sizes="(max-width: 480px) 280px, (max-width: 768px) 300px, (max-width: 1024px) 350px, 400px"
+          srcset="{{ product.featured_image | image_url: width: 280 }} 280w,
+                  {{ product.featured_image | image_url: width: 300 }} 300w,
+                  {{ product.featured_image | image_url: width: 350 }} 350w,
+                  {{ product.featured_image | image_url: width: 400 }} 400w,
+                  {{ product.featured_image | image_url: width: 600 }} 600w,
+                  {{ product.featured_image | image_url: width: 800 }} 800w"
+        >
+      {% else %}
+        <div class="shop-by-concern-image-placeholder-{{ ai_gen_id }}">
+          {{ 'product-1' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_badges and product.compare_at_price > product.price %}
+        <div class="shop-by-concern-badge-{{ ai_gen_id }}">
+          Sale
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="shop-by-concern-content-{{ ai_gen_id }}">
+      <h3 class="shop-by-concern-product-title-{{ ai_gen_id }}">
+        <a href="{{ product.url }}">{{ product.title }}</a>
+      </h3>
+
+      <div class="shop-by-concern-price-wrapper-{{ ai_gen_id }}">
+        <span class="shop-by-concern-price-{{ ai_gen_id }}">{{ product.price | money }}</span>
+        {% if product.compare_at_price > product.price %}
+          <span class="shop-by-concern-compare-price-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
+        {% endif %}
+      </div>
+
+      {% if block.settings.show_ratings %}
+        <div class="shop-by-concern-rating-{{ ai_gen_id }}">
+          <div class="shop-by-concern-stars-{{ ai_gen_id }}">
+            {% for i in (1..5) %}
+              <svg class="shop-by-concern-star-{{ ai_gen_id }}" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            {% endfor %}
+          </div>
+          <span class="shop-by-concern-rating-text-{{ ai_gen_id }}">(4.5)</span>
+        </div>
+      {% endif %}
+
+      {% if product.metafields.custom.attributes %}
+        <div class="shop-by-concern-attributes-{{ ai_gen_id }}">
+          {% assign attributes = product.metafields.custom.attributes | split: ',' %}
+          {% for attribute in attributes limit: 3 %}
+            <span class="shop-by-concern-attribute-{{ ai_gen_id }}">{{ attribute | strip }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_variant_dropdown and product.variants.size > 1 %}
+        <select class="shop-by-concern-variant-select-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
+          {% for variant in product.variants %}
+            <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %}>
+              {{ variant.title }} - {{ variant.price | money }}
+            </option>
+          {% endfor %}
+        </select>
+      {% endif %}
+
+      <div class="shop-by-concern-quantity-wrapper-{{ ai_gen_id }}">
+        <span class="shop-by-concern-quantity-label-{{ ai_gen_id }}">Qty:</span>
+        <div class="shop-by-concern-quantity-controls-{{ ai_gen_id }}">
+          <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="decrease" aria-label="Decrease quantity">−</button>
+          <input
+            type="number"
+            class="shop-by-concern-quantity-input-{{ ai_gen_id }}"
+            value="1"
+            min="1"
+            aria-label="Quantity"
+          >
+          <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="increase" aria-label="Increase quantity">+</button>
+        </div>
+      </div>
+
+      <button
+        class="shop-by-concern-add-to-cart-{{ ai_gen_id }}"
+        data-product-id="{{ product.id }}"
+        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+        {% unless product.available %}disabled{% endunless %}
+      >
+        {% if product.available %}
+          Add to Cart
+        {% else %}
+          Sold Out
+        {% endif %}
+      </button>
+    </div>
+  </div>
+{% endcapture %}
+
+<script>
+(function() {
+  class ShopByConcern{{ ai_gen_id }} extends HTMLElement {
+    constructor() {
+      super();
+      this.currentPage = 1;
+      this.currentCollection = null;
+      this.isLoading = false;
+      this.productsPerPage = parseInt(this.dataset.productsPerPage) || 8;
+      this.showLoadMore = this.dataset.showLoadMore === 'true';
+    }
+
+    connectedCallback() {
+      this.setupEventListeners();
+      this.initializeFirstTab();
+      this.setupCarousel();
+    }
+
+    setupEventListeners() {
+      // Tab navigation
+      this.querySelectorAll('.shop-by-concern-tab-{{ ai_gen_id }}').forEach(tab => {
+        tab.addEventListener('click', (e) => this.handleTabClick(e));
+        tab.addEventListener('keydown', (e) => this.handleTabKeydown(e));
+      });
+
+      // Quantity controls
+      this.addEventListener('click', (e) => {
+        if (e.target.matches('.shop-by-concern-quantity-btn-{{ ai_gen_id }}')) {
+          this.handleQuantityChange(e);
+        }
+      });
+
+      // Add to cart
+      this.addEventListener('click', (e) => {
+        if (e.target.matches('.shop-by-concern-add-to-cart-{{ ai_gen_id }}')) {
+          this.handleAddToCart(e);
+        }
+      });
+
+      // Variant selection
+      this.addEventListener('change', (e) => {
+        if (e.target.matches('.shop-by-concern-variant-select-{{ ai_gen_id }}')) {
+          this.handleVariantChange(e);
+        }
+      });
+
+      // Load more
+      const loadMoreBtn = this.querySelector('.shop-by-concern-load-more-btn-{{ ai_gen_id }}');
+      if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', () => this.loadMoreProducts());
+      }
+
+      // Quantity input validation
+      this.addEventListener('input', (e) => {
+        if (e.target.matches('.shop-by-concern-quantity-input-{{ ai_gen_id }}')) {
+          this.validateQuantityInput(e.target);
+        }
+      });
+    }
+
+    initializeFirstTab() {
+      const firstTab = this.querySelector('.shop-by-concern-tab-{{ ai_gen_id }}.active');
+      if (firstTab) {
+        this.currentCollection = firstTab.dataset.collectionHandle;
+      }
+    }
+
+    setupCarousel() {
+      const prevBtn = this.querySelector('.shop-by-concern-carousel-prev-{{ ai_gen_id }}');
+      const nextBtn = this.querySelector('.shop-by-concern-carousel-next-{{ ai_gen_id }}');
+      const track = this.querySelector('.shop-by-concern-carousel-track-{{ ai_gen_id }}');
+
+      if (prevBtn && nextBtn && track) {
+        prevBtn.addEventListener('click', () => {
+          track.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+
+        nextBtn.addEventListener('click', () => {
+          track.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+      }
+    }
+
+    handleTabClick(e) {
+      e.preventDefault();
+      const tab = e.target;
+      const collectionHandle = tab.dataset.collectionHandle;
+      
+      if (collectionHandle === this.currentCollection) return;
+
+      this.setActiveTab(tab);
+      this.loadProducts(collectionHandle);
+    }
+
+    handleTabKeydown(e) {
+      const tabs = Array.from(this.querySelectorAll('.shop-by-concern-tab-{{ ai_gen_id }}'));
+      const currentIndex = tabs.indexOf(e.target);
+
+      switch (e.key) {
+        case 'ArrowLeft':
+          e.preventDefault();
+          const prevIndex = currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
+          tabs[prevIndex].focus();
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          const nextIndex = currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
+          tabs[nextIndex].focus();
+          break;
+        case 'Enter':
+        case ' ':
+          e.preventDefault();
+          e.target.click();
+          break;
+      }
+    }
+
+    setActiveTab(activeTab) {
+      this.querySelectorAll('.shop-by-concern-tab-{{ ai_gen_id }}').forEach(tab => {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-selected', 'false');
+      });
+
+      activeTab.classList.add('active');
+      activeTab.setAttribute('aria-selected', 'true');
+
+      const panel = this.querySelector('#products-panel-{{ ai_gen_id }}');
+      panel.setAttribute('aria-labelledby', activeTab.id);
+    }
+
+    async loadProducts(collectionHandle, page = 1) {
+      if (this.isLoading) return;
+
+      this.isLoading = true;
+      this.currentCollection = collectionHandle;
+      this.currentPage = page;
+
+      this.showLoading();
+
+      try {
+        const response = await fetch(`/collections/${collectionHandle}/products.json?limit=${this.productsPerPage}&page=${page}`);
+        const data = await response.json();
+
+        if (page === 1) {
+          this.renderProducts(data.products);
+        } else {
+          this.appendProducts(data.products);
+        }
+
+        this.updateLoadMoreButton(data.products.length === this.productsPerPage);
+      } catch (error) {
+        console.error('Error loading products:', error);
+        this.showEmpty();
+      } finally {
+        this.hideLoading();
+        this.isLoading = false;
+      }
+    }
+
+    renderProducts(products) {
+      const grid = this.querySelector('#products-grid-{{ ai_gen_id }}');
+      const carousel = this.querySelector('#carousel-track-{{ ai_gen_id }}');
+
+      if (products.length === 0) {
+        this.showEmpty();
+        return;
+      }
+
+      const productsHTML = products.map(product => this.createProductCard(product)).join('');
+      
+      if (grid) grid.innerHTML = productsHTML;
+      if (carousel) carousel.innerHTML = productsHTML;
+
+      this.hideEmpty();
+    }
+
+    appendProducts(products) {
+      const grid = this.querySelector('#products-grid-{{ ai_gen_id }}');
+      const carousel = this.querySelector('#carousel-track-{{ ai_gen_id }}');
+
+      const productsHTML = products.map(product => this.createProductCard(product)).join('');
+      
+      if (grid) grid.insertAdjacentHTML('beforeend', productsHTML);
+      if (carousel) carousel.insertAdjacentHTML('beforeend', productsHTML);
+    }
+
+    createProductCard(product) {
+      const variant = product.variants[0];
+      const hasMultipleVariants = product.variants.length > 1;
+      const showVariantDropdown = hasMultipleVariants && {{ block.settings.show_variant_dropdown | json }};
+      const showBadges = {{ block.settings.show_badges | json }};
+      const showRatings = {{ block.settings.show_ratings | json }};
+
+      return `
+        <div class="shop-by-concern-card-{{ ai_gen_id }}" data-product-id="${product.id}">
+          <div class="shop-by-concern-image-wrapper-{{ ai_gen_id }}">
+            ${product.featured_image ? 
+              `<img
+                class="shop-by-concern-image-{{ ai_gen_id }}"
+                src="${product.featured_image}"
+                alt="${product.title}"
+                loading="lazy"
+                width="400"
+                height="400"
+              >` :
+              `<div class="shop-by-concern-image-placeholder-{{ ai_gen_id }}">
+                <svg viewBox="0 0 525 525" xmlns="http://www.w3.org/2000/svg">
+                  <rect fill="#f4f4f4" width="525" height="525"/>
+                  <path fill="#ddd" d="M375 175h-50v-50h-125v50h-50l112.5 150z"/>
+                </svg>
+              </div>`
+            }
+            ${showBadges && product.compare_at_price > product.price ? 
+              '<div class="shop-by-concern-badge-{{ ai_gen_id }}">Sale</div>' : ''
+            }
+          </div>
+          <div class="shop-by-concern-content-{{ ai_gen_id }}">
+            <h3 class="shop-by-concern-product-title-{{ ai_gen_id }}">
+              <a href="/products/${product.handle}">${product.title}</a>
+            </h3>
+            <div class="shop-by-concern-price-wrapper-{{ ai_gen_id }}">
+              <span class="shop-by-concern-price-{{ ai_gen_id }}">${this.formatMoney(variant.price)}</span>
+              ${product.compare_at_price > product.price ? 
+                `<span class="shop-by-concern-compare-price-{{ ai_gen_id }}">${this.formatMoney(product.compare_at_price)}</span>` : ''
+              }
+            </div>
+            ${showRatings ? `
+              <div class="shop-by-concern-rating-{{ ai_gen_id }}">
+                <div class="shop-by-concern-stars-{{ ai_gen_id }}">
+                  ${'★'.repeat(5)}
+                </div>
+                <span class="shop-by-concern-rating-text-{{ ai_gen_id }}">(4.5)</span>
+              </div>
+            ` : ''}
+            ${showVariantDropdown ? `
+              <select class="shop-by-concern-variant-select-{{ ai_gen_id }}" data-product-id="${product.id}">
+                ${product.variants.map(v => 
+                  `<option value="${v.id}">${v.title} - ${this.formatMoney(v.price)}</option>`
+                ).join('')}
+              </select>
+            ` : ''}
+            <div class="shop-by-concern-quantity-wrapper-{{ ai_gen_id }}">
+              <span class="shop-by-concern-quantity-label-{{ ai_gen_id }}">Qty:</span>
+              <div class="shop-by-concern-quantity-controls-{{ ai_gen_id }}">
+                <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="decrease" aria-label="Decrease quantity">−</button>
+                <input type="number" class="shop-by-concern-quantity-input-{{ ai_gen_id }}" value="1" min="1" aria-label="Quantity">
+                <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="increase" aria-label="Increase quantity">+</button>
+              </div>
+            </div>
+            <button
+              class="shop-by-concern-add-to-cart-{{ ai_gen_id }}"
+              data-product-id="${product.id}"
+              data-variant-id="${variant.id}"
+              ${!variant.available ? 'disabled' : ''}
+            >
+              ${variant.available ? 'Add to Cart' : 'Sold Out'}
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    formatMoney(cents) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      }).format(cents / 100);
+    }
+
+    handleQuantityChange(e) {
+      const action = e.target.dataset.action;
+      const input = e.target.parentNode.querySelector('.shop-by-concern-quantity-input-{{ ai_gen_id }}');
+      let value = parseInt(input.value) || 1;
+
+      if (action === 'increase') {
+        value++;
+      } else if (action === 'decrease' && value > 1) {
+        value--;
+      }
+
+      input.value = value;
+    }
+
+    validateQuantityInput(input) {
+      let value = parseInt(input.value) || 1;
+      if (value < 1) value = 1;
+      input.value = value;
+    }
+
+    handleVariantChange(e) {
+      const select = e.target;
+      const card = select.closest('.shop-by-concern-card-{{ ai_gen_id }}');
+      const addToCartBtn = card.querySelector('.shop-by-concern-add-to-cart-{{ ai_gen_id }}');
+      
+      addToCartBtn.dataset.variantId = select.value;
+    }
+
+    async handleAddToCart(e) {
+      e.preventDefault();
+      
+      const button = e.target;
+      const card = button.closest('.shop-by-concern-card-{{ ai_gen_id }}');
+      const variantId = button.dataset.variantId;
+      const quantity = parseInt(card.querySelector('.shop-by-concern-quantity-input-{{ ai_gen_id }}').value) || 1;
+
+      if (button.disabled) return;
+
+      button.disabled = true;
+      button.textContent = 'Adding...';
+
+      try {
+        const response = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: variantId,
+            quantity: quantity
+          })
+        });
+
+        if (response.ok) {
+          this.showSuccessState(button);
+          this.showToast();
+          
+          // Trigger cart update event
+          document.dispatchEvent(new CustomEvent('cart:updated'));
+        } else {
+          throw new Error('Failed to add to cart');
+        }
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        button.textContent = 'Error';
+        setTimeout(() => {
+          button.textContent = 'Add to Cart';
+          button.disabled = false;
+        }, 2000);
+      }
+    }
+
+    showSuccessState(button) {
+      button.classList.add('added');
+      button.textContent = 'Added!';
+      
+      setTimeout(() => {
+        button.classList.remove('added');
+        button.textContent = 'Add to Cart';
+        button.disabled = false;
+      }, 2000);
+    }
+
+    showToast() {
+      const toast = this.querySelector('#toast-{{ ai_gen_id }}');
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    loadMoreProducts() {
+      this.loadProducts(this.currentCollection, this.currentPage + 1);
+    }
+
+    updateLoadMoreButton(hasMore) {
+      const loadMoreSection = this.querySelector('#load-more-{{ ai_gen_id }}');
+      if (loadMoreSection) {
+        loadMoreSection.style.display = hasMore && this.showLoadMore ? 'block' : 'none';
+      }
+    }
+
+    showLoading() {
+      const loading = this.querySelector('#loading-{{ ai_gen_id }}');
+      if (loading) loading.style.display = 'block';
+    }
+
+    hideLoading() {
+      const loading = this.querySelector('#loading-{{ ai_gen_id }}');
+      if (loading) loading.style.display = 'none';
+    }
+
+    showEmpty() {
+      const empty = this.querySelector('#empty-{{ ai_gen_id }}');
+      if (empty) empty.style.display = 'block';
+    }
+
+    hideEmpty() {
+      const empty = this.querySelector('#empty-{{ ai_gen_id }}');
+      if (empty) empty.style.display = 'none';
+    }
+  }
+
+  customElements.define('shop-by-concern-{{ ai_gen_id }}', ShopByConcern{{ ai_gen_id }});
+})();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Shop by concern",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Shop by Concern"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section subtitle",
+      "default": "Find products tailored to your specific needs"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "label": "Products per page",
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "show_load_more",
+      "label": "Show load more button",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Collections"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Collection 1"
+    },
+    {
+      "type": "text",
+      "id": "tab_label_1",
+      "label": "Tab label 1",
+      "default": "Acne"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Collection 2"
+    },
+    {
+      "type": "text",
+      "id": "tab_label_2",
+      "label": "Tab label 2",
+      "default": "Anti-aging"
+    },
+    {
+      "type": "collection",
+      "id": "collection_3",
+      "label": "Collection 3"
+    },
+    {
+      "type": "text",
+      "id": "tab_label_3",
+      "label": "Tab label 3",
+      "default": "Sensitive skin"
+    },
+    {
+      "type": "collection",
+      "id": "collection_4",
+      "label": "Collection 4"
+    },
+    {
+      "type": "text",
+      "id": "tab_label_4",
+      "label": "Tab label 4",
+      "default": "Hydration"
+    },
+    {
+      "type": "collection",
+      "id": "collection_5",
+      "label": "Collection 5"
+    },
+    {
+      "type": "text",
+      "id": "tab_label_5",
+      "label": "Tab label 5",
+      "default": "Brightening"
+    },
+    {
+      "type": "collection",
+      "id": "collection_6",
+      "label": "Collection 6"
+    },
+    {
+      "type": "text",
+      "id": "tab_label_6",
+      "label": "Tab label 6",
+      "default": "Sun protection"
+    },
+    {
+      "type": "header",
+      "content": "Product card features"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badges",
+      "label": "Show sale badges",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ratings",
+      "label": "Show star ratings",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variant_dropdown",
+      "label": "Show variant dropdown",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color"
+    },
+    {
+      "type": "color",
+      "id": "product_title_color",
+      "label": "Product title color"
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price color"
+    },
+    {
+      "type": "header",
+      "content": "Tab styling"
+    },
+    {
+      "type": "range",
+      "id": "tab_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Tab border radius",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "tab_text_color",
+      "label": "Tab text color"
+    },
+    {
+      "type": "color",
+      "id": "tab_bg_color",
+      "label": "Tab background color"
+    },
+    {
+      "type": "color",
+      "id": "tab_border_color",
+      "label": "Tab border color"
+    },
+    {
+      "type": "color",
+      "id": "tab_hover_text_color",
+      "label": "Tab hover text color"
+    },
+    {
+      "type": "color",
+      "id": "tab_hover_bg_color",
+      "label": "Tab hover background color"
+    },
+    {
+      "type": "color",
+      "id": "tab_hover_border_color",
+      "label": "Tab hover border color"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_text_color",
+      "label": "Active tab text color"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_bg_color",
+      "label": "Active tab background color"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_border_color",
+      "label": "Active tab border color"
+    },
+    {
+      "type": "header",
+      "content": "Card styling"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "card_shadow",
+      "label": "Show card shadow",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card background color"
+    },
+    {
+      "type": "header",
+      "content": "Badge styling"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Badge background color"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge text color"
+    },
+    {
+      "type": "header",
+      "content": "Button styling"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background color"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Button hover background color"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop by concern"
+    }
+  ]
+}
 {% endschema %}
