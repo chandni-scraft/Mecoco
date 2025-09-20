@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Badge Examples</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .example-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .product-card {
+            position: relative;
+            width: 250px;
+            height: 300px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 20px;
+            display: inline-block;
+            overflow: hidden;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        
+        .product-info {
+            padding: 15px;
+        }
+        
+        .product-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .product-price {
+            color: #333;
+        }
+        
+        /* Badge Styles */
+        .product-badges {
+            position: absolute;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .product-badges--top-left {
+            top: 10px;
+            left: 10px;
+        }
+        
+        .product-badges--top-right {
+            top: 10px;
+            right: 10px;
+        }
+        
+        .product-badges--bottom-left {
+            bottom: 10px;
+            left: 10px;
+        }
+        
+        .product-badges__badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 20px;
+            padding: 6px 12px;
+            white-space: nowrap;
+            max-width: 120px;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+        
+        .product-badges__badge--custom {
+            min-width: fit-content;
+        }
+        
+        .badge-new {
+            background-color: #00C851;
+            color: #FFFFFF;
+        }
+        
+        .badge-sale {
+            background-color: #FF4444;
+            color: #FFFFFF;
+        }
+        
+        .badge-premium {
+            background-color: #FFD700;
+            color: #000000;
+            border: 1px solid #FFA500;
+        }
+        
+        .badge-limited {
+            background-color: #8B5CF6;
+            color: #FFFFFF;
+            border: 1px solid #6D28D9;
+        }
+        
+        .badge-bestseller {
+            background-color: #FF6B35;
+            color: #FFFFFF;
+        }
+        
+        .badge-freeshipping {
+            background-color: #2196F3;
+            color: #FFFFFF;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .section-title {
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Product Badge Examples</h1>
+        <p>This page demonstrates how the custom product badges will look in your Shopify theme.</p>
+        
+        <div class="example-section">
+            <h2 class="section-title">Single Badge Examples</h2>
+            <div class="grid">
+                <div class="product-card">
+                    <div class="product-image">Product Image</div>
+                    <div class="product-badges product-badges--top-left">
+                        <div class="product-badges__badge product-badges__badge--custom badge-new">New</div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-title">Product with "New" Badge</div>
+                        <div class="product-price">$29.99</div>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">Product Image</div>
+                    <div class="product-badges product-badges--top-right">
+                        <div class="product-badges__badge product-badges__badge--custom badge-sale">Sale</div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-title">Product with "Sale" Badge</div>
+                        <div class="product-price">$19.99</div>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">Product Image</div>
+                    <div class="product-badges product-badges--bottom-left">
+                        <div class="product-badges__badge product-badges__badge--custom badge-premium">Premium</div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-title">Product with "Premium" Badge</div>
+                        <div class="product-price">$49.99</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <h2 class="section-title">Multiple Badge Examples</h2>
+            <div class="grid">
+                <div class="product-card">
+                    <div class="product-image">Product Image</div>
+                    <div class="product-badges product-badges--top-left">
+                        <div class="product-badges__badge product-badges__badge--custom badge-new">New Arrival</div>
+                        <div class="product-badges__badge product-badges__badge--custom badge-bestseller">Best Seller</div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-title">Product with Multiple Badges</div>
+                        <div class="product-price">$39.99</div>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">Product Image</div>
+                    <div class="product-badges product-badges--top-right">
+                        <div class="product-badges__badge product-badges__badge--custom badge-limited">Limited Edition</div>
+                        <div class="product-badges__badge product-badges__badge--custom badge-freeshipping">Free Shipping</div>
+                        <div class="product-badges__badge product-badges__badge--custom badge-sale">20% Off</div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-title">Product with Three Badges</div>
+                        <div class="product-price">$79.99</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <h2 class="section-title">Badge Configuration Examples</h2>
+            <p>Here are some example JSON configurations you can use in your product meta fields:</p>
+            
+            <h3>Simple Badge (Text Only)</h3>
+            <pre><code>[
+  {
+    "text": "New"
+  }
+]</code></pre>
+            
+            <h3>Badge with Custom Colors</h3>
+            <pre><code>[
+  {
+    "text": "Premium",
+    "background_color": "#FFD700",
+    "text_color": "#000000",
+    "border_color": "#FFA500"
+  }
+]</code></pre>
+            
+            <h3>Multiple Badges</h3>
+            <pre><code>[
+  {
+    "text": "New Arrival",
+    "background_color": "#00C851",
+    "text_color": "#FFFFFF"
+  },
+  {
+    "text": "Best Seller",
+    "background_color": "#FF6B35",
+    "text_color": "#FFFFFF"
+  },
+  {
+    "text": "Limited Edition",
+    "background_color": "#8B5CF6",
+    "text_color": "#FFFFFF",
+    "border_color": "#6D28D9"
+  }
+]</code></pre>
+        </div>
+    </div>
+</body>
+</html>

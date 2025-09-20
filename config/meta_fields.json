@@ -1,0 +1,22 @@
+{
+  "meta_fields": [
+    {
+      "namespace": "custom",
+      "key": "product_badges",
+      "name": "Product Badges",
+      "description": "Custom badges to display on product cards in collections",
+      "type": "list.list.single_line_text",
+      "access": {
+        "admin": "merchant_write",
+        "storefront": "public_read"
+      },
+      "validations": [
+        {
+          "name": "json",
+          "value": "{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":50},\"background_color\":{\"type\":\"string\",\"pattern\":\"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$\"},\"text_color\":{\"type\":\"string\",\"pattern\":\"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$\"},\"border_color\":{\"type\":\"string\",\"pattern\":\"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$\"}},\"required\":[\"text\"]}}"
+        }
+      ],
+      "default": "[]"
+    }
+  ]
+}

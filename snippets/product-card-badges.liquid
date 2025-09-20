@@ -15,6 +15,7 @@
     --badge-font-family: var(--font-{{ settings.badge_font_family }}--family); --badge-font-weight: var(--font-{{ settings.badge_font_family }}--weight); --badge-text-transform: {{ settings.badge_text_transform }};
   "
 >
+  {%- comment -%} Default sale/sold out badges {%- endcomment -%}
   {%- if product.available == false or product.compare_at_price > product.price and product.available -%}
     <div
       class="
@@ -29,6 +30,33 @@
       {%- endif -%}
     </div>
   {%- endif -%}
+
+  {%- comment -%} Custom meta field badges {%- endcomment -%}
+  {%- if product.metafields.custom.product_badges -%}
+    {%- assign custom_badges = product.metafields.custom.product_badges.value -%}
+    {%- if custom_badges != blank -%}
+      {%- for badge in custom_badges -%}
+        {%- if badge.text != blank -%}
+          <div
+            class="product-badges__badge product-badges__badge--rectangle product-badges__badge--custom"
+            style="
+              {%- if badge.background_color != blank -%}
+                background-color: {{ badge.background_color }};
+              {%- endif -%}
+              {%- if badge.text_color != blank -%}
+                color: {{ badge.text_color }};
+              {%- endif -%}
+              {%- if badge.border_color != blank -%}
+                border: 1px solid {{ badge.border_color }};
+              {%- endif -%}
+            "
+          >
+            {{ badge.text }}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endif -%}
 </div>
 
 {% stylesheet %}
@@ -37,6 +65,9 @@
 
     position: absolute;
     z-index: var(--layer-flat);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
 
   .product-badges--bottom-left {
@@ -73,5 +104,20 @@
   .product-badges__badge--rectangle {
     padding-block: var(--badge-rectangle-padding-block);
     padding-inline: var(--badge-rectangle-padding-inline);
+  }
+
+  .product-badges__badge--custom {
+    min-width: fit-content;
+    max-width: 120px;
+    word-wrap: break-word;
+    white-space: normal;
+    text-align: center;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-badges__badge--custom {
+      max-width: 100px;
+      font-size: calc(var(--badge-font-size) * 0.9);
+    }
   }
 {% endstylesheet %}
