@@ -296,11 +296,8 @@
   }
 
   /* Show the submenus on hover */
-  .menu-list__list-item.menu-list__list-item--expanded > .menu-list__submenu,
-  .menu-list__list-item[data-expanded='true'] > .menu-list__submenu,
   .menu-list__list-item:has([aria-expanded='true']) > .menu-list__submenu,
   /* Show the overflow menu when a menu item is hovered */
-  .overflow-menu[data-expanded='true']::part(overflow),
   .overflow-menu:has([slot="overflow"] [aria-expanded='true'])::part(overflow),
   /* Keep the submenus open when they are hovered */
   .menu-list__submenu:is(:hover),
@@ -310,7 +307,6 @@
     visibility: visible;
   }
 
-  .menu-list__list-item[data-animating] > .menu-list__submenu,
   .menu-list__list-item:has([data-animating]) > .menu-list__submenu {
     --submenu-content-opacity: 0;
 
@@ -387,7 +383,6 @@
     --submenu-content-opacity: 1;
   }
 
-  .menu-list__list-item[slot='overflow'][data-animating] > .menu-list__link,
   .menu-list__list-item:where([slot='overflow']):has([data-animating]) > .menu-list__link {
     --submenu-content-opacity: 0;
   }
