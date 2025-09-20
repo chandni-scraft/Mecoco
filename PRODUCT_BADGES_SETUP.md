@@ -30,8 +30,8 @@ You only need to create **1 single meta field** for all badges:
 1. Go to **Settings** > **Custom data** > **Products**
 2. Click **Add definition**
 3. Set the following:
-   - **Name**: Product Badges
-   - **Namespace and key**: `custom.product_badges`
+   - **Name**: Product Badges (Simple)
+   - **Namespace and key**: `custom.product_badges_simple`
    - **Type**: Multi-line text
    - **Description**: Add multiple badges with text and colors. Format: Badge Text|Background Color|Text Color (one per line)
 
@@ -39,7 +39,7 @@ You only need to create **1 single meta field** for all badges:
 
 1. Go to **Products** in your Shopify admin
 2. Select a product
-3. Scroll down to find the **"Product Badges"** field
+3. Scroll down to find the **"Product Badges (Simple)"** field
 4. Add badges using this simple format (one badge per line):
 
 **Format:** `Badge Text|Background Color|Text Color`

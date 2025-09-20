@@ -32,8 +32,8 @@
   {%- endif -%}
 
   {%- comment -%} Custom meta field badges {%- endcomment -%}
-  {%- if product.metafields.custom.product_badges != blank -%}
-    {%- assign badge_lines = product.metafields.custom.product_badges | split: newline -%}
+  {%- if product.metafields.custom.product_badges_simple != blank -%}
+    {%- assign badge_lines = product.metafields.custom.product_badges_simple | split: newline -%}
     {%- for badge_line in badge_lines -%}
       {%- assign badge_parts = badge_line | split: '|' -%}
       {%- if badge_parts.size >= 1 and badge_parts[0] != blank -%}

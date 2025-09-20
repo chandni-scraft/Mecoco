@@ -2,8 +2,8 @@
   "meta_fields": [
     {
       "namespace": "custom",
-      "key": "product_badges",
-      "name": "Product Badges",
+      "key": "product_badges_simple",
+      "name": "Product Badges (Simple)",
       "description": "Add multiple badges with text and colors. Format: Badge Text|Background Color|Text Color (one per line). Example: New Arrival|#00C851|#FFFFFF",
       "type": "multi_line_text",
       "access": {
