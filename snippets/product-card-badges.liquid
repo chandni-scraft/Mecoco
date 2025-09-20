@@ -32,55 +32,29 @@
   {%- endif -%}
 
   {%- comment -%} Custom meta field badges {%- endcomment -%}
-  {%- comment -%} Badge 1 {%- endcomment -%}
-  {%- if product.metafields.custom.badge_1_text != blank -%}
-    <div
-      class="product-badges__badge product-badges__badge--rectangle product-badges__badge--custom"
-      style="
-        {%- if product.metafields.custom.badge_1_background_color != blank -%}
-          background-color: {{ product.metafields.custom.badge_1_background_color }};
-        {%- endif -%}
-        {%- if product.metafields.custom.badge_1_text_color != blank -%}
-          color: {{ product.metafields.custom.badge_1_text_color }};
-        {%- endif -%}
-      "
-    >
-      {{ product.metafields.custom.badge_1_text }}
-    </div>
-  {%- endif -%}
-
-  {%- comment -%} Badge 2 {%- endcomment -%}
-  {%- if product.metafields.custom.badge_2_text != blank -%}
-    <div
-      class="product-badges__badge product-badges__badge--rectangle product-badges__badge--custom"
-      style="
-        {%- if product.metafields.custom.badge_2_background_color != blank -%}
-          background-color: {{ product.metafields.custom.badge_2_background_color }};
-        {%- endif -%}
-        {%- if product.metafields.custom.badge_2_text_color != blank -%}
-          color: {{ product.metafields.custom.badge_2_text_color }};
-        {%- endif -%}
-      "
-    >
-      {{ product.metafields.custom.badge_2_text }}
-    </div>
-  {%- endif -%}
-
-  {%- comment -%} Badge 3 {%- endcomment -%}
-  {%- if product.metafields.custom.badge_3_text != blank -%}
-    <div
-      class="product-badges__badge product-badges__badge--rectangle product-badges__badge--custom"
-      style="
-        {%- if product.metafields.custom.badge_3_background_color != blank -%}
-          background-color: {{ product.metafields.custom.badge_3_background_color }};
-        {%- endif -%}
-        {%- if product.metafields.custom.badge_3_text_color != blank -%}
-          color: {{ product.metafields.custom.badge_3_text_color }};
-        {%- endif -%}
-      "
-    >
-      {{ product.metafields.custom.badge_3_text }}
-    </div>
+  {%- if product.metafields.custom.product_badges != blank -%}
+    {%- assign badge_lines = product.metafields.custom.product_badges | split: newline -%}
+    {%- for badge_line in badge_lines -%}
+      {%- assign badge_parts = badge_line | split: '|' -%}
+      {%- if badge_parts.size >= 1 and badge_parts[0] != blank -%}
+        {%- assign badge_text = badge_parts[0] | strip -%}
+        {%- assign badge_bg = badge_parts[1] | strip -%}
+        {%- assign badge_text_color = badge_parts[2] | strip -%}
+        <div
+          class="product-badges__badge product-badges__badge--rectangle product-badges__badge--custom"
+          style="
+            {%- if badge_bg != blank -%}
+              background-color: {{ badge_bg }};
+            {%- endif -%}
+            {%- if badge_text_color != blank -%}
+              color: {{ badge_text_color }};
+            {%- endif -%}
+          "
+        >
+          {{ badge_text }}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
   {%- endif -%}
 </div>
 

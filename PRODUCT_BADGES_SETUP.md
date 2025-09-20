@@ -23,82 +23,50 @@ The system uses a meta field called `custom.product_badges` that stores an array
 - `text_color` (optional): Hex color code (e.g., "#FFFFFF")
 - `border_color` (optional): Hex color code (e.g., "#000000")
 
-### 2. Creating Meta Fields in Shopify Admin
+### 2. Creating Meta Field in Shopify Admin
 
-You need to create 9 individual meta fields for the 3 badges. Here's how:
+You only need to create **1 single meta field** for all badges:
 
 1. Go to **Settings** > **Custom data** > **Products**
-2. Click **Add definition** and create these 9 meta fields:
-
-**Badge 1:**
-- **Name**: Badge 1 - Text
-- **Namespace and key**: `custom.badge_1_text`
-- **Type**: Single line text
-- **Description**: First badge text (e.g., 'New', 'Sale', 'Best Seller')
-
-- **Name**: Badge 1 - Background Color
-- **Namespace and key**: `custom.badge_1_background_color`
-- **Type**: Single line text
-- **Description**: Background color for first badge (e.g., #FF0000)
-
-- **Name**: Badge 1 - Text Color
-- **Namespace and key**: `custom.badge_1_text_color`
-- **Type**: Single line text
-- **Description**: Text color for first badge (e.g., #FFFFFF)
-
-**Badge 2:**
-- **Name**: Badge 2 - Text
-- **Namespace and key**: `custom.badge_2_text`
-- **Type**: Single line text
-- **Description**: Second badge text (e.g., 'Limited Edition', 'Free Shipping')
-
-- **Name**: Badge 2 - Background Color
-- **Namespace and key**: `custom.badge_2_background_color`
-- **Type**: Single line text
-- **Description**: Background color for second badge (e.g., #00FF00)
-
-- **Name**: Badge 2 - Text Color
-- **Namespace and key**: `custom.badge_2_text_color`
-- **Type**: Single line text
-- **Description**: Text color for second badge (e.g., #000000)
-
-**Badge 3:**
-- **Name**: Badge 3 - Text
-- **Namespace and key**: `custom.badge_3_text`
-- **Type**: Single line text
-- **Description**: Third badge text (e.g., 'Premium', 'Exclusive')
-
-- **Name**: Badge 3 - Background Color
-- **Namespace and key**: `custom.badge_3_background_color`
-- **Type**: Single line text
-- **Description**: Background color for third badge (e.g., #8B5CF6)
-
-- **Name**: Badge 3 - Text Color
-- **Namespace and key**: `custom.badge_3_text_color`
-- **Type**: Single line text
-- **Description**: Text color for third badge (e.g., #FFFFFF)
+2. Click **Add definition**
+3. Set the following:
+   - **Name**: Product Badges
+   - **Namespace and key**: `custom.product_badges`
+   - **Type**: Multi-line text
+   - **Description**: Add multiple badges with text and colors. Format: Badge Text|Background Color|Text Color (one per line)
 
 ### 3. Adding Badges to Products
 
 1. Go to **Products** in your Shopify admin
 2. Select a product
-3. Scroll down to find the badge fields (they'll be grouped together)
-4. Simply fill in the text and color fields:
+3. Scroll down to find the **"Product Badges"** field
+4. Add badges using this simple format (one badge per line):
 
-**Example for Badge 1:**
-- Badge 1 - Text: `New Arrival`
-- Badge 1 - Background Color: `#00C851`
-- Badge 1 - Text Color: `#FFFFFF`
+**Format:** `Badge Text|Background Color|Text Color`
 
-**Example for Badge 2:**
-- Badge 2 - Text: `Best Seller`
-- Badge 2 - Background Color: `#FF6B35`
-- Badge 2 - Text Color: `#FFFFFF`
+**Examples:**
 
-**Example for Badge 3:**
-- Badge 3 - Text: `Limited Edition`
-- Badge 3 - Background Color: `#8B5CF6`
-- Badge 3 - Text Color: `#FFFFFF`
+**Single Badge:**
+```
+New Arrival|#00C851|#FFFFFF
+```
+
+**Multiple Badges:**
+```
+New Arrival|#00C851|#FFFFFF
+Best Seller|#FF6B35|#FFFFFF
+Limited Edition|#8B5CF6|#FFFFFF
+```
+
+**Simple Badge (no colors):**
+```
+Sale
+```
+
+**Badge with only background color:**
+```
+Premium|#FFD700
+```
 
 ### 4. Badge Configuration Options
 

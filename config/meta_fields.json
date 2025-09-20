@@ -2,10 +2,10 @@
   "meta_fields": [
     {
       "namespace": "custom",
-      "key": "badge_1_text",
-      "name": "Badge 1 - Text",
-      "description": "First badge text (e.g., 'New', 'Sale', 'Best Seller')",
-      "type": "single_line_text",
+      "key": "product_badges",
+      "name": "Product Badges",
+      "description": "Add multiple badges with text and colors. Format: Badge Text|Background Color|Text Color (one per line). Example: New Arrival|#00C851|#FFFFFF",
+      "type": "multi_line_text",
       "access": {
         "admin": "merchant_write",
         "storefront": "public_read"
@@ -13,145 +13,10 @@
       "validations": [
         {
           "name": "length",
-          "value": "50"
+          "value": "500"
         }
-      ]
-    },
-    {
-      "namespace": "custom",
-      "key": "badge_1_background_color",
-      "name": "Badge 1 - Background Color",
-      "description": "Background color for first badge (e.g., #FF0000)",
-      "type": "single_line_text",
-      "access": {
-        "admin": "merchant_write",
-        "storefront": "public_read"
-      },
-      "validations": [
-        {
-          "name": "regex",
-          "value": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-        }
-      ]
-    },
-    {
-      "namespace": "custom",
-      "key": "badge_1_text_color",
-      "name": "Badge 1 - Text Color",
-      "description": "Text color for first badge (e.g., #FFFFFF)",
-      "type": "single_line_text",
-      "access": {
-        "admin": "merchant_write",
-        "storefront": "public_read"
-      },
-      "validations": [
-        {
-          "name": "regex",
-          "value": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-        }
-      ]
-    },
-    {
-      "namespace": "custom",
-      "key": "badge_2_text",
-      "name": "Badge 2 - Text",
-      "description": "Second badge text (e.g., 'Limited Edition', 'Free Shipping')",
-      "type": "single_line_text",
-      "access": {
-        "admin": "merchant_write",
-        "storefront": "public_read"
-      },
-      "validations": [
-        {
-          "name": "length",
-          "value": "50"
-        }
-      ]
-    },
-    {
-      "namespace": "custom",
-      "key": "badge_2_background_color",
-      "name": "Badge 2 - Background Color",
-      "description": "Background color for second badge (e.g., #00FF00)",
-      "type": "single_line_text",
-      "access": {
-        "admin": "merchant_write",
-        "storefront": "public_read"
-      },
-      "validations": [
-        {
-          "name": "regex",
-          "value": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-        }
-      ]
-    },
-    {
-      "namespace": "custom",
-      "key": "badge_2_text_color",
-      "name": "Badge 2 - Text Color",
-      "description": "Text color for second badge (e.g., #000000)",
-      "type": "single_line_text",
-      "access": {
-        "admin": "merchant_write",
-        "storefront": "public_read"
-      },
-      "validations": [
-        {
-          "name": "regex",
-          "value": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-        }
-      ]
-    },
-    {
-      "namespace": "custom",
-      "key": "badge_3_text",
-      "name": "Badge 3 - Text",
-      "description": "Third badge text (e.g., 'Premium', 'Exclusive')",
-      "type": "single_line_text",
-      "access": {
-        "admin": "merchant_write",
-        "storefront": "public_read"
-      },
-      "validations": [
-        {
-          "name": "length",
-          "value": "50"
-        }
-      ]
-    },
-    {
-      "namespace": "custom",
-      "key": "badge_3_background_color",
-      "name": "Badge 3 - Background Color",
-      "description": "Background color for third badge (e.g., #8B5CF6)",
-      "type": "single_line_text",
-      "access": {
-        "admin": "merchant_write",
-        "storefront": "public_read"
-      },
-      "validations": [
-        {
-          "name": "regex",
-          "value": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-        }
-      ]
-    },
-    {
-      "namespace": "custom",
-      "key": "badge_3_text_color",
-      "name": "Badge 3 - Text Color",
-      "description": "Text color for third badge (e.g., #FFFFFF)",
-      "type": "single_line_text",
-      "access": {
-        "admin": "merchant_write",
-        "storefront": "public_read"
-      },
-      "validations": [
-        {
-          "name": "regex",
-          "value": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-        }
-      ]
+      ],
+      "default": ""
     }
   ]
 }
