@@ -89,6 +89,57 @@
               {% endif %}
             </div>
           {% endif %}
+          
+          {% if block.settings.offer_4_label != blank %}
+            <div class="offer-item">
+              <div class="offer-label">{{ block.settings.offer_4_label }}</div>
+              {% if block.settings.offer_4_code != blank %}
+                <div class="offer-code-group">
+                  <button class="offer-code-button" data-code="{{ block.settings.offer_4_code }}">
+                    <span class="offer-code-text">Code:</span>
+                    {{ block.settings.offer_4_code }}
+                    <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M8 4.5V3.3c0-.56 0-.84-.109-1.054a1 1 0 0 0-.437-.437C7.24 1.5 6.96 1.5 6.4 1.5H3.2c-.56 0-.84 0-1.054.109a1 1 0 0 0-.437.437C1.5 2.26 1.5 2.54 1.5 3.1v3.2c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437c.214.109.494.109 1.054.109h1.2m1.8-3.6h3.2c.56 0 .84 0 1.054.109a1 1 0 0 0 .437.437c.109.214.109.494.109 1.054v3.2c0 .56 0 .84-.109 1.054a1 1 0 0 0-.437.437C9.14 10.5 8.86 10.5 8.3 10.5H5.1c-.56 0-.84 0-1.054-.109a1 1 0 0 1-.437-.437C3.5 9.74 3.5 9.46 3.5 8.9V5.7c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.26 4.1 4.54 4.1 5.1 4.1Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+          
+          {% if block.settings.offer_5_label != blank %}
+            <div class="offer-item">
+              <div class="offer-label">{{ block.settings.offer_5_label }}</div>
+              {% if block.settings.offer_5_code != blank %}
+                <div class="offer-code-group">
+                  <button class="offer-code-button" data-code="{{ block.settings.offer_5_code }}">
+                    <span class="offer-code-text">Code:</span>
+                    {{ block.settings.offer_5_code }}
+                    <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M8 4.5V3.3c0-.56 0-.84-.109-1.054a1 1 0 0 0-.437-.437C7.24 1.5 6.96 1.5 6.4 1.5H3.2c-.56 0-.84 0-1.054.109a1 1 0 0 0-.437.437C1.5 2.26 1.5 2.54 1.5 3.1v3.2c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437c.214.109.494.109 1.054.109h1.2m1.8-3.6h3.2c.56 0 .84 0 1.054.109a1 1 0 0 0 .437.437c.109.214.109.494.109 1.054v3.2c0 .56 0 .84-.109 1.054a1 1 0 0 0-.437.437C9.14 10.5 8.86 10.5 8.3 10.5H5.1c-.56 0-.84 0-1.054-.109a1 1 0 0 1-.437-.437C3.5 9.74 3.5 9.46 3.5 8.9V5.7c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.26 4.1 4.54 4.1 5.1 4.1Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+          
+          {% if block.settings.offer_6_label != blank %}
+            <div class="offer-item">
+              <div class="offer-label">{{ block.settings.offer_6_label }}</div>
+              {% if block.settings.offer_6_code != blank %}
+                <div class="offer-code-group">
+                  <button class="offer-code-button" data-code="{{ block.settings.offer_6_code }}">
+                    <span class="offer-code-text">Code:</span>
+                    {{ block.settings.offer_6_code }}
+                    <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M8 4.5V3.3c0-.56 0-.84-.109-1.054a1 1 0 0 0-.437-.437C7.24 1.5 6.96 1.5 6.4 1.5H3.2c-.56 0-.84 0-1.054.109a1 1 0 0 0-.437.437C1.5 2.26 1.5 2.54 1.5 3.1v3.2c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437c.214.109.494.109 1.054.109h1.2m1.8-3.6h3.2c.56 0 .84 0 1.054.109a1 1 0 0 0 .437.437c.109.214.109.494.109 1.054v3.2c0 .56 0 .84-.109 1.054a1 1 0 0 0-.437.437C9.14 10.5 8.86 10.5 8.3 10.5H5.1c-.56 0-.84 0-1.054-.109a1 1 0 0 1-.437-.437C3.5 9.74 3.5 9.46 3.5 8.9V5.7c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.26 4.1 4.54 4.1 5.1 4.1Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -349,6 +400,48 @@
     {
       "type": "text",
       "id": "offer_3_code",
+      "label": "Code (optional)"
+    },
+    {
+      "type": "header",
+      "content": "Offer 4"
+    },
+    {
+      "type": "text",
+      "id": "offer_4_label",
+      "label": "Label"
+    },
+    {
+      "type": "text",
+      "id": "offer_4_code",
+      "label": "Code (optional)"
+    },
+    {
+      "type": "header",
+      "content": "Offer 5"
+    },
+    {
+      "type": "text",
+      "id": "offer_5_label",
+      "label": "Label"
+    },
+    {
+      "type": "text",
+      "id": "offer_5_code",
+      "label": "Code (optional)"
+    },
+    {
+      "type": "header",
+      "content": "Offer 6"
+    },
+    {
+      "type": "text",
+      "id": "offer_6_label",
+      "label": "Label"
+    },
+    {
+      "type": "text",
+      "id": "offer_6_code",
       "label": "Code (optional)"
     }
   ],
