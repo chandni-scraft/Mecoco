@@ -52,10 +52,11 @@
                 
                 {%- if block_settings.show_variant_price and current_variant -%}
                   <span class="variant-option__price-wrapper">
-                    {%- if current_variant.compare_at_price and current_variant.compare_at_price > current_variant.price -%}
-                      <span class="variant-option__compare-price">{{ current_variant.compare_at_price | money }}</span>
-                    {%- endif -%}
-                    <span class="variant-option__price">{{ current_variant.price | money }}</span>
+                    <span class="variant-option__price-line">
+                      {%- if current_variant.compare_at_price and current_variant.compare_at_price > current_variant.price -%}
+                        <span class="variant-option__compare-price">{{ current_variant.compare_at_price | money }}</span>
+                      {%- endif -%}
+                      <span class="variant-option__price">{{ current_variant.price | money }}</span>
                     
                     {%- if block_settings.show_per_gram_price and current_variant.weight and current_variant.weight > 0 -%}
                       {%- comment -%}
@@ -79,6 +80,7 @@
                       -%}
                       <span class="variant-option__per-gram-price">({{ price_per_unit | money }}/{{ unit_label }})</span>
                     {%- endif -%}
+                    </span>
                   </span>
                 {%- endif -%}
               </span>
@@ -113,6 +115,13 @@
     gap: 2px;
     font-size: 0.875em;
     width: 100%;
+  }
+  
+  .variant-picker-with-price .variant-option__price-line {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
   }
 
   .variant-picker-with-price .variant-option__price {

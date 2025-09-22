@@ -71,31 +71,11 @@
       "default": false
     },
     {
-      "type": "text",
-      "id": "weight_metafield",
-      "label": "Weight metafield",
-      "info": "Not needed when 'Use Shopify's built-in weight field' is enabled. Enter the metafield key that contains variant weight (e.g., 'custom.weight_grams')",
-      "default": "custom.weight_grams"
-    },
-    {
-      "type": "select",
-      "id": "weight_unit",
-      "label": "Weight unit stored in metafield",
-      "options": [
-        {
-          "value": "g",
-          "label": "Grams"
-        },
-        {
-          "value": "kg",
-          "label": "Kilograms"
-        },
-        {
-          "value": "mg",
-          "label": "Milligrams"
-        }
-      ],
-      "default": "g"
+      "type": "checkbox",
+      "id": "use_simple_weight",
+      "label": "Use Shopify's built-in weight field",
+      "info": "Uses the weight from product's Shipping section. Enable this for easiest setup.",
+      "default": true
     },
     {
       "type": "select",
@@ -118,11 +98,36 @@
       "default": "g"
     },
     {
-      "type": "checkbox",
-      "id": "use_simple_weight",
-      "label": "Use Shopify's built-in weight field",
-      "info": "Enable this if custom metafields aren't working. Uses the weight from the Shipping section.",
-      "default": false
+      "type": "header",
+      "content": "Advanced Settings"
+    },
+    {
+      "type": "text",
+      "id": "weight_metafield",
+      "label": "Custom weight metafield",
+      "info": "Only needed if NOT using Shopify's built-in weight. Enter metafield key (e.g., 'custom.weight_grams')",
+      "default": ""
+    },
+    {
+      "type": "select",
+      "id": "weight_unit",
+      "label": "Weight unit in metafield",
+      "info": "Only applies when using custom metafield",
+      "options": [
+        {
+          "value": "g",
+          "label": "Grams"
+        },
+        {
+          "value": "kg",
+          "label": "Kilograms"
+        },
+        {
+          "value": "mg",
+          "label": "Milligrams"
+        }
+      ],
+      "default": "g"
     },
     {
       "type": "header",

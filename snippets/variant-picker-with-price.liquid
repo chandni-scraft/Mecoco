@@ -153,10 +153,11 @@
                   
                   {%- if block_settings.show_variant_price and variant_price -%}
                     <span class="variant-option__price-wrapper">
-                      {%- if variant_compare_price and variant_compare_price > variant_price -%}
-                        <span class="variant-option__compare-price">{{ variant_compare_price | money }}</span>
-                      {%- endif -%}
-                      <span class="variant-option__price">{{ variant_price | money }}</span>
+                      <span class="variant-option__price-line">
+                        {%- if variant_compare_price and variant_compare_price > variant_price -%}
+                          <span class="variant-option__compare-price">{{ variant_compare_price | money }}</span>
+                        {%- endif -%}
+                        <span class="variant-option__price">{{ variant_price | money }}</span>
                       
                       {%- if block_settings.show_per_gram_price -%}
                         {%- if variant_weight and variant_weight > 0 -%}
@@ -191,6 +192,7 @@
                           {%- endif -%}
                         {%- endif -%}
                       {%- endif -%}
+                      </span>
                     </span>
                   {%- endif -%}
                 </span>
@@ -351,6 +353,13 @@
     gap: 2px;
     font-size: 0.875em;
     width: 100%;
+  }
+  
+  .variant-picker-with-price .variant-option__price-line {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
   }
 
   .variant-picker-with-price .variant-option__price {
