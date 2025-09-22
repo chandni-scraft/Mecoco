@@ -90,6 +90,9 @@
       {%- endfor -%}
     </form>
   </variant-picker>
+  
+  {% comment %} Render offers immediately after variant picker {% endcomment %}
+  {% render 'product-offers-inline' %}
 {% endunless %}
 
 {% style %}
