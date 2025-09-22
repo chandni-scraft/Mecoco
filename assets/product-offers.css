@@ -277,11 +277,31 @@ style[data-section-id] {
 
 /* Force scrolling for inline offers */
 .product-offers-inline .offers-scroll-wrapper {
-  overflow-x: scroll !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
   -webkit-overflow-scrolling: touch;
+  max-width: 100%;
 }
 
 /* Ensure offers don't wrap */
 .product-offers-inline .offers-list {
   flex-wrap: nowrap !important;
+  display: inline-flex !important;
+}
+
+/* Desktop specific scrolling */
+@media screen and (min-width: 750px) {
+  .product-offers-inline {
+    max-width: 600px; /* Limit width on desktop to force scroll */
+  }
+  
+  .product-offers-inline .offers-scroll-wrapper {
+    overflow-x: auto !important;
+  }
+  
+  /* Always show scrollbar on desktop for better UX */
+  .product-offers-inline .offers-scroll-wrapper::-webkit-scrollbar {
+    height: 6px !important;
+    display: block !important;
+  }
 }
