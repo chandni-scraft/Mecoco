@@ -524,7 +524,110 @@
         {% assign first_collection = block.settings.collection_1 %}
         {% if first_collection != blank %}
           {% for product in collections[first_collection.handle].products limit: block.settings.products_per_page %}
-            {% render 'shop-by-concern-product-card', product: product, block: block, ai_gen_id: ai_gen_id %}
+            <div class="shop-by-concern-card-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
+              <div class="shop-by-concern-image-wrapper-{{ ai_gen_id }}">
+                {% if product.featured_image %}
+                  <img
+                    class="shop-by-concern-image-{{ ai_gen_id }}"
+                    src="{{ product.featured_image | image_url: width: 400 }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                    loading="lazy"
+                    width="400"
+                    height="400"
+                    sizes="(max-width: 480px) 280px, (max-width: 768px) 300px, (max-width: 1024px) 350px, 400px"
+                    srcset="{{ product.featured_image | image_url: width: 280 }} 280w,
+                            {{ product.featured_image | image_url: width: 300 }} 300w,
+                            {{ product.featured_image | image_url: width: 350 }} 350w,
+                            {{ product.featured_image | image_url: width: 400 }} 400w,
+                            {{ product.featured_image | image_url: width: 600 }} 600w,
+                            {{ product.featured_image | image_url: width: 800 }} 800w"
+                  >
+                {% else %}
+                  <div class="shop-by-concern-image-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+
+                {% if block.settings.show_badges and product.compare_at_price > product.price %}
+                  <div class="shop-by-concern-badge-{{ ai_gen_id }}">
+                    Sale
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="shop-by-concern-content-{{ ai_gen_id }}">
+                <h3 class="shop-by-concern-product-title-{{ ai_gen_id }}">
+                  <a href="{{ product.url }}">{{ product.title }}</a>
+                </h3>
+
+                <div class="shop-by-concern-price-wrapper-{{ ai_gen_id }}">
+                  <span class="shop-by-concern-price-{{ ai_gen_id }}">{{ product.price | money }}</span>
+                  {% if product.compare_at_price > product.price %}
+                    <span class="shop-by-concern-compare-price-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
+                  {% endif %}
+                </div>
+
+                {% if block.settings.show_ratings %}
+                  <div class="shop-by-concern-rating-{{ ai_gen_id }}">
+                    <div class="shop-by-concern-stars-{{ ai_gen_id }}">
+                      {% for i in (1..5) %}
+                        <svg class="shop-by-concern-star-{{ ai_gen_id }}" viewBox="0 0 24 24">
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                      {% endfor %}
+                    </div>
+                    <span class="shop-by-concern-rating-text-{{ ai_gen_id }}">(4.5)</span>
+                  </div>
+                {% endif %}
+
+                {% if product.metafields.custom.attributes %}
+                  <div class="shop-by-concern-attributes-{{ ai_gen_id }}">
+                    {% assign attributes = product.metafields.custom.attributes | split: ',' %}
+                    {% for attribute in attributes limit: 3 %}
+                      <span class="shop-by-concern-attribute-{{ ai_gen_id }}">{{ attribute | strip }}</span>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+
+                {% if block.settings.show_variant_dropdown and product.variants.size > 1 %}
+                  <select class="shop-by-concern-variant-select-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
+                    {% for variant in product.variants %}
+                      <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %}>
+                        {{ variant.title }} - {{ variant.price | money }}
+                      </option>
+                    {% endfor %}
+                  </select>
+                {% endif %}
+
+                <div class="shop-by-concern-quantity-wrapper-{{ ai_gen_id }}">
+                  <span class="shop-by-concern-quantity-label-{{ ai_gen_id }}">Qty:</span>
+                  <div class="shop-by-concern-quantity-controls-{{ ai_gen_id }}">
+                    <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="decrease" aria-label="Decrease quantity">−</button>
+                    <input
+                      type="number"
+                      class="shop-by-concern-quantity-input-{{ ai_gen_id }}"
+                      value="1"
+                      min="1"
+                      aria-label="Quantity"
+                    >
+                    <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="increase" aria-label="Increase quantity">+</button>
+                  </div>
+                </div>
+
+                <button
+                  class="shop-by-concern-add-to-cart-{{ ai_gen_id }}"
+                  data-product-id="{{ product.id }}"
+                  data-variant-id="{{ product.selected_or_first_available_variant.id | default: product.variants.first.id }}"
+                  {% unless product.available %}disabled{% endunless %}
+                >
+                  {% if product.available %}
+                    Add to Cart
+                  {% else %}
+                    Sold Out
+                  {% endif %}
+                </button>
+              </div>
+            </div>
           {% endfor %}
         {% endif %}
       </div>
@@ -538,7 +641,110 @@
         <div class="shop-by-concern-carousel-track-{{ ai_gen_id }}" id="carousel-track-{{ ai_gen_id }}">
           {% if first_collection != blank %}
             {% for product in collections[first_collection.handle].products limit: block.settings.products_per_page %}
-              {% render 'shop-by-concern-product-card', product: product, block: block, ai_gen_id: ai_gen_id %}
+              <div class="shop-by-concern-card-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
+                <div class="shop-by-concern-image-wrapper-{{ ai_gen_id }}">
+                  {% if product.featured_image %}
+                    <img
+                      class="shop-by-concern-image-{{ ai_gen_id }}"
+                      src="{{ product.featured_image | image_url: width: 400 }}"
+                      alt="{{ product.featured_image.alt | escape }}"
+                      loading="lazy"
+                      width="400"
+                      height="400"
+                      sizes="(max-width: 480px) 280px, (max-width: 768px) 300px, (max-width: 1024px) 350px, 400px"
+                      srcset="{{ product.featured_image | image_url: width: 280 }} 280w,
+                              {{ product.featured_image | image_url: width: 300 }} 300w,
+                              {{ product.featured_image | image_url: width: 350 }} 350w,
+                              {{ product.featured_image | image_url: width: 400 }} 400w,
+                              {{ product.featured_image | image_url: width: 600 }} 600w,
+                              {{ product.featured_image | image_url: width: 800 }} 800w"
+                    >
+                  {% else %}
+                    <div class="shop-by-concern-image-placeholder-{{ ai_gen_id }}">
+                      {{ 'product-1' | placeholder_svg_tag }}
+                    </div>
+                  {% endif %}
+
+                  {% if block.settings.show_badges and product.compare_at_price > product.price %}
+                    <div class="shop-by-concern-badge-{{ ai_gen_id }}">
+                      Sale
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="shop-by-concern-content-{{ ai_gen_id }}">
+                  <h3 class="shop-by-concern-product-title-{{ ai_gen_id }}">
+                    <a href="{{ product.url }}">{{ product.title }}</a>
+                  </h3>
+
+                  <div class="shop-by-concern-price-wrapper-{{ ai_gen_id }}">
+                    <span class="shop-by-concern-price-{{ ai_gen_id }}">{{ product.price | money }}</span>
+                    {% if product.compare_at_price > product.price %}
+                      <span class="shop-by-concern-compare-price-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
+                    {% endif %}
+                  </div>
+
+                  {% if block.settings.show_ratings %}
+                    <div class="shop-by-concern-rating-{{ ai_gen_id }}">
+                      <div class="shop-by-concern-stars-{{ ai_gen_id }}">
+                        {% for i in (1..5) %}
+                          <svg class="shop-by-concern-star-{{ ai_gen_id }}" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                          </svg>
+                        {% endfor %}
+                      </div>
+                      <span class="shop-by-concern-rating-text-{{ ai_gen_id }}">(4.5)</span>
+                    </div>
+                  {% endif %}
+
+                  {% if product.metafields.custom.attributes %}
+                    <div class="shop-by-concern-attributes-{{ ai_gen_id }}">
+                      {% assign attributes = product.metafields.custom.attributes | split: ',' %}
+                      {% for attribute in attributes limit: 3 %}
+                        <span class="shop-by-concern-attribute-{{ ai_gen_id }}">{{ attribute | strip }}</span>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+
+                  {% if block.settings.show_variant_dropdown and product.variants.size > 1 %}
+                    <select class="shop-by-concern-variant-select-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
+                      {% for variant in product.variants %}
+                        <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %}>
+                          {{ variant.title }} - {{ variant.price | money }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                  {% endif %}
+
+                  <div class="shop-by-concern-quantity-wrapper-{{ ai_gen_id }}">
+                    <span class="shop-by-concern-quantity-label-{{ ai_gen_id }}">Qty:</span>
+                    <div class="shop-by-concern-quantity-controls-{{ ai_gen_id }}">
+                      <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="decrease" aria-label="Decrease quantity">−</button>
+                      <input
+                        type="number"
+                        class="shop-by-concern-quantity-input-{{ ai_gen_id }}"
+                        value="1"
+                        min="1"
+                        aria-label="Quantity"
+                      >
+                      <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="increase" aria-label="Increase quantity">+</button>
+                    </div>
+                  </div>
+
+                  <button
+                    class="shop-by-concern-add-to-cart-{{ ai_gen_id }}"
+                    data-product-id="{{ product.id }}"
+                    data-variant-id="{{ product.selected_or_first_available_variant.id | default: product.variants.first.id }}"
+                    {% unless product.available %}disabled{% endunless %}
+                  >
+                    {% if product.available %}
+                      Add to Cart
+                    {% else %}
+                      Sold Out
+                    {% endif %}
+                  </button>
+                </div>
+              </div>
             {% endfor %}
           {% endif %}
         </div>
@@ -572,115 +778,6 @@
   </div>
 </shop-by-concern-{{ ai_gen_id }}>
 
-{% comment %}
-  Inline product card template to avoid external snippet dependency
-{% endcomment %}
-{% capture product_card_template %}
-  <div class="shop-by-concern-card-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
-    <div class="shop-by-concern-image-wrapper-{{ ai_gen_id }}">
-      {% if product.featured_image %}
-        <img
-          class="shop-by-concern-image-{{ ai_gen_id }}"
-          src="{{ product.featured_image | image_url: width: 400 }}"
-          alt="{{ product.featured_image.alt | escape }}"
-          loading="lazy"
-          width="400"
-          height="400"
-          sizes="(max-width: 480px) 280px, (max-width: 768px) 300px, (max-width: 1024px) 350px, 400px"
-          srcset="{{ product.featured_image | image_url: width: 280 }} 280w,
-                  {{ product.featured_image | image_url: width: 300 }} 300w,
-                  {{ product.featured_image | image_url: width: 350 }} 350w,
-                  {{ product.featured_image | image_url: width: 400 }} 400w,
-                  {{ product.featured_image | image_url: width: 600 }} 600w,
-                  {{ product.featured_image | image_url: width: 800 }} 800w"
-        >
-      {% else %}
-        <div class="shop-by-concern-image-placeholder-{{ ai_gen_id }}">
-          {{ 'product-1' | placeholder_svg_tag }}
-        </div>
-      {% endif %}
-
-      {% if block.settings.show_badges and product.compare_at_price > product.price %}
-        <div class="shop-by-concern-badge-{{ ai_gen_id }}">
-          Sale
-        </div>
-      {% endif %}
-    </div>
-
-    <div class="shop-by-concern-content-{{ ai_gen_id }}">
-      <h3 class="shop-by-concern-product-title-{{ ai_gen_id }}">
-        <a href="{{ product.url }}">{{ product.title }}</a>
-      </h3>
-
-      <div class="shop-by-concern-price-wrapper-{{ ai_gen_id }}">
-        <span class="shop-by-concern-price-{{ ai_gen_id }}">{{ product.price | money }}</span>
-        {% if product.compare_at_price > product.price %}
-          <span class="shop-by-concern-compare-price-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
-        {% endif %}
-      </div>
-
-      {% if block.settings.show_ratings %}
-        <div class="shop-by-concern-rating-{{ ai_gen_id }}">
-          <div class="shop-by-concern-stars-{{ ai_gen_id }}">
-            {% for i in (1..5) %}
-              <svg class="shop-by-concern-star-{{ ai_gen_id }}" viewBox="0 0 24 24">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-              </svg>
-            {% endfor %}
-          </div>
-          <span class="shop-by-concern-rating-text-{{ ai_gen_id }}">(4.5)</span>
-        </div>
-      {% endif %}
-
-      {% if product.metafields.custom.attributes %}
-        <div class="shop-by-concern-attributes-{{ ai_gen_id }}">
-          {% assign attributes = product.metafields.custom.attributes | split: ',' %}
-          {% for attribute in attributes limit: 3 %}
-            <span class="shop-by-concern-attribute-{{ ai_gen_id }}">{{ attribute | strip }}</span>
-          {% endfor %}
-        </div>
-      {% endif %}
-
-      {% if block.settings.show_variant_dropdown and product.variants.size > 1 %}
-        <select class="shop-by-concern-variant-select-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
-          {% for variant in product.variants %}
-            <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %}>
-              {{ variant.title }} - {{ variant.price | money }}
-            </option>
-          {% endfor %}
-        </select>
-      {% endif %}
-
-      <div class="shop-by-concern-quantity-wrapper-{{ ai_gen_id }}">
-        <span class="shop-by-concern-quantity-label-{{ ai_gen_id }}">Qty:</span>
-        <div class="shop-by-concern-quantity-controls-{{ ai_gen_id }}">
-          <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="decrease" aria-label="Decrease quantity">−</button>
-          <input
-            type="number"
-            class="shop-by-concern-quantity-input-{{ ai_gen_id }}"
-            value="1"
-            min="1"
-            aria-label="Quantity"
-          >
-          <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="increase" aria-label="Increase quantity">+</button>
-        </div>
-      </div>
-
-      <button
-        class="shop-by-concern-add-to-cart-{{ ai_gen_id }}"
-        data-product-id="{{ product.id }}"
-        data-variant-id="{{ product.selected_or_first_available_variant.id | default: product.variants.first.id }}"
-        {% unless product.available %}disabled{% endunless %}
-      >
-        {% if product.available %}
-          Add to Cart
-        {% else %}
-          Sold Out
-        {% endif %}
-      </button>
-    </div>
-  </div>
-{% endcapture %}
 
 <script>
 (function() {
@@ -769,8 +866,8 @@
       e.preventDefault();
       const tab = e.target;
       const collectionHandle = tab.dataset.collectionHandle;
-      
-      if (collectionHandle === this.currentCollection) return;
+
+      if (!collectionHandle || collectionHandle === this.currentCollection) return;
 
       this.setActiveTab(tab);
       this.loadProducts(collectionHandle);
@@ -813,7 +910,7 @@
     }
 
     async loadProducts(collectionHandle, page = 1) {
-      if (this.isLoading) return;
+      if (this.isLoading || !collectionHandle) return;
 
       this.isLoading = true;
       this.currentCollection = collectionHandle;
@@ -823,10 +920,15 @@
 
       try {
         const response = await fetch(`/collections/${collectionHandle}.json`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
 
         let products = [];
-        if (data.collection && data.collection.products) {
+        if (data.collection && data.collection.products && data.collection.products.length > 0) {
           const startIndex = (page - 1) * this.productsPerPage;
           const endIndex = startIndex + this.productsPerPage;
           products = data.collection.products.slice(startIndex, endIndex);
@@ -876,7 +978,13 @@
     }
 
     createProductCard(product) {
-      const variant = product.variants && product.variants[0] ? product.variants[0] : { id: '', price: 0, available: false, title: 'Default Title' };
+      // Ensure product has required fields
+      if (!product || !product.id) {
+        console.error('Invalid product data:', product);
+        return '';
+      }
+
+      const variant = (product.variants && product.variants[0]) ? product.variants[0] : { id: '', price: 0, available: false, title: 'Default Title' };
       const hasMultipleVariants = product.variants && product.variants.length > 1;
       const showVariantDropdown = hasMultipleVariants && {{ block.settings.show_variant_dropdown | json }};
       const showBadges = {{ block.settings.show_badges | json }};
@@ -889,7 +997,7 @@
               `<img
                 class="shop-by-concern-image-{{ ai_gen_id }}"
                 src="${product.featured_image.src || product.featured_image}"
-                alt="${product.title}"
+                alt="${product.title || 'Product image'}"
                 loading="lazy"
                 width="400"
                 height="400"
@@ -907,7 +1015,7 @@
           </div>
           <div class="shop-by-concern-content-{{ ai_gen_id }}">
             <h3 class="shop-by-concern-product-title-{{ ai_gen_id }}">
-              <a href="/products/${product.handle}">${product.title}</a>
+              <a href="/products/${product.handle || '#'}">${product.title || 'Untitled Product'}</a>
             </h3>
             <div class="shop-by-concern-price-wrapper-{{ ai_gen_id }}">
               <span class="shop-by-concern-price-{{ ai_gen_id }}">${this.formatMoney(variant.price)}</span>
@@ -926,7 +1034,7 @@
             ${showVariantDropdown ? `
               <select class="shop-by-concern-variant-select-{{ ai_gen_id }}" data-product-id="${product.id}">
                 ${product.variants ? product.variants.map(v =>
-                  `<option value="${v.id}" ${v.id === variant.id ? 'selected' : ''}>${v.title} - ${this.formatMoney(v.price)}</option>`
+                  `<option value="${v.id}" ${v.id === variant.id ? 'selected' : ''}>${v.title || 'Variant'} - ${this.formatMoney(v.price)}</option>`
                 ).join('') : ''}
               </select>
             ` : ''}
