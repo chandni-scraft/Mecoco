@@ -1,0 +1,336 @@
+{{ 'product-offers.css' | asset_url | stylesheet_tag }}
+
+<div class="product-offers-section color-{{ section.settings.color_scheme }}" data-section-id="{{ section.id }}">
+  <div class="container">
+    {% if section.settings.heading != blank %}
+      <h2 class="offers-heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+    
+    <div class="offers-slider-wrapper">
+      <div class="offers-slider" data-offers-count="{{ section.blocks.size }}">
+        <div class="offers-track">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'offer' %}
+                <div class="offer-card" {{ block.shopify_attributes }}>
+                  <div class="offer-content">
+                    {% if block.settings.badge != blank %}
+                      <span class="offer-badge">{{ block.settings.badge }}</span>
+                    {% endif %}
+                    
+                    <h3 class="offer-title">{{ block.settings.title }}</h3>
+                    
+                    {% if block.settings.description != blank %}
+                      <p class="offer-description">{{ block.settings.description }}</p>
+                    {% endif %}
+                    
+                    <div class="offer-footer">
+                      {% if block.settings.show_code and block.settings.discount_code != blank %}
+                        <div class="offer-code-wrapper">
+                          <span class="code-label">Code:</span>
+                          <code class="discount-code" data-code="{{ block.settings.discount_code }}">{{ block.settings.discount_code }}</code>
+                          <button class="copy-code-btn" data-code="{{ block.settings.discount_code }}">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                              <path d="M10.667 5.333V3.733c0-.746 0-1.12-.145-1.405a1.333 1.333 0 0 0-.583-.583C9.653 1.6 9.28 1.6 8.533 1.6H4.267c-.747 0-1.12 0-1.406.145a1.333 1.333 0 0 0-.583.583c-.145.285-.145.658-.145 1.405v4.266c0 .747 0 1.12.145 1.406.128.254.329.455.583.583.285.145.659.145 1.405.145h1.6m2.4-4.8h4.267c.746 0 1.12 0 1.405.145.254.128.455.329.583.583.145.285.145.659.145 1.405v4.267c0 .746 0 1.12-.145 1.405a1.333 1.333 0 0 1-.583.583c-.285.145-.659.145-1.405.145H8.267c-.747 0-1.12 0-1.406-.145a1.333 1.333 0 0 1-.583-.583c-.145-.285-.145-.659-.145-1.405V8.267c0-.747 0-1.12.145-1.406a1.333 1.333 0 0 1 .583-.583c.285-.145.659-.145 1.405-.145Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="copy-text">Copy</span>
+                          </button>
+                        </div>
+                      {% endif %}
+                      
+                      {% if block.settings.cta_text != blank and block.settings.cta_link != blank %}
+                        <a href="{{ block.settings.cta_link }}" class="offer-cta-link">
+                          {{ block.settings.cta_text }}
+                        </a>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+      </div>
+      
+      {% if section.blocks.size > 1 and section.settings.show_navigation %}
+        <button class="offers-nav offers-nav--prev" aria-label="Previous offer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="offers-nav offers-nav--next" aria-label="Next offer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      {% endif %}
+    </div>
+    
+    {% if section.blocks.size > 1 and section.settings.show_dots %}
+      <div class="offers-dots">
+        {% for block in section.blocks %}
+          <button class="offers-dot{% if forloop.first %} active{% endif %}" aria-label="Go to offer {{ forloop.index }}"></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+    if (!section) return;
+    
+    const track = section.querySelector('.offers-track');
+    const cards = section.querySelectorAll('.offer-card');
+    const prevBtn = section.querySelector('.offers-nav--prev');
+    const nextBtn = section.querySelector('.offers-nav--next');
+    const dots = section.querySelectorAll('.offers-dot');
+    
+    if (cards.length <= 1) return;
+    
+    let currentIndex = 0;
+    const cardCount = cards.length;
+    
+    function updateSlider() {
+      const cardWidth = cards[0].offsetWidth;
+      const gap = 16; // Match CSS gap
+      const offset = currentIndex * (cardWidth + gap);
+      track.style.transform = `translateX(-${offset}px)`;
+      
+      // Update dots
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentIndex);
+      });
+    }
+    
+    function goToNext() {
+      currentIndex = (currentIndex + 1) % cardCount;
+      updateSlider();
+    }
+    
+    function goToPrev() {
+      currentIndex = (currentIndex - 1 + cardCount) % cardCount;
+      updateSlider();
+    }
+    
+    // Navigation
+    if (nextBtn) nextBtn.addEventListener('click', goToNext);
+    if (prevBtn) prevBtn.addEventListener('click', goToPrev);
+    
+    // Dots
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        currentIndex = index;
+        updateSlider();
+      });
+    });
+    
+    // Auto-rotate
+    {% if section.settings.auto_rotate %}
+      setInterval(goToNext, {{ section.settings.rotation_speed | times: 1000 }});
+    {% endif %}
+    
+    // Copy code functionality
+    const copyButtons = section.querySelectorAll('.copy-code-btn');
+    copyButtons.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const code = this.dataset.code;
+        const copyText = this.querySelector('.copy-text');
+        
+        navigator.clipboard.writeText(code).then(() => {
+          copyText.textContent = 'Copied!';
+          this.classList.add('copied');
+          
+          setTimeout(() => {
+            copyText.textContent = 'Copy';
+            this.classList.remove('copied');
+          }, 2000);
+        });
+      });
+    });
+    
+    // Touch/swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    track.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+    
+    track.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+    
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      const diff = touchStartX - touchEndX;
+      
+      if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+          goToNext();
+        } else {
+          goToPrev();
+        }
+      }
+    }
+    
+    // Resize handler
+    window.addEventListener('resize', updateSlider);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product Offers",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Special Offers"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show navigation arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show dots navigation",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "Auto-rotate offers",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "rotation_speed",
+      "label": "Rotation speed (seconds)",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        {
+          "value": "background-1",
+          "label": "Background 1"
+        },
+        {
+          "value": "background-2",
+          "label": "Background 2"
+        },
+        {
+          "value": "inverse",
+          "label": "Inverse"
+        }
+      ],
+      "default": "background-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "offer",
+      "name": "Offer",
+      "settings": [
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge text",
+          "default": "LIMITED TIME",
+          "info": "Small text shown above the title"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Offer title",
+          "default": "Get 10% Off"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Save on all orders above ₹500"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_code",
+          "label": "Show discount code",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "discount_code",
+          "label": "Discount code",
+          "default": "SAVE10",
+          "info": "Create matching discount in Shopify admin"
+        },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "Button text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "cta_link",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Offers",
+      "blocks": [
+        {
+          "type": "offer",
+          "settings": {
+            "badge": "FREE SHIPPING",
+            "title": "Free Delivery",
+            "description": "On all orders above ₹500",
+            "show_code": false,
+            "cta_text": "Shop Now",
+            "cta_link": "/collections/all"
+          }
+        },
+        {
+          "type": "offer",
+          "settings": {
+            "badge": "LIMITED TIME",
+            "title": "15% Off First Order",
+            "description": "New customers get extra savings",
+            "show_code": true,
+            "discount_code": "FIRST15",
+            "cta_text": "Use Code",
+            "cta_link": "/collections/all"
+          }
+        },
+        {
+          "type": "offer",
+          "settings": {
+            "badge": "BULK SAVE",
+            "title": "Buy 2 Get 10% Off",
+            "description": "Mix and match any products",
+            "show_code": true,
+            "discount_code": "BUNDLE10",
+            "cta_text": "Shop Bundle",
+            "cta_link": "/collections/all"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

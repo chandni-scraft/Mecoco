@@ -682,10 +682,60 @@
         "padding-block-start": 1,
         "padding-block-end": 1
       }
+    },
+    "product_offers_section": {
+      "type": "product-offers",
+      "blocks": {
+        "offer_1": {
+          "type": "offer",
+          "settings": {
+            "badge": "FREE SHIPPING",
+            "title": "Free Delivery",
+            "description": "On all orders above ₹500",
+            "show_code": false,
+            "cta_text": "Shop Now",
+            "cta_link": "/collections/all"
+          }
+        },
+        "offer_2": {
+          "type": "offer",
+          "settings": {
+            "badge": "LIMITED TIME",
+            "title": "15% Off First Order",
+            "description": "New customers get extra savings",
+            "show_code": true,
+            "discount_code": "FIRST15",
+            "cta_text": "Use Code",
+            "cta_link": "/collections/all"
+          }
+        },
+        "offer_3": {
+          "type": "offer",
+          "settings": {
+            "badge": "BULK SAVE",
+            "title": "Buy 2 Get 10% Off",
+            "description": "Mix and match any products",
+            "show_code": true,
+            "discount_code": "BUNDLE10",
+            "cta_text": "Shop Bundle",
+            "cta_link": "/collections/all"
+          }
+        }
+      },
+      "block_order": ["offer_1", "offer_2", "offer_3"],
+      "settings": {
+        "heading": "Special Offers",
+        "show_navigation": true,
+        "show_dots": true,
+        "auto_rotate": false,
+        "rotation_speed": 5,
+        "color_scheme": "background-1"
+      }
     }
   },
   "order": [
     "main",
+    "product_offers_section",
     "product_recommendations_iA6pyd"
   ]
 }
