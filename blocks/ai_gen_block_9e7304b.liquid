@@ -581,9 +581,9 @@
                 </h3>
 
                 <div class="shop-by-concern-price-wrapper-{{ ai_gen_id }}">
-                  <span class="shop-by-concern-price-{{ ai_gen_id }}">{{ product.price | money }}</span>
+                  <span class="shop-by-concern-price-{{ ai_gen_id }}">RS {{ product.price | money_without_currency | replace: '.00', '.00' }}</span>
                   {% if product.compare_at_price > product.price %}
-                    <span class="shop-by-concern-compare-price-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
+                    <span class="shop-by-concern-compare-price-{{ ai_gen_id }}">RS {{ product.compare_at_price | money_without_currency | replace: '.00', '.00' }}</span>
                   {% endif %}
                 </div>
 
@@ -698,9 +698,9 @@
                   </h3>
 
                   <div class="shop-by-concern-price-wrapper-{{ ai_gen_id }}">
-                    <span class="shop-by-concern-price-{{ ai_gen_id }}">{{ product.price | money }}</span>
+                    <span class="shop-by-concern-price-{{ ai_gen_id }}">RS {{ product.price | money_without_currency | replace: '.00', '.00' }}</span>
                     {% if product.compare_at_price > product.price %}
-                      <span class="shop-by-concern-compare-price-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
+                      <span class="shop-by-concern-compare-price-{{ ai_gen_id }}">RS {{ product.compare_at_price | money_without_currency | replace: '.00', '.00' }}</span>
                     {% endif %}
                   </div>
 
@@ -1316,16 +1316,16 @@
     formatMoney(price) {
       // Handle both string and number inputs
       const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
-      // Format with RS symbol for Indian Rupees
+      // Format with RS symbol for Indian Rupees (with space and 2 decimals)
       const formatted = new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
       }).format(numericPrice);
 
-      // Replace ₹ symbol with RS
-      return formatted.replace('₹', 'RS');
+      // Replace ₹ symbol with RS (with space)
+      return formatted.replace('₹', 'RS ');
     }
 
     handleQuantityChange(e) {
