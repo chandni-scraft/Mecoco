@@ -184,7 +184,15 @@
                 "offer_5_label": "B2 G3",
                 "offer_5_code": "b2g3",
                 "offer_6_label": "free shipping",
-                "offer_6_code": "fs"
+                "offer_6_code": "fs",
+                "offer_7_label": "FLASH SALE",
+                "offer_7_code": "FLASH24",
+                "offer_8_label": "STUDENT DISCOUNT",
+                "offer_8_code": "STU20",
+                "offer_9_label": "WEEKEND SPECIAL",
+                "offer_9_code": "WKND30",
+                "offer_10_label": "CLEARANCE",
+                "offer_10_code": "CLEAR50"
               },
               "blocks": {}
             },
