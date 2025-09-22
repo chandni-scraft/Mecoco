@@ -536,7 +536,14 @@
       <div class="shop-by-concern-grid-{{ ai_gen_id }}" id="products-grid-{{ ai_gen_id }}">
         {% assign first_collection = block.settings.collection_1 %}
         {% if first_collection != blank %}
-          {% for product in first_collection.products limit: block.settings.products_per_page %}
+          {% assign first_collection_products = first_collection.products %}
+          <!-- Debug: First collection info -->
+          <div style="display: none;">
+            First collection: {{ first_collection.title | default: 'No title' }}<br>
+            Products count: {{ first_collection_products | size }}<br>
+            First product: {{ first_collection_products.first.title | default: 'No products' }}
+          </div>
+          {% for product in first_collection_products limit: block.settings.products_per_page %}
             <div class="shop-by-concern-card-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
               <div class="shop-by-concern-image-wrapper-{{ ai_gen_id }}">
                 {% if product.featured_image %}
@@ -653,7 +660,7 @@
         </button>
         <div class="shop-by-concern-carousel-track-{{ ai_gen_id }}" id="carousel-track-{{ ai_gen_id }}">
           {% if first_collection != blank %}
-            {% for product in first_collection.products limit: block.settings.products_per_page %}
+            {% for product in first_collection_products limit: block.settings.products_per_page %}
               <div class="shop-by-concern-card-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
                 <div class="shop-by-concern-image-wrapper-{{ ai_gen_id }}">
                   {% if product.featured_image %}
@@ -1192,13 +1199,25 @@
         handle = product.handle;
         available = firstVariant ? firstVariant.availableForSale : true;
       } else {
-        // Fallback
-        variant = { id: '', price: 0, available: false, title: 'Default Title' };
-        featuredImage = null;
-        price = 0;
-        comparePrice = null;
-        handle = '#';
-        available = false;
+        // Fallback - try to extract basic info
+        variant = { id: '', price: product.price || 0, available: product.available !== false, title: 'Default Title' };
+        featuredImage = product.featured_image || product.featuredImage || product.image;
+        price = variant.price;
+        comparePrice = product.compare_at_price || product.compareAtPrice || null;
+        handle = product.handle || '#';
+        available = variant.available;
+      }
+
+      // Ensure featuredImage is properly formatted
+      if (featuredImage && typeof featuredImage === 'object' && !featuredImage.src && !featuredImage.url) {
+        // If it's a Shopify image object without src/url, try to construct URL
+        if (featuredImage.originalSrc) {
+          featuredImage = featuredImage.originalSrc;
+        } else if (featuredImage.url) {
+          featuredImage = featuredImage.url;
+        } else {
+          featuredImage = null;
+        }
       }
 
       const hasMultipleVariants = product.variants && (
@@ -1215,11 +1234,13 @@
             ${featuredImage ?
               `<img
                 class="shop-by-concern-image-{{ ai_gen_id }}"
-                src="${typeof featuredImage === 'string' ? featuredImage : featuredImage.url || featuredImage.src || featuredImage}"
+                src="${typeof featuredImage === 'string' ? featuredImage : (featuredImage.src || featuredImage.url || featuredImage.originalSrc || featuredImage)}"
                 alt="${product.title || 'Product image'}"
                 loading="lazy"
                 width="400"
                 height="400"
+                sizes="(max-width: 480px) 280px, (max-width: 768px) 300px, (max-width: 1024px) 350px, 400px"
+                srcset="${typeof featuredImage === 'string' ? featuredImage : (featuredImage.src || featuredImage.url || featuredImage.originalSrc || featuredImage)} 400w"
               >` :
               `<div class="shop-by-concern-image-placeholder-{{ ai_gen_id }}">
                 <svg viewBox="0 0 525 525" xmlns="http://www.w3.org/2000/svg">
