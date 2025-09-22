@@ -9,6 +9,7 @@
     padding: 40px 0;
     background-color: rgb(var(--color-background));
     color: rgb(var(--color-foreground));
+    overflow-x: hidden; /* prevent horizontal scroll on mobile */
   }
 
   .shop-by-concern-container-{{ ai_gen_id }} {
@@ -374,6 +375,7 @@
   .shop-by-concern-carousel-{{ ai_gen_id }} {
     position: relative;
     overflow: hidden;
+    width: 100%;
   }
 
   .shop-by-concern-carousel-track-{{ ai_gen_id }} {
@@ -383,7 +385,7 @@
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    padding-bottom: 10px;
+    padding: 0 16px 10px; /* add side padding so cards never exceed viewport */
     overscroll-behavior-x: contain; /* prevent page from scrolling horizontally */
   }
 
@@ -393,6 +395,7 @@
 
   .shop-by-concern-carousel-track-{{ ai_gen_id }} .shop-by-concern-card-{{ ai_gen_id }} {
     flex: 0 0 280px;
+    max-width: 100%;
     scroll-snap-align: start;
   }
 
@@ -477,6 +480,15 @@
 
     .shop-by-concern-carousel-next-{{ ai_gen_id }} {
       right: 8px;
+    }
+    /* Make carousel items fit within viewport minus padding */
+    .shop-by-concern-carousel-track-{{ ai_gen_id }} .shop-by-concern-card-{{ ai_gen_id }} {
+      flex: 0 0 calc(100% - 32px);
+      max-width: calc(100% - 32px);
+    }
+
+    .shop-by-concern-image-wrapper-{{ ai_gen_id }} {
+      width: 100%;
     }
   }
 
