@@ -163,6 +163,7 @@
                 "weight_metafield": "custom.weight_grams",
                 "weight_unit": "g",
                 "price_per_unit": "g",
+                "use_simple_weight": true,
                 "padding-block-start": 12,
                 "padding-block-end": 24,
                 "padding-inline-start": 0,
