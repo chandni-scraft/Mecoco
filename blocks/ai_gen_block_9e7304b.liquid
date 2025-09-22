@@ -14,7 +14,9 @@
   .shop-by-concern-container-{{ ai_gen_id }} {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    width: 100%;
   }
 
   .shop-by-concern-header-{{ ai_gen_id }} {
@@ -82,6 +84,8 @@
   .shop-by-concern-products-{{ ai_gen_id }} {
     position: relative;
     min-height: 400px;
+    width: 100%;
+    overflow: hidden;
   }
 
   .shop-by-concern-grid-{{ ai_gen_id }} {
@@ -102,6 +106,8 @@
     overflow: hidden;
     transition: all 0.3s ease;
     position: relative;
+    width: 100%;
+    box-sizing: border-box;
     {% if block.settings.card_shadow %}
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     {% endif %}
@@ -540,7 +546,7 @@
           <div style="display: none;" id="collection-debug-{{ ai_gen_id }}">
             First collection: {{ first_collection.title | default: 'No title' }}<br>
             Products count: {{ first_collection_products | size }}<br>
-            First product: {{ first_collection_products.first.title | default: 'No products' }}<br>
+            First product: {{ first_collection_products.first.title | default: 'N/A' }}<br>
             Collection handle: {{ first_collection.handle | default: 'No handle' }}
           </div>
           {% for product in first_collection_products limit: block.settings.products_per_page %}
@@ -781,9 +787,6 @@
 
       <div class="shop-by-concern-empty-{{ ai_gen_id }}" id="empty-{{ ai_gen_id }}" style="display: none;">
         <p>No products found in this category.</p>
-        <p style="font-size: 12px; color: rgba(0,0,0,0.6); margin-top: 8px;">
-          This collection appears to be empty or may not exist. Please check the collection settings in your Shopify admin.
-        </p>
       </div>
 
       {% if block.settings.show_load_more %}
@@ -1077,13 +1080,9 @@
           products = allProducts.slice(startIndex, endIndex);
           console.log('LoadProducts: Products extracted from GraphQL response', { productsLength: products.length, startIndex, endIndex, totalProducts: allProducts.length });
         } else {
-          console.log('LoadProducts: No products found in data', {
-            data: data,
+          console.log('LoadProducts: No products found in collection data', {
+            collectionHandle: collectionHandle,
             hasData: !!data,
-            hasProducts: !!(data && data.products),
-            hasCollection: !!(data && data.collection),
-            hasGraphQL: !!(data && data.data && data.data.collection),
-            collectionProductsLength: data && data.collection ? data.collection.products.length : 'N/A',
             productsLength: data && data.products ? data.products.length : 'N/A'
           });
 
@@ -1102,7 +1101,7 @@
 
                 // If collection exists but products_count is 0, the collection is truly empty
                 if (matchingCollection.products_count === 0) {
-                  console.log('LoadProducts: Collection exists but has no products');
+                  console.log('LoadProducts: Collection is empty:', matchingCollection.title);
                 }
               }
             }
@@ -1387,9 +1386,28 @@
         if (response.ok) {
           this.showSuccessState(button);
           this.showToast();
-          
-          // Trigger cart update event
+
+          // Trigger multiple cart update events for better compatibility
           document.dispatchEvent(new CustomEvent('cart:updated'));
+          document.dispatchEvent(new CustomEvent('cart:refresh'));
+          document.dispatchEvent(new CustomEvent('cart-update'));
+
+          // Force cart drawer refresh if it exists
+          const cartDrawer = document.querySelector('[data-cart-drawer], .cart-drawer, #cart-drawer');
+          if (cartDrawer) {
+            // Try to trigger cart drawer update
+            if (typeof cartDrawer.updateCart === 'function') {
+              cartDrawer.updateCart();
+            } else if (typeof cartDrawer.refresh === 'function') {
+              cartDrawer.refresh();
+            } else if (cartDrawer.dataset.cartDrawer) {
+              // Trigger click on cart icon to refresh drawer
+              const cartIcon = document.querySelector('.cart-icon, [data-cart-icon]');
+              if (cartIcon) {
+                cartIcon.click();
+              }
+            }
+          }
         } else {
           throw new Error('Failed to add to cart');
         }
