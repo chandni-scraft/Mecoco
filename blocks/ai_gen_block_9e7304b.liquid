@@ -978,11 +978,44 @@
           try {
             console.log('LoadProducts: Using collection ID for API call', collectionId);
             response = await fetch(`/collections/${collectionId}/products.json?limit=50`);
+
             if (response.ok) {
               data = await response.json();
-              console.log('LoadProducts: Products API data received using collection ID', { data: data, products: data.products });
+              console.log('LoadProducts: Products API data received using collection ID', {
+                data: data,
+                products: data.products,
+                productsLength: data.products ? data.products.length : 'N/A',
+                fullData: JSON.stringify(data, null, 2)
+              });
+
+              // Check if products exist but are in a different structure
+              if (data.products && data.products.length === 0) {
+                console.log('LoadProducts: Products array is empty, checking for alternative data structures');
+
+                // Try to get products from the collection itself
+                try {
+                  const collectionResponse = await fetch(`/collections/${collectionId}.json`);
+                  if (collectionResponse.ok) {
+                    const collectionData = await collectionResponse.json();
+                    console.log('LoadProducts: Collection data received', {
+                      collection: collectionData.collection,
+                      collectionProducts: collectionData.collection ? collectionData.collection.products : 'N/A'
+                    });
+
+                    // If collection has products, use them
+                    if (collectionData.collection && collectionData.collection.products && collectionData.collection.products.length > 0) {
+                      data = { products: collectionData.collection.products };
+                      console.log('LoadProducts: Using products from collection data');
+                    }
+                  }
+                } catch (collectionError) {
+                  console.log('LoadProducts: Could not fetch collection data', collectionError);
+                }
+              }
             } else {
               console.log('LoadProducts: Products API failed with status', response.status);
+              const responseText = await response.text();
+              console.log('LoadProducts: Response text when status not ok', responseText);
             }
           } catch (error) {
             console.log('LoadProducts: Collection ID API call failed', error);
@@ -1044,6 +1077,7 @@
           dataType: data.products ? 'direct_products' : data.collection ? 'collection' : 'unknown',
           hasProducts: !!(data && data.products && data.products.length > 0),
           hasCollectionProducts: !!(data && data.collection && data.collection.products && data.collection.products.length > 0),
+          hasGraphQLProducts: !!(data && data.data && data.data.collection && data.data.collection.products),
           productsCount: data.products ? data.products.length : (data.collection ? data.collection.products.length : 0)
         });
 
@@ -1057,12 +1091,20 @@
           const endIndex = startIndex + this.productsPerPage;
           products = data.collection.products.slice(startIndex, endIndex);
           console.log('LoadProducts: Products extracted from collection response', { productsLength: products.length, startIndex, endIndex, totalProducts: data.collection.products.length });
+        } else if (data && data.data && data.data.collection && data.data.collection.products && data.data.collection.products.edges) {
+          // Handle GraphQL response format
+          const allProducts = data.data.collection.products.edges.map(edge => edge.node);
+          const startIndex = (page - 1) * this.productsPerPage;
+          const endIndex = startIndex + this.productsPerPage;
+          products = allProducts.slice(startIndex, endIndex);
+          console.log('LoadProducts: Products extracted from GraphQL response', { productsLength: products.length, startIndex, endIndex, totalProducts: allProducts.length });
         } else {
           console.log('LoadProducts: No products found in data', {
             data: data,
             hasData: !!data,
             hasProducts: !!(data && data.products),
             hasCollection: !!(data && data.collection),
+            hasGraphQL: !!(data && data.data && data.data.collection),
             collectionProductsLength: data && data.collection ? data.collection.products.length : 'N/A',
             productsLength: data && data.products ? data.products.length : 'N/A'
           });
@@ -1084,7 +1126,110 @@
                 if (searchResponse.ok) {
                   const searchHtml = await searchResponse.text();
                   console.log('LoadProducts: Search response received, but this is HTML, not JSON');
-                  // Note: This returns HTML, not JSON, so we can't parse products from it easily
+
+                  // Try to extract product information from the HTML
+                  const parser = new DOMParser();
+                  const doc = parser.parseFromString(searchHtml, 'text/html');
+                  const productElements = doc.querySelectorAll('[data-product-id]');
+
+                  if (productElements.length > 0) {
+                    console.log('LoadProducts: Found products in search HTML', productElements.length);
+                    // This is a complex approach - for now just log that we found products
+                    // In a real implementation, we would need to parse the HTML more carefully
+                  }
+                }
+
+                // Alternative: Try GraphQL API if available
+                try {
+                  console.log('LoadProducts: Trying GraphQL API as last resort');
+                  const graphqlResponse = await fetch('/api/graphql', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      query: `
+                        query GetCollectionProducts($id: ID!) {
+                          collection(id: $id) {
+                            id
+                            title
+                            products(first: 20) {
+                              edges {
+                                node {
+                                  id
+                                  title
+                                  handle
+                                  featuredImage {
+                                    url
+                                    altText
+                                  }
+                                  priceRange {
+                                    minVariantPrice {
+                                      amount
+                                      currencyCode
+                                    }
+                                  }
+                                  variants(first: 1) {
+                                    edges {
+                                      node {
+                                        id
+                                        price
+                                        availableForSale
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      `,
+                      variables: {
+                        id: `gid://shopify/Collection/${matchingCollection.id}`
+                      }
+                    })
+                  });
+
+                  if (graphqlResponse.ok) {
+                    const graphqlData = await graphqlResponse.json();
+                    console.log('LoadProducts: GraphQL response received', graphqlData);
+
+                    if (graphqlData.data && graphqlData.data.collection && graphqlData.data.collection.products) {
+                      const products = graphqlData.data.collection.products.edges.map(edge => edge.node);
+                      console.log('LoadProducts: Found products via GraphQL', products.length);
+
+                      data = { products: products };
+                      console.log('LoadProducts: Using products from GraphQL data');
+                    } else {
+                      console.log('LoadProducts: GraphQL response has no products', graphqlData);
+                    }
+                  } else {
+                    console.log('LoadProducts: GraphQL API returned non-ok status', graphqlResponse.status);
+                    const errorText = await graphqlResponse.text();
+                    console.log('LoadProducts: GraphQL error response', errorText);
+                  }
+                } catch (graphqlError) {
+                  console.log('LoadProducts: GraphQL API failed', graphqlError);
+                }
+
+                // Ultimate fallback: Try using the Shopify AJAX API
+                if (!data || !data.products || data.products.length === 0) {
+                  try {
+                    console.log('LoadProducts: Trying Shopify AJAX API as ultimate fallback');
+                    const ajaxResponse = await fetch('/collections/' + matchingCollection.handle + '/products.json?limit=20');
+
+                    if (ajaxResponse.ok) {
+                      const ajaxData = await ajaxResponse.json();
+                      console.log('LoadProducts: AJAX API response received', ajaxData);
+
+                      if (ajaxData.products && ajaxData.products.length > 0) {
+                        data = ajaxData;
+                        console.log('LoadProducts: Found products via AJAX API', ajaxData.products.length);
+                      }
+                    }
+                  } catch (ajaxError) {
+                    console.log('LoadProducts: AJAX API also failed', ajaxError);
+                  }
                 }
               } catch (error) {
                 console.log('LoadProducts: Last resort search failed', error);
@@ -1162,8 +1307,40 @@
         return '';
       }
 
-      const variant = (product.variants && product.variants[0]) ? product.variants[0] : { id: '', price: 0, available: false, title: 'Default Title' };
-      const hasMultipleVariants = product.variants && product.variants.length > 1;
+      // Handle different product data formats (REST vs GraphQL)
+      let variant, featuredImage, price, comparePrice, handle, available;
+
+      if (product.variants && product.variants[0]) {
+        // REST API format
+        variant = product.variants[0];
+        featuredImage = product.featured_image;
+        price = variant.price;
+        comparePrice = product.compare_at_price;
+        handle = product.handle;
+        available = variant.available;
+      } else if (product.priceRange && product.priceRange.minVariantPrice) {
+        // GraphQL format
+        const firstVariant = product.variants && product.variants.edges && product.variants.edges[0] ? product.variants.edges[0].node : null;
+        variant = firstVariant;
+        featuredImage = product.featuredImage;
+        price = firstVariant ? firstVariant.price : product.priceRange.minVariantPrice.amount;
+        comparePrice = null; // GraphQL doesn't provide compare price easily
+        handle = product.handle;
+        available = firstVariant ? firstVariant.availableForSale : true;
+      } else {
+        // Fallback
+        variant = { id: '', price: 0, available: false, title: 'Default Title' };
+        featuredImage = null;
+        price = 0;
+        comparePrice = null;
+        handle = '#';
+        available = false;
+      }
+
+      const hasMultipleVariants = product.variants && (
+        Array.isArray(product.variants) ? product.variants.length > 1 :
+        product.variants.edges ? product.variants.edges.length > 1 : false
+      );
       const showVariantDropdown = hasMultipleVariants && {{ block.settings.show_variant_dropdown | json }};
       const showBadges = {{ block.settings.show_badges | json }};
       const showRatings = {{ block.settings.show_ratings | json }};
@@ -1171,10 +1348,10 @@
       return `
         <div class="shop-by-concern-card-{{ ai_gen_id }}" data-product-id="${product.id}">
           <div class="shop-by-concern-image-wrapper-{{ ai_gen_id }}">
-            ${product.featured_image ? 
+            ${featuredImage ?
               `<img
                 class="shop-by-concern-image-{{ ai_gen_id }}"
-                src="${product.featured_image.src || product.featured_image}"
+                src="${typeof featuredImage === 'string' ? featuredImage : featuredImage.url || featuredImage.src || featuredImage}"
                 alt="${product.title || 'Product image'}"
                 loading="lazy"
                 width="400"
@@ -1187,18 +1364,18 @@
                 </svg>
               </div>`
             }
-            ${showBadges && product.compare_at_price && product.compare_at_price > variant.price ?
+            ${showBadges && comparePrice && comparePrice > price ?
               '<div class="shop-by-concern-badge-{{ ai_gen_id }}">Sale</div>' : ''
             }
           </div>
           <div class="shop-by-concern-content-{{ ai_gen_id }}">
             <h3 class="shop-by-concern-product-title-{{ ai_gen_id }}">
-              <a href="/products/${product.handle || '#'}">${product.title || 'Untitled Product'}</a>
+              <a href="/products/${handle || '#'}">${product.title || 'Untitled Product'}</a>
             </h3>
             <div class="shop-by-concern-price-wrapper-{{ ai_gen_id }}">
-              <span class="shop-by-concern-price-{{ ai_gen_id }}">${this.formatMoney(variant.price)}</span>
-              ${product.compare_at_price && product.compare_at_price > variant.price ?
-                `<span class="shop-by-concern-compare-price-{{ ai_gen_id }}">${this.formatMoney(product.compare_at_price)}</span>` : ''
+              <span class="shop-by-concern-price-{{ ai_gen_id }}">${this.formatMoney(price)}</span>
+              ${comparePrice && comparePrice > price ?
+                `<span class="shop-by-concern-compare-price-{{ ai_gen_id }}">${this.formatMoney(comparePrice)}</span>` : ''
               }
             </div>
             ${showRatings ? `
@@ -1211,9 +1388,12 @@
             ` : ''}
             ${showVariantDropdown ? `
               <select class="shop-by-concern-variant-select-{{ ai_gen_id }}" data-product-id="${product.id}">
-                ${product.variants ? product.variants.map(v =>
-                  `<option value="${v.id}" ${v.id === variant.id ? 'selected' : ''}>${v.title || 'Variant'} - ${this.formatMoney(v.price)}</option>`
-                ).join('') : ''}
+                ${product.variants ?
+                  (Array.isArray(product.variants) ?
+                    product.variants.map(v => `<option value="${v.id}" ${v.id === variant.id ? 'selected' : ''}>${v.title || 'Variant'} - ${this.formatMoney(v.price)}</option>`).join('') :
+                    product.variants.edges.map(edge => `<option value="${edge.node.id}" ${edge.node.id === variant.id ? 'selected' : ''}>${edge.node.title || 'Variant'} - ${this.formatMoney(edge.node.price)}</option>`).join('')
+                  ) : ''
+                }
               </select>
             ` : ''}
             <div class="shop-by-concern-quantity-wrapper-{{ ai_gen_id }}">
@@ -1228,9 +1408,9 @@
               class="shop-by-concern-add-to-cart-{{ ai_gen_id }}"
               data-product-id="${product.id}"
               data-variant-id="${variant.id || ''}"
-              ${!variant.available ? 'disabled' : ''}
+              ${!available ? 'disabled' : ''}
             >
-              ${variant.available ? 'Add to Cart' : 'Sold Out'}
+              ${available ? 'Add to Cart' : 'Sold Out'}
             </button>
           </div>
         </div>
