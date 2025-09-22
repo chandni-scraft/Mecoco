@@ -523,7 +523,7 @@
       <div class="shop-by-concern-grid-{{ ai_gen_id }}" id="products-grid-{{ ai_gen_id }}">
         {% assign first_collection = block.settings.collection_1 %}
         {% if first_collection != blank %}
-          {% for product in first_collection.products limit: block.settings.products_per_page %}
+          {% for product in collections[first_collection.handle].products limit: block.settings.products_per_page %}
             {% render 'shop-by-concern-product-card', product: product, block: block, ai_gen_id: ai_gen_id %}
           {% endfor %}
         {% endif %}
@@ -537,7 +537,7 @@
         </button>
         <div class="shop-by-concern-carousel-track-{{ ai_gen_id }}" id="carousel-track-{{ ai_gen_id }}">
           {% if first_collection != blank %}
-            {% for product in first_collection.products limit: block.settings.products_per_page %}
+            {% for product in collections[first_collection.handle].products limit: block.settings.products_per_page %}
               {% render 'shop-by-concern-product-card', product: product, block: block, ai_gen_id: ai_gen_id %}
             {% endfor %}
           {% endif %}
@@ -669,7 +669,7 @@
       <button
         class="shop-by-concern-add-to-cart-{{ ai_gen_id }}"
         data-product-id="{{ product.id }}"
-        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+        data-variant-id="{{ product.selected_or_first_available_variant.id | default: product.variants.first.id }}"
         {% unless product.available %}disabled{% endunless %}
       >
         {% if product.available %}
@@ -822,16 +822,23 @@
       this.showLoading();
 
       try {
-        const response = await fetch(`/collections/${collectionHandle}/products.json?limit=${this.productsPerPage}&page=${page}`);
+        const response = await fetch(`/collections/${collectionHandle}.json`);
         const data = await response.json();
 
-        if (page === 1) {
-          this.renderProducts(data.products);
-        } else {
-          this.appendProducts(data.products);
+        let products = [];
+        if (data.collection && data.collection.products) {
+          const startIndex = (page - 1) * this.productsPerPage;
+          const endIndex = startIndex + this.productsPerPage;
+          products = data.collection.products.slice(startIndex, endIndex);
         }
 
-        this.updateLoadMoreButton(data.products.length === this.productsPerPage);
+        if (page === 1) {
+          this.renderProducts(products);
+        } else {
+          this.appendProducts(products);
+        }
+
+        this.updateLoadMoreButton(products.length === this.productsPerPage);
       } catch (error) {
         console.error('Error loading products:', error);
         this.showEmpty();
@@ -869,8 +876,8 @@
     }
 
     createProductCard(product) {
-      const variant = product.variants[0];
-      const hasMultipleVariants = product.variants.length > 1;
+      const variant = product.variants && product.variants[0] ? product.variants[0] : { id: '', price: 0, available: false, title: 'Default Title' };
+      const hasMultipleVariants = product.variants && product.variants.length > 1;
       const showVariantDropdown = hasMultipleVariants && {{ block.settings.show_variant_dropdown | json }};
       const showBadges = {{ block.settings.show_badges | json }};
       const showRatings = {{ block.settings.show_ratings | json }};
@@ -878,10 +885,10 @@
       return `
         <div class="shop-by-concern-card-{{ ai_gen_id }}" data-product-id="${product.id}">
           <div class="shop-by-concern-image-wrapper-{{ ai_gen_id }}">
-            ${product.featured_image ? 
+            ${product.featured_image ?
               `<img
                 class="shop-by-concern-image-{{ ai_gen_id }}"
-                src="${product.featured_image}"
+                src="${product.featured_image.src || product.featured_image}"
                 alt="${product.title}"
                 loading="lazy"
                 width="400"
@@ -894,7 +901,7 @@
                 </svg>
               </div>`
             }
-            ${showBadges && product.compare_at_price > product.price ? 
+            ${showBadges && product.compare_at_price && product.compare_at_price > variant.price ?
               '<div class="shop-by-concern-badge-{{ ai_gen_id }}">Sale</div>' : ''
             }
           </div>
@@ -904,7 +911,7 @@
             </h3>
             <div class="shop-by-concern-price-wrapper-{{ ai_gen_id }}">
               <span class="shop-by-concern-price-{{ ai_gen_id }}">${this.formatMoney(variant.price)}</span>
-              ${product.compare_at_price > product.price ? 
+              ${product.compare_at_price && product.compare_at_price > variant.price ?
                 `<span class="shop-by-concern-compare-price-{{ ai_gen_id }}">${this.formatMoney(product.compare_at_price)}</span>` : ''
               }
             </div>
@@ -918,9 +925,9 @@
             ` : ''}
             ${showVariantDropdown ? `
               <select class="shop-by-concern-variant-select-{{ ai_gen_id }}" data-product-id="${product.id}">
-                ${product.variants.map(v => 
-                  `<option value="${v.id}">${v.title} - ${this.formatMoney(v.price)}</option>`
-                ).join('')}
+                ${product.variants ? product.variants.map(v =>
+                  `<option value="${v.id}" ${v.id === variant.id ? 'selected' : ''}>${v.title} - ${this.formatMoney(v.price)}</option>`
+                ).join('') : ''}
               </select>
             ` : ''}
             <div class="shop-by-concern-quantity-wrapper-{{ ai_gen_id }}">
@@ -934,7 +941,7 @@
             <button
               class="shop-by-concern-add-to-cart-{{ ai_gen_id }}"
               data-product-id="${product.id}"
-              data-variant-id="${variant.id}"
+              data-variant-id="${variant.id || ''}"
               ${!variant.available ? 'disabled' : ''}
             >
               ${variant.available ? 'Add to Cart' : 'Sold Out'}
@@ -944,11 +951,13 @@
       `;
     }
 
-    formatMoney(cents) {
+    formatMoney(price) {
+      // Handle both string and number inputs
+      const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD'
-      }).format(cents / 100);
+      }).format(numericPrice);
     }
 
     handleQuantityChange(e) {
@@ -966,8 +975,8 @@
     }
 
     validateQuantityInput(input) {
-      let value = parseInt(input.value) || 1;
-      if (value < 1) value = 1;
+      let value = parseInt(input.value);
+      if (isNaN(value) || value < 1) value = 1;
       input.value = value;
     }
 
@@ -975,19 +984,22 @@
       const select = e.target;
       const card = select.closest('.shop-by-concern-card-{{ ai_gen_id }}');
       const addToCartBtn = card.querySelector('.shop-by-concern-add-to-cart-{{ ai_gen_id }}');
-      
-      addToCartBtn.dataset.variantId = select.value;
+      const variantId = select.value;
+
+      if (addToCartBtn) {
+        addToCartBtn.dataset.variantId = variantId;
+      }
     }
 
     async handleAddToCart(e) {
       e.preventDefault();
-      
+
       const button = e.target;
       const card = button.closest('.shop-by-concern-card-{{ ai_gen_id }}');
       const variantId = button.dataset.variantId;
       const quantity = parseInt(card.querySelector('.shop-by-concern-quantity-input-{{ ai_gen_id }}').value) || 1;
 
-      if (button.disabled) return;
+      if (button.disabled || !variantId) return;
 
       button.disabled = true;
       button.textContent = 'Adding...';
@@ -1007,7 +1019,7 @@
         if (response.ok) {
           this.showSuccessState(button);
           this.showToast();
-          
+
           // Trigger cart update event
           document.dispatchEvent(new CustomEvent('cart:updated'));
         } else {
