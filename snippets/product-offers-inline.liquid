@@ -1,56 +1,44 @@
-{% comment %} Fetch the product offers section data {% endcomment %}
-{% assign offers_section = nil %}
-{% for section in sections %}
-  {% if section.type == 'product-offers' %}
-    {% assign offers_section = section %}
-    {% break %}
-  {% endif %}
-{% endfor %}
-
-{% comment %} If no section found, try to get it from the template {% endcomment %}
-{% if offers_section == nil %}
-  {% assign offers_section = sections.product_offers_section %}
-{% endif %}
-
-{% if offers_section %}
 {{ 'product-offers.css' | asset_url | stylesheet_tag }}
 
+{% comment %} Hardcoded offers data from product.json {% endcomment %}
 <style>
   .product-offers-inline {
-    --offers-bg: {{ offers_section.settings.background_color | default: '#e8f5e9' }};
-    --offers-text: {{ offers_section.settings.text_color | default: '#1b5e20' }};
-    --offers-indicator: {{ offers_section.settings.indicator_color | default: '#4caf50' }};
-    --offers-border: {{ offers_section.settings.background_color | color_mix: '#000000', 10 | default: '#c8e6c9' }};
+    --offers-bg: #ffffff;
+    --offers-text: #a42325;
+    --offers-indicator: #e6e6e6;
+    --offers-border: #f0f0f0;
   }
 </style>
 
 <div class="product-offers-bar product-offers-inline" data-offers-inline>
   <div class="offers-header">
     <span class="offers-indicator"></span>
-    <span class="offers-title">{{ offers_section.settings.heading | default: 'Special Offers' }}</span>
+    <span class="offers-title">Special Offers</span>
   </div>
   
   <div class="offers-container">
     <div class="offers-scroll-wrapper">
       <div class="offers-list">
-        {% for block in offers_section.blocks %}
-          {% if block.type == 'offer' %}
-            <div class="offer-item">
-              <div class="offer-label">{{ block.settings.label }}</div>
-              {% if block.settings.code != blank %}
-                <div class="offer-code-group">
-                  <button class="offer-code-button" data-code="{{ block.settings.code }}">
-                    <span class="offer-code-text">Code:</span>
-                    {{ block.settings.code }}
-                    <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M8 4.5V3.3c0-.56 0-.84-.109-1.054a1 1 0 0 0-.437-.437C7.24 1.5 6.96 1.5 6.4 1.5H3.2c-.56 0-.84 0-1.054.109a1 1 0 0 0-.437.437C1.5 2.26 1.5 2.54 1.5 3.1v3.2c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437c.214.109.494.109 1.054.109h1.2m1.8-3.6h3.2c.56 0 .84 0 1.054.109a1 1 0 0 0 .437.437c.109.214.109.494.109 1.054v3.2c0 .56 0 .84-.109 1.054a1 1 0 0 0-.437.437C9.14 10.5 8.86 10.5 8.3 10.5H5.1c-.56 0-.84 0-1.054-.109a1 1 0 0 1-.437-.437C3.5 9.74 3.5 9.46 3.5 8.9V5.7c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.26 4.1 4.54 4.1 5.1 4.1Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </button>
-                </div>
-              {% endif %}
-            </div>
-          {% endif %}
-        {% endfor %}
+        <div class="offer-item">
+          <div class="offer-label">10% off order above 499</div>
+          <div class="offer-code-group">
+            <button class="offer-code-button" data-code="code10">
+              <span class="offer-code-text">Code:</span>
+              code10
+              <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M8 4.5V3.3c0-.56 0-.84-.109-1.054a1 1 0 0 0-.437-.437C7.24 1.5 6.96 1.5 6.4 1.5H3.2c-.56 0-.84 0-1.054.109a1 1 0 0 0-.437.437C1.5 2.26 1.5 2.54 1.5 3.1v3.2c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437c.214.109.494.109 1.054.109h1.2m1.8-3.6h3.2c.56 0 .84 0 1.054.109a1 1 0 0 0 .437.437c.109.214.109.494.109 1.054v3.2c0 .56 0 .84-.109 1.054a1 1 0 0 0-.437.437C9.14 10.5 8.86 10.5 8.3 10.5H5.1c-.56 0-.84 0-1.054-.109a1 1 0 0 1-.437-.437C3.5 9.74 3.5 9.46 3.5 8.9V5.7c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.26 4.1 4.54 4.1 5.1 4.1Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="offer-item">
+          <div class="offer-label">FREE GIFT</div>
+        </div>
+        
+        <div class="offer-item">
+          <div class="offer-label">FREE GIFT</div>
+        </div>
       </div>
     </div>
   </div>
@@ -82,4 +70,3 @@
     });
   });
 </script>
-{% endif %}
