@@ -60,7 +60,7 @@
 .offers-list {
   display: flex;
   gap: 8px;
-  padding-right: 20px;
+  transition: transform 0.3s ease;
 }
 
 /* Offer Items */
@@ -146,7 +146,7 @@
 }
 
 /* Navigation Buttons */
-.offers-nav {
+.product-offers-inline .offers-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -155,7 +155,7 @@
   border-radius: 50%;
   width: 32px;
   height: 32px;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -170,12 +170,12 @@
   transform: translateY(-50%) scale(1.1);
 }
 
-.offers-nav--prev {
-  left: -16px;
+.product-offers-inline .offers-nav--prev {
+  left: -40px;
 }
 
-.offers-nav--next {
-  right: -16px;
+.product-offers-inline .offers-nav--next {
+  right: -40px;
 }
 
 .offers-nav svg {
