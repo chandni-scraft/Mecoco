@@ -93,7 +93,6 @@
   }
 
   .shop-by-concern-grid-{{ ai_gen_id }}.loading {
-    opacity: 0.3;
     pointer-events: none;
   }
 
@@ -538,10 +537,11 @@
         {% if first_collection != blank %}
           {% assign first_collection_products = first_collection.products %}
           <!-- Debug: First collection info -->
-          <div style="display: none;">
+          <div style="display: none;" id="collection-debug-{{ ai_gen_id }}">
             First collection: {{ first_collection.title | default: 'No title' }}<br>
             Products count: {{ first_collection_products | size }}<br>
-            First product: {{ first_collection_products.first.title | default: 'No products' }}
+            First product: {{ first_collection_products.first.title | default: 'No products' }}<br>
+            Collection handle: {{ first_collection.handle | default: 'No handle' }}
           </div>
           {% for product in first_collection_products limit: block.settings.products_per_page %}
             <div class="shop-by-concern-card-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
@@ -1134,26 +1134,25 @@
       const carousel = this.querySelector('#carousel-track-{{ ai_gen_id }}');
       const tabs = this.querySelectorAll('.shop-by-concern-tab-{{ ai_gen_id }}');
 
-      console.log('RenderProducts: Rendering products', { productsLength: products.length });
-
       if (products.length === 0) {
         this.showEmpty();
         // Remove loading state from all tabs
         tabs.forEach(tab => tab.classList.remove('loading'));
+        if (grid) grid.classList.remove('loading');
+        if (carousel) carousel.style.display = 'none';
         return;
       }
 
       const productsHTML = products.map(product => this.createProductCard(product)).join('');
-      
+
       if (grid) {
-        grid.classList.add('loading');
         grid.innerHTML = productsHTML;
-        // Remove loading class after a short delay for smooth transition
-        setTimeout(() => {
-          grid.classList.remove('loading');
-        }, 300);
+        grid.classList.remove('loading');
       }
-      if (carousel) carousel.innerHTML = productsHTML;
+      if (carousel) {
+        carousel.innerHTML = productsHTML;
+        carousel.style.display = 'flex';
+      }
 
       this.hideEmpty();
 
@@ -1209,14 +1208,26 @@
       }
 
       // Ensure featuredImage is properly formatted
-      if (featuredImage && typeof featuredImage === 'object' && !featuredImage.src && !featuredImage.url) {
-        // If it's a Shopify image object without src/url, try to construct URL
+      if (featuredImage && typeof featuredImage === 'object') {
+        // If it's a Shopify image object, try to extract the URL
         if (featuredImage.originalSrc) {
           featuredImage = featuredImage.originalSrc;
+        } else if (featuredImage.src) {
+          featuredImage = featuredImage.src;
         } else if (featuredImage.url) {
           featuredImage = featuredImage.url;
+        } else if (featuredImage.original_src) {
+          featuredImage = featuredImage.original_src;
         } else {
           featuredImage = null;
+        }
+      }
+
+      // Additional fallback for image
+      if (!featuredImage && product.images && product.images[0]) {
+        featuredImage = product.images[0];
+        if (typeof featuredImage === 'object') {
+          featuredImage = featuredImage.src || featuredImage.url || featuredImage.originalSrc || featuredImage;
         }
       }
 
@@ -1234,13 +1245,13 @@
             ${featuredImage ?
               `<img
                 class="shop-by-concern-image-{{ ai_gen_id }}"
-                src="${typeof featuredImage === 'string' ? featuredImage : (featuredImage.src || featuredImage.url || featuredImage.originalSrc || featuredImage)}"
+                src="${featuredImage}"
                 alt="${product.title || 'Product image'}"
                 loading="lazy"
                 width="400"
                 height="400"
                 sizes="(max-width: 480px) 280px, (max-width: 768px) 300px, (max-width: 1024px) 350px, 400px"
-                srcset="${typeof featuredImage === 'string' ? featuredImage : (featuredImage.src || featuredImage.url || featuredImage.originalSrc || featuredImage)} 400w"
+                srcset="${featuredImage} 400w"
               >` :
               `<div class="shop-by-concern-image-placeholder-{{ ai_gen_id }}">
                 <svg viewBox="0 0 525 525" xmlns="http://www.w3.org/2000/svg">
@@ -1450,6 +1461,12 @@
   }
 
   customElements.define('shop-by-concern-{{ ai_gen_id }}', ShopByConcern{{ ai_gen_id }});
+
+  // Show debug information for troubleshooting
+  const debugElement = document.getElementById('collection-debug-{{ ai_gen_id }}');
+  if (debugElement) {
+    console.log('Shop by Concern Debug Info:', debugElement.innerHTML.replace(/<br>/g, ' | '));
+  }
 })();
 </script>
 
