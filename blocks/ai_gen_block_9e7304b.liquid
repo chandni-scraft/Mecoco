@@ -46,7 +46,13 @@
     margin-bottom: 32px;
     padding: 0;
     list-style: none;
+    max-width: 100%;
+    overflow-x: auto; /* prevent tab labels from causing page overflow */
+    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none; /* Firefox */
   }
+
+  .shop-by-concern-tabs-{{ ai_gen_id }}::-webkit-scrollbar { display: none; }
 
   .shop-by-concern-tab-{{ ai_gen_id }} {
     background: none;
@@ -113,6 +119,14 @@
     {% endif %}
   }
 
+  /* Prevent any child from expanding card width on mobile */
+  @media screen and (max-width: 480px) {
+    .shop-by-concern-card-{{ ai_gen_id }} * {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+  }
+
   .shop-by-concern-card-{{ ai_gen_id }}:hover {
     transform: translateY(-4px);
     {% if block.settings.card_shadow %}
@@ -124,6 +138,7 @@
     position: relative;
     aspect-ratio: 1;
     overflow: hidden;
+    max-width: 100%;
   }
 
   .shop-by-concern-image-{{ ai_gen_id }} {
@@ -387,6 +402,8 @@
     -ms-overflow-style: none;
     padding: 0 16px 10px; /* add side padding so cards never exceed viewport */
     overscroll-behavior-x: contain; /* prevent page from scrolling horizontally */
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .shop-by-concern-carousel-track-{{ ai_gen_id }}::-webkit-scrollbar {
@@ -483,8 +500,8 @@
     }
     /* Make carousel items fit within viewport minus padding */
     .shop-by-concern-carousel-track-{{ ai_gen_id }} .shop-by-concern-card-{{ ai_gen_id }} {
-      flex: 0 0 calc(100% - 32px);
-      max-width: calc(100% - 32px);
+      flex: 0 0 calc(100vw - 32px);
+      max-width: calc(100vw - 32px);
     }
 
     .shop-by-concern-image-wrapper-{{ ai_gen_id }} {
