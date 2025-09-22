@@ -422,43 +422,6 @@
         "padding-block-end": 0
       }
     },
-    "product_offers_section": {
-      "type": "product-offers",
-      "blocks": {
-        "offer_1": {
-          "type": "offer",
-          "settings": {
-            "label": "10% off order above 499",
-            "code": "code10"
-          }
-        },
-        "offer_2": {
-          "type": "offer",
-          "settings": {
-            "label": "FREE GIFT",
-            "code": ""
-          }
-        },
-        "offer_3": {
-          "type": "offer",
-          "settings": {
-            "label": "FREE GIFT",
-            "code": ""
-          }
-        }
-      },
-      "block_order": [
-        "offer_1",
-        "offer_2",
-        "offer_3"
-      ],
-      "settings": {
-        "heading": "Special Offers",
-        "background_color": "#ffffff",
-        "text_color": "#a42325",
-        "indicator_color": "#e6e6e6"
-      }
-    },
     "product_recommendations_iA6pyd": {
       "type": "product-recommendations",
       "blocks": {
