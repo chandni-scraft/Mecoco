@@ -411,6 +411,43 @@
         "padding-block-end": 0
       }
     },
+    "product_offers_section": {
+      "type": "product-offers",
+      "blocks": {
+        "offer_1": {
+          "type": "offer",
+          "settings": {
+            "label": "10% off order above 499",
+            "code": "code10"
+          }
+        },
+        "offer_2": {
+          "type": "offer",
+          "settings": {
+            "label": "FREE GIFT",
+            "code": ""
+          }
+        },
+        "offer_3": {
+          "type": "offer",
+          "settings": {
+            "label": "FREE GIFT",
+            "code": ""
+          }
+        }
+      },
+      "block_order": [
+        "offer_1",
+        "offer_2",
+        "offer_3"
+      ],
+      "settings": {
+        "heading": "Special Offers",
+        "background_color": "#ffffff",
+        "text_color": "#a42325",
+        "indicator_color": "#e6e6e6"
+      }
+    },
     "product_recommendations_iA6pyd": {
       "type": "product-recommendations",
       "blocks": {
@@ -682,50 +719,11 @@
         "padding-block-start": 1,
         "padding-block-end": 1
       }
-    },
-    "product_offers_section": {
-      "type": "product-offers",
-      "blocks": {
-        "offer_1": {
-          "type": "offer",
-          "settings": {
-            "label": "FREE GIFT",
-            "code": "FREEBTAN"
-          }
-        },
-        "offer_2": {
-          "type": "offer",
-          "settings": {
-            "label": "FREE GIFT",
-            "code": "FREEHANDMALAI"
-          }
-        },
-        "offer_3": {
-          "type": "offer",
-          "settings": {
-            "label": "20% OFF",
-            "code": "NEWHABIT50"
-          }
-        },
-        "offer_4": {
-          "type": "offer",
-          "settings": {
-            "label": "FREE",
-            "code": ""
-          }
-        }
-      },
-      "block_order": ["offer_1", "offer_2", "offer_3", "offer_4"],
-      "settings": {
-        "heading": "11 Limited Time Offers",
-        "background_color": "#e8f5e9",
-        "text_color": "#1b5e20",
-        "indicator_color": "#4caf50"
-      }
     }
   },
   "order": [
     "main",
+    "product_offers_section",
     "product_recommendations_iA6pyd"
   ]
 }
