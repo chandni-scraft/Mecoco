@@ -37,13 +37,6 @@
     </div>
     
     <div class="offers-container">
-      {% comment %} Navigation arrows {% endcomment %}
-      <button class="offers-nav offers-nav--prev" aria-label="Previous offers" style="display: none;">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      
       <div class="offers-scroll-wrapper">
         <div class="offers-list" data-current-slide="0">
           {% if block.settings.offer_1_label != blank %}
@@ -149,13 +142,6 @@
           {% endif %}
         </div>
       </div>
-      
-      {% comment %} Next arrow {% endcomment %}
-      <button class="offers-nav offers-nav--next" aria-label="Next offers">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
     </div>
   </div>
   
@@ -164,63 +150,23 @@
       const offersBar = document.querySelector('[data-offers-inline]');
       if (!offersBar) return;
       
-      // Slider functionality
+      // Simple horizontal scroll functionality
       const scrollWrapper = offersBar.querySelector('.offers-scroll-wrapper');
       const offersList = offersBar.querySelector('.offers-list');
       const offers = offersBar.querySelectorAll('.offer-item');
-      const prevBtn = offersBar.querySelector('.offers-nav--prev');
-      const nextBtn = offersBar.querySelector('.offers-nav--next');
       
-      const offersPerView = 3;
-      const totalOffers = offers.length;
-      const totalSlides = Math.ceil(totalOffers / offersPerView);
-      let currentSlide = 0;
-      
-      // Set up wrapper width to show only 3 offers
-      if (window.innerWidth > 750) {
-        scrollWrapper.style.overflow = 'hidden';
-        
-        // Calculate and set width
-        const updateDimensions = () => {
-          const offerWidth = offers[0]?.offsetWidth || 120;
-          const gap = 8;
-          const wrapperWidth = (offerWidth * offersPerView) + (gap * (offersPerView - 1));
-          scrollWrapper.style.width = wrapperWidth + 'px';
-        };
-        
-        updateDimensions();
-        window.addEventListener('resize', updateDimensions);
-        
-        // Navigation function
-        const goToSlide = (slideIndex) => {
-          if (slideIndex < 0 || slideIndex >= totalSlides) return;
-          
-          currentSlide = slideIndex;
-          const offerWidth = offers[0].offsetWidth;
-          const gap = 8;
-          const offset = currentSlide * offersPerView * (offerWidth + gap);
-          
-          offersList.style.transform = `translateX(-${offset}px)`;
-          
-          // Update button visibility
-          prevBtn.style.display = currentSlide === 0 ? 'none' : 'flex';
-          nextBtn.style.display = currentSlide === totalSlides - 1 ? 'none' : 'flex';
-        };
-        
-        // Initial button visibility
-        if (totalOffers > offersPerView) {
-          nextBtn.style.display = 'flex';
+      // Check if scrolling is needed
+      const checkScroll = () => {
+        const needsScroll = offersList.scrollWidth > scrollWrapper.clientWidth;
+        if (needsScroll) {
+          scrollWrapper.style.overflowX = 'auto';
+        } else {
+          scrollWrapper.style.overflowX = 'hidden';
         }
-        
-        // Button event listeners
-        prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
-        nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
-      } else {
-        // Mobile: allow horizontal scroll
-        scrollWrapper.style.overflowX = 'auto';
-        prevBtn.style.display = 'none';
-        nextBtn.style.display = 'none';
-      }
+      };
+      
+      checkScroll();
+      window.addEventListener('resize', checkScroll);
       
       // Copy code functionality
       const codeButtons = offersBar.querySelectorAll('.offer-code-button');
