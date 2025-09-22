@@ -178,7 +178,13 @@
                 "offer_2_label": "FREE GIFT",
                 "offer_2_code": "Festive20",
                 "offer_3_label": "diwali offer",
-                "offer_3_code": "Divali15"
+                "offer_3_code": "Divali15",
+                "offer_4_label": "B1 G1",
+                "offer_4_code": "b1g1",
+                "offer_5_label": "B2 G3",
+                "offer_5_code": "b2g3",
+                "offer_6_label": "free shipping",
+                "offer_6_code": "fs"
               },
               "blocks": {}
             },
