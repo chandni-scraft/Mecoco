@@ -1,0 +1,213 @@
+{{ 'product-offers.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .product-offers-bar-block {
+    --offers-bg: {{ block.settings.background_color }};
+    --offers-text: {{ block.settings.text_color }};
+    --offers-indicator: {{ block.settings.indicator_color }};
+    --offers-border: {{ block.settings.background_color | color_mix: '#000000', 10 }};
+  }
+</style>
+
+<div class="product-offers-bar product-offers-bar-block" data-block-id="{{ block.id }}">
+  <div class="offers-header">
+    <span class="offers-indicator"></span>
+    <span class="offers-title">{{ block.settings.heading | default: '11 Limited Time Offers' }}</span>
+  </div>
+  
+  <div class="offers-container">
+    <div class="offers-scroll-wrapper">
+      <div class="offers-list">
+        {% if block.settings.offer_1_label != blank %}
+          <div class="offer-item">
+            <div class="offer-label">{{ block.settings.offer_1_label }}</div>
+            {% if block.settings.offer_1_code != blank %}
+              <div class="offer-code-group">
+                <span class="offer-code-text">Code:</span>
+                <button class="offer-code-button" data-code="{{ block.settings.offer_1_code }}">
+                  {{ block.settings.offer_1_code }}
+                  <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M8 4.5V3.3c0-.56 0-.84-.109-1.054a1 1 0 0 0-.437-.437C7.24 1.5 6.96 1.5 6.4 1.5H3.2c-.56 0-.84 0-1.054.109a1 1 0 0 0-.437.437C1.5 2.26 1.5 2.54 1.5 3.1v3.2c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437c.214.109.494.109 1.054.109h1.2m1.8-3.6h3.2c.56 0 .84 0 1.054.109a1 1 0 0 0 .437.437c.109.214.109.494.109 1.054v3.2c0 .56 0 .84-.109 1.054a1 1 0 0 0-.437.437C9.14 10.5 8.86 10.5 8.3 10.5H5.1c-.56 0-.84 0-1.054-.109a1 1 0 0 1-.437-.437C3.5 9.74 3.5 9.46 3.5 8.9V5.7c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.26 4.1 4.54 4.1 5.1 4.1Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+        
+        {% if block.settings.offer_2_label != blank %}
+          <div class="offer-item">
+            <div class="offer-label">{{ block.settings.offer_2_label }}</div>
+            {% if block.settings.offer_2_code != blank %}
+              <div class="offer-code-group">
+                <span class="offer-code-text">Code:</span>
+                <button class="offer-code-button" data-code="{{ block.settings.offer_2_code }}">
+                  {{ block.settings.offer_2_code }}
+                  <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M8 4.5V3.3c0-.56 0-.84-.109-1.054a1 1 0 0 0-.437-.437C7.24 1.5 6.96 1.5 6.4 1.5H3.2c-.56 0-.84 0-1.054.109a1 1 0 0 0-.437.437C1.5 2.26 1.5 2.54 1.5 3.1v3.2c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437c.214.109.494.109 1.054.109h1.2m1.8-3.6h3.2c.56 0 .84 0 1.054.109a1 1 0 0 0 .437.437c.109.214.109.494.109 1.054v3.2c0 .56 0 .84-.109 1.054a1 1 0 0 0-.437.437C9.14 10.5 8.86 10.5 8.3 10.5H5.1c-.56 0-.84 0-1.054-.109a1 1 0 0 1-.437-.437C3.5 9.74 3.5 9.46 3.5 8.9V5.7c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.26 4.1 4.54 4.1 5.1 4.1Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+        
+        {% if block.settings.offer_3_label != blank %}
+          <div class="offer-item">
+            <div class="offer-label">{{ block.settings.offer_3_label }}</div>
+            {% if block.settings.offer_3_code != blank %}
+              <div class="offer-code-group">
+                <span class="offer-code-text">Code:</span>
+                <button class="offer-code-button" data-code="{{ block.settings.offer_3_code }}">
+                  {{ block.settings.offer_3_code }}
+                  <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M8 4.5V3.3c0-.56 0-.84-.109-1.054a1 1 0 0 0-.437-.437C7.24 1.5 6.96 1.5 6.4 1.5H3.2c-.56 0-.84 0-1.054.109a1 1 0 0 0-.437.437C1.5 2.26 1.5 2.54 1.5 3.1v3.2c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437c.214.109.494.109 1.054.109h1.2m1.8-3.6h3.2c.56 0 .84 0 1.054.109a1 1 0 0 0 .437.437c.109.214.109.494.109 1.054v3.2c0 .56 0 .84-.109 1.054a1 1 0 0 0-.437.437C9.14 10.5 8.86 10.5 8.3 10.5H5.1c-.56 0-.84 0-1.054-.109a1 1 0 0 1-.437-.437C3.5 9.74 3.5 9.46 3.5 8.9V5.7c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.26 4.1 4.54 4.1 5.1 4.1Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+        
+        {% if block.settings.offer_4_label != blank %}
+          <div class="offer-item">
+            <div class="offer-label">{{ block.settings.offer_4_label }}</div>
+            {% if block.settings.offer_4_code != blank %}
+              <div class="offer-code-group">
+                <span class="offer-code-text">Code:</span>
+                <button class="offer-code-button" data-code="{{ block.settings.offer_4_code }}">
+                  {{ block.settings.offer_4_code }}
+                  <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M8 4.5V3.3c0-.56 0-.84-.109-1.054a1 1 0 0 0-.437-.437C7.24 1.5 6.96 1.5 6.4 1.5H3.2c-.56 0-.84 0-1.054.109a1 1 0 0 0-.437.437C1.5 2.26 1.5 2.54 1.5 3.1v3.2c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437c.214.109.494.109 1.054.109h1.2m1.8-3.6h3.2c.56 0 .84 0 1.054.109a1 1 0 0 0 .437.437c.109.214.109.494.109 1.054v3.2c0 .56 0 .84-.109 1.054a1 1 0 0 0-.437.437C9.14 10.5 8.86 10.5 8.3 10.5H5.1c-.56 0-.84 0-1.054-.109a1 1 0 0 1-.437-.437C3.5 9.74 3.5 9.46 3.5 8.9V5.7c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.26 4.1 4.54 4.1 5.1 4.1Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const block = document.querySelector('[data-block-id="{{ block.id }}"]');
+    if (!block) return;
+    
+    // Copy code functionality
+    const codeButtons = block.querySelectorAll('.offer-code-button');
+    codeButtons.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const code = this.dataset.code;
+        const originalHTML = this.innerHTML;
+        
+        navigator.clipboard.writeText(code).then(() => {
+          this.innerHTML = 'Copied! <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 6L5 8L9 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+          this.classList.add('copied');
+          
+          setTimeout(() => {
+            this.innerHTML = originalHTML;
+            this.classList.remove('copied');
+          }, 2000);
+        });
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Offer Bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "11 Limited Time Offers"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#e8f5e9"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1b5e20"
+    },
+    {
+      "type": "color",
+      "id": "indicator_color",
+      "label": "Indicator color",
+      "default": "#4caf50"
+    },
+    {
+      "type": "header",
+      "content": "Offer 1"
+    },
+    {
+      "type": "text",
+      "id": "offer_1_label",
+      "label": "Label",
+      "default": "FREE GIFT"
+    },
+    {
+      "type": "text",
+      "id": "offer_1_code",
+      "label": "Code",
+      "default": "FREEBTAN"
+    },
+    {
+      "type": "header",
+      "content": "Offer 2"
+    },
+    {
+      "type": "text",
+      "id": "offer_2_label",
+      "label": "Label",
+      "default": "FREE GIFT"
+    },
+    {
+      "type": "text",
+      "id": "offer_2_code",
+      "label": "Code",
+      "default": "FREEHANDMALAI"
+    },
+    {
+      "type": "header",
+      "content": "Offer 3"
+    },
+    {
+      "type": "text",
+      "id": "offer_3_label",
+      "label": "Label",
+      "default": "20% OFF"
+    },
+    {
+      "type": "text",
+      "id": "offer_3_code",
+      "label": "Code",
+      "default": "NEWHABIT50"
+    },
+    {
+      "type": "header",
+      "content": "Offer 4"
+    },
+    {
+      "type": "text",
+      "id": "offer_4_label",
+      "label": "Label",
+      "default": "FREE"
+    },
+    {
+      "type": "text",
+      "id": "offer_4_code",
+      "label": "Code"
+    }
+  ]
+}
+{% endschema %}

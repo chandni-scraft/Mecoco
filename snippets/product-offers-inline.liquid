@@ -1,0 +1,84 @@
+{{ 'product-offers.css' | asset_url | stylesheet_tag }}
+
+<div class="product-offers-bar product-offers-inline" data-offers-inline>
+  <div class="offers-header">
+    <span class="offers-indicator"></span>
+    <span class="offers-title">11 Limited Time Offers</span>
+  </div>
+  
+  <div class="offers-container">
+    <div class="offers-scroll-wrapper">
+      <div class="offers-list">
+        <div class="offer-item">
+          <div class="offer-label">FREE GIFT</div>
+          <div class="offer-code-group">
+            <button class="offer-code-button" data-code="FREEBTAN">
+              <span class="offer-code-text">Code:</span>
+              FREEBTAN
+              <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M8 4.5V3.3c0-.56 0-.84-.109-1.054a1 1 0 0 0-.437-.437C7.24 1.5 6.96 1.5 6.4 1.5H3.2c-.56 0-.84 0-1.054.109a1 1 0 0 0-.437.437C1.5 2.26 1.5 2.54 1.5 3.1v3.2c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437c.214.109.494.109 1.054.109h1.2m1.8-3.6h3.2c.56 0 .84 0 1.054.109a1 1 0 0 0 .437.437c.109.214.109.494.109 1.054v3.2c0 .56 0 .84-.109 1.054a1 1 0 0 0-.437.437C9.14 10.5 8.86 10.5 8.3 10.5H5.1c-.56 0-.84 0-1.054-.109a1 1 0 0 1-.437-.437C3.5 9.74 3.5 9.46 3.5 8.9V5.7c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.26 4.1 4.54 4.1 5.1 4.1Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="offer-item">
+          <div class="offer-label">FREE GIFT</div>
+          <div class="offer-code-group">
+            <button class="offer-code-button" data-code="FREEHANDMALAI">
+              <span class="offer-code-text">Code:</span>
+              FREEHANDMALAI
+              <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M8 4.5V3.3c0-.56 0-.84-.109-1.054a1 1 0 0 0-.437-.437C7.24 1.5 6.96 1.5 6.4 1.5H3.2c-.56 0-.84 0-1.054.109a1 1 0 0 0-.437.437C1.5 2.26 1.5 2.54 1.5 3.1v3.2c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437c.214.109.494.109 1.054.109h1.2m1.8-3.6h3.2c.56 0 .84 0 1.054.109a1 1 0 0 0 .437.437c.109.214.109.494.109 1.054v3.2c0 .56 0 .84-.109 1.054a1 1 0 0 0-.437.437C9.14 10.5 8.86 10.5 8.3 10.5H5.1c-.56 0-.84 0-1.054-.109a1 1 0 0 1-.437-.437C3.5 9.74 3.5 9.46 3.5 8.9V5.7c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.26 4.1 4.54 4.1 5.1 4.1Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="offer-item">
+          <div class="offer-label">20% OFF</div>
+          <div class="offer-code-group">
+            <button class="offer-code-button" data-code="NEWHABIT50">
+              <span class="offer-code-text">Code:</span>
+              NEWHABIT50
+              <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M8 4.5V3.3c0-.56 0-.84-.109-1.054a1 1 0 0 0-.437-.437C7.24 1.5 6.96 1.5 6.4 1.5H3.2c-.56 0-.84 0-1.054.109a1 1 0 0 0-.437.437C1.5 2.26 1.5 2.54 1.5 3.1v3.2c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437c.214.109.494.109 1.054.109h1.2m1.8-3.6h3.2c.56 0 .84 0 1.054.109a1 1 0 0 0 .437.437c.109.214.109.494.109 1.054v3.2c0 .56 0 .84-.109 1.054a1 1 0 0 0-.437.437C9.14 10.5 8.86 10.5 8.3 10.5H5.1c-.56 0-.84 0-1.054-.109a1 1 0 0 1-.437-.437C3.5 9.74 3.5 9.46 3.5 8.9V5.7c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.26 4.1 4.54 4.1 5.1 4.1Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="offer-item">
+          <div class="offer-label">FREE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const offersBar = document.querySelector('[data-offers-inline]');
+    if (!offersBar) return;
+    
+    // Copy code functionality
+    const codeButtons = offersBar.querySelectorAll('.offer-code-button');
+    codeButtons.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const code = this.dataset.code;
+        const originalHTML = this.innerHTML;
+        
+        navigator.clipboard.writeText(code).then(() => {
+          this.innerHTML = 'Copied! <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 6L5 8L9 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+          this.classList.add('copied');
+          
+          setTimeout(() => {
+            this.innerHTML = originalHTML;
+            this.classList.remove('copied');
+          }, 2000);
+        });
+      });
+    });
+  });
+</script>
