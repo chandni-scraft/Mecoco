@@ -74,8 +74,14 @@
     border-color: {{ block.settings.tab_active_border_color | default: 'rgb(var(--color-primary))' }};
   }
 
+  .shop-by-concern-tab-{{ ai_gen_id }}.loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
   .shop-by-concern-products-{{ ai_gen_id }} {
     position: relative;
+    min-height: 400px;
   }
 
   .shop-by-concern-grid-{{ ai_gen_id }} {
@@ -83,6 +89,12 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 24px;
     margin-bottom: 32px;
+    transition: opacity 0.3s ease;
+  }
+
+  .shop-by-concern-grid-{{ ai_gen_id }}.loading {
+    opacity: 0.3;
+    pointer-events: none;
   }
 
   .shop-by-concern-card-{{ ai_gen_id }} {
@@ -867,10 +879,22 @@
       const tab = e.target;
       const collectionHandle = tab.dataset.collectionHandle;
 
-      if (!collectionHandle || collectionHandle === this.currentCollection) return;
+      console.log('Tab clicked:', { tab, collectionHandle, currentCollection: this.currentCollection });
+
+      if (!collectionHandle || collectionHandle === this.currentCollection) {
+        console.log('Tab click ignored: no handle or same collection');
+        return;
+      }
+
+      // Add loading state to clicked tab
+      tab.classList.add('loading');
 
       this.setActiveTab(tab);
-      this.loadProducts(collectionHandle);
+
+      // Add a small delay to show the loading state smoothly
+      setTimeout(() => {
+        this.loadProducts(collectionHandle);
+      }, 100);
     }
 
     handleTabKeydown(e) {
@@ -910,28 +934,72 @@
     }
 
     async loadProducts(collectionHandle, page = 1) {
-      if (this.isLoading || !collectionHandle) return;
+      if (this.isLoading || !collectionHandle) {
+        console.log('LoadProducts: Already loading or no collection handle', { isLoading: this.isLoading, collectionHandle });
+        return;
+      }
 
       this.isLoading = true;
       this.currentCollection = collectionHandle;
       this.currentPage = page;
 
       this.showLoading();
+      console.log('LoadProducts: Starting to load collection', { collectionHandle, page });
 
       try {
-        const response = await fetch(`/collections/${collectionHandle}.json`);
+        // Try multiple API endpoints for better compatibility
+        let response;
+        let data;
+
+        // First try the standard collection endpoint
+        try {
+          response = await fetch(`/collections/${collectionHandle}.json`);
+          console.log('LoadProducts: API response', { status: response.status, ok: response.ok });
+
+          if (response.ok) {
+            data = await response.json();
+            console.log('LoadProducts: API data received', { data: data, collection: data.collection });
+          }
+        } catch (error) {
+          console.log('LoadProducts: First API call failed, trying alternative', error);
+        }
+
+        // If first attempt failed or returned empty, try the all collections endpoint
+        if (!data || !data.collection || !data.collection.products || data.collection.products.length === 0) {
+          try {
+            const collectionsResponse = await fetch('/collections.json');
+            const collectionsData = await collectionsResponse.json();
+            const foundCollection = collectionsData.collections.find(c => c.handle === collectionHandle);
+
+            if (foundCollection) {
+              response = await fetch(`/collections/${foundCollection.id}/products.json?limit=50`);
+              if (response.ok) {
+                data = await response.json();
+                console.log('LoadProducts: Alternative API data received', { data: data, products: data.products });
+              }
+            }
+          } catch (error) {
+            console.log('LoadProducts: Alternative API call failed', error);
+          }
+        }
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
-
         let products = [];
-        if (data.collection && data.collection.products && data.collection.products.length > 0) {
+        if (data && data.products && data.products.length > 0) {
+          const startIndex = (page - 1) * this.productsPerPage;
+          const endIndex = startIndex + this.productsPerPage;
+          products = data.products.slice(startIndex, endIndex);
+          console.log('LoadProducts: Products extracted', { productsLength: products.length, startIndex, endIndex });
+        } else if (data && data.collection && data.collection.products && data.collection.products.length > 0) {
           const startIndex = (page - 1) * this.productsPerPage;
           const endIndex = startIndex + this.productsPerPage;
           products = data.collection.products.slice(startIndex, endIndex);
+          console.log('LoadProducts: Products extracted from collection', { productsLength: products.length, startIndex, endIndex });
+        } else {
+          console.log('LoadProducts: No products found in any data format', { data });
         }
 
         if (page === 1) {
@@ -941,30 +1009,47 @@
         }
 
         this.updateLoadMoreButton(products.length === this.productsPerPage);
+        console.log('LoadProducts: Products rendered successfully', { productsLength: products.length });
       } catch (error) {
-        console.error('Error loading products:', error);
+        console.error('LoadProducts: Error loading products', error);
         this.showEmpty();
       } finally {
         this.hideLoading();
         this.isLoading = false;
+        console.log('LoadProducts: Loading completed');
       }
     }
 
     renderProducts(products) {
       const grid = this.querySelector('#products-grid-{{ ai_gen_id }}');
       const carousel = this.querySelector('#carousel-track-{{ ai_gen_id }}');
+      const tabs = this.querySelectorAll('.shop-by-concern-tab-{{ ai_gen_id }}');
+
+      console.log('RenderProducts: Rendering products', { productsLength: products.length });
 
       if (products.length === 0) {
         this.showEmpty();
+        // Remove loading state from all tabs
+        tabs.forEach(tab => tab.classList.remove('loading'));
         return;
       }
 
       const productsHTML = products.map(product => this.createProductCard(product)).join('');
-      
-      if (grid) grid.innerHTML = productsHTML;
+
+      if (grid) {
+        grid.classList.add('loading');
+        grid.innerHTML = productsHTML;
+        // Remove loading class after a short delay for smooth transition
+        setTimeout(() => {
+          grid.classList.remove('loading');
+        }, 300);
+      }
       if (carousel) carousel.innerHTML = productsHTML;
 
       this.hideEmpty();
+
+      // Remove loading state from all tabs
+      tabs.forEach(tab => tab.classList.remove('loading'));
     }
 
     appendProducts(products) {
@@ -1186,7 +1271,12 @@
 
     showEmpty() {
       const empty = this.querySelector('#empty-{{ ai_gen_id }}');
+      const tabs = this.querySelectorAll('.shop-by-concern-tab-{{ ai_gen_id }}');
+
       if (empty) empty.style.display = 'block';
+
+      // Remove loading state from all tabs
+      tabs.forEach(tab => tab.classList.remove('loading'));
     }
 
     hideEmpty() {
