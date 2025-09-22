@@ -384,6 +384,7 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding-bottom: 10px;
+    overscroll-behavior-x: contain; /* prevent page from scrolling horizontally */
   }
 
   .shop-by-concern-carousel-track-{{ ai_gen_id }}::-webkit-scrollbar {
@@ -459,10 +460,23 @@
 
     .shop-by-concern-carousel-{{ ai_gen_id }} {
       display: block;
+      overflow: hidden; /* Prevent horizontal overflow on small screens */
     }
 
     .shop-by-concern-carousel-nav-{{ ai_gen_id }} {
       display: flex;
+      width: 36px;
+      height: 36px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    /* Keep nav buttons inside container on mobile */
+    .shop-by-concern-carousel-prev-{{ ai_gen_id }} {
+      left: 8px;
+    }
+
+    .shop-by-concern-carousel-next-{{ ai_gen_id }} {
+      right: 8px;
     }
   }
 
@@ -1389,7 +1403,7 @@
           document.dispatchEvent(new CustomEvent('cart:change'));
 
           // Force cart drawer refresh if it exists
-          const cartDrawer = document.querySelector('[data-cart-drawer], .cart-drawer, #cart-drawer, .drawer');
+          const cartDrawer = document.querySelector('[data-cart-drawer], .cart-drawer, #cart-drawer, .drawer, cart-drawer');
           if (cartDrawer) {
             // Try to trigger cart drawer update
             if (typeof cartDrawer.updateCart === 'function') {
@@ -1400,7 +1414,7 @@
               cartDrawer.update();
             } else if (cartDrawer.dataset.cartDrawer) {
               // Trigger click on cart icon to refresh drawer
-              const cartIcon = document.querySelector('.cart-icon, [data-cart-icon], .cart-toggle');
+              const cartIcon = document.querySelector('.cart-icon, [data-cart-icon], .cart-toggle, #cart-icon-bubble');
               if (cartIcon) {
                 cartIcon.click();
                 // Trigger another click after a short delay to ensure it works
@@ -1411,12 +1425,14 @@
             }
 
             // Try to find and trigger cart drawer by various methods
-            const cartElements = document.querySelectorAll('[data-cart], [data-drawer], .cart-drawer');
+            const cartElements = document.querySelectorAll('[data-cart], [data-drawer], .cart-drawer, cart-drawer, #CartDrawer');
             cartElements.forEach(element => {
               if (typeof element.refreshCart === 'function') {
                 element.refreshCart();
               } else if (typeof element.updateCart === 'function') {
                 element.updateCart();
+              } else if (typeof element.renderContents === 'function') {
+                element.renderContents();
               }
             });
           }
@@ -1428,6 +1444,14 @@
           if (typeof window.updateCart === 'function') {
             window.updateCart();
           }
+          // Online Store 2.0: fetch updated cart and dispatch
+          try {
+            const cartRes = await fetch('/cart.js');
+            if (cartRes.ok) {
+              const cartJson = await cartRes.json();
+              document.dispatchEvent(new CustomEvent('cart:updated:payload', { detail: cartJson }));
+            }
+          } catch (err) {}
         } else {
           throw new Error('Failed to add to cart');
         }
