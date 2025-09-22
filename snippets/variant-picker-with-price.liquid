@@ -1,0 +1,347 @@
+{%- doc -%}
+  Renders a variant picker with price display options.
+  
+  @param {object} product_resource - The product object.
+  @param {object} [block] - The block object
+{%- enddoc -%}
+
+{% assign block_settings = block.settings %}
+
+{% unless product_resource.has_only_default_variant %}
+  {% liquid
+    assign button_background_brightness = section.settings.color_scheme.settings.foreground | color_brightness
+    if button_background_brightness < 105
+      assign strikethrough_color_mix = '#000'
+    else
+      assign strikethrough_color_mix = '#fff'
+    endif
+  %}
+  <variant-picker
+    class="variant-picker spacing-style variant-picker--{{ block_settings.alignment }} variant-picker-with-price"
+    style="--color-strikethrough-mix: {{ strikethrough_color_mix }}; {% render 'spacing-style', settings: block_settings %}"
+    data-section-id="{{ section.id }}"
+    data-product-id="{{ product_resource.id }}"
+    data-block-id="{{ block.id }}"
+    data-product-url="{{ product_resource.url }}"
+    ref="mainVariantPicker"
+    {% if product.id == product_resource.id %}
+      data-template-product-match="true"
+    {% endif %}
+    {{ block.shopify_attributes }}
+    {% if request.visual_preview_mode %}
+      data-shopify-visual-preview
+    {% endif %}
+  >
+    <form class="variant-picker__form">
+      {%- for product_option in product_resource.options_with_values -%}
+        {%- liquid
+          assign swatch_count = product_option.values | map: 'swatch' | compact | size
+          assign variant_style = block_settings.variant_style
+
+          if swatch_count > 0 and block_settings.show_swatches
+            if block_settings.variant_style == 'dropdown'
+              assign variant_style = 'swatch_dropdown'
+            else
+              assign variant_style = 'swatch'
+            endif
+          endif
+
+          if variant_style == 'buttons' and settings.variant_button_width == 'equal-width-buttons'
+            assign fieldset_id = section.id | append: '-' | append: product_resource.id | append: '-' | append: product_option.name | handleize
+            assign option_id_attribute = 'data-option-id="' | append: fieldset_id | append: '"'
+            assign longest_value = 0
+          endif
+        -%}
+
+        {%- if variant_style == 'swatch' or block_settings.variant_style == 'buttons' -%}
+          <fieldset
+            class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}{% if block_settings.show_variant_price %} variant-option--with-price{% endif %}"
+            {{ option_id_attribute }}
+          >
+            <legend>
+              {{ product_option.name | escape -}}
+              {%- if variant_style == 'swatch' -%}
+                <span class="variant-option__swatch-value">{{ product_option.selected_value }}</span>
+              {%- endif %}
+            </legend>
+            {%- for product_option_value in product_option.values -%}
+              {% if product_option_value.size > longest_value and option_id_attribute %}
+                {% assign longest_value = product_option_value.size %}
+              {% endif %}
+              
+              {%- liquid
+                assign variant_price = nil
+                assign variant_compare_price = nil
+                assign variant_weight = nil
+                
+                if product_option_value.variant
+                  assign variant_price = product_option_value.variant.price
+                  assign variant_compare_price = product_option_value.variant.compare_at_price
+                  
+                  if block_settings.weight_metafield != blank
+                    assign weight_parts = block_settings.weight_metafield | split: '.'
+                    if weight_parts.size == 2
+                      assign namespace = weight_parts[0]
+                      assign key = weight_parts[1]
+                      assign variant_weight = product_option_value.variant.metafields[namespace][key]
+                    endif
+                  endif
+                endif
+              -%}
+              
+              <label class="variant-option__button-label{% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}{% if block_settings.show_variant_price %} variant-option__button-label--with-price{% endif %}">
+                <input
+                  type="radio"
+                  name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
+                  value="{{ product_option_value | escape }}"
+                  aria-label="{{ product_option_value.name }}"
+                  {% if product_option_value.available == false %}
+                    aria-disabled="true"
+                  {% endif %}
+                  data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
+                  data-option-value-id="{{ product_option_value.id }}"
+                  data-option-available="{{ product_option_value.available }}"
+                  data-connected-product-url="{{ product_option_value.product_url }}"
+                  {% if product_option_value.variant.id %}
+                    data-variant-id="{{ product_option_value.variant.id }}"
+                  {% endif %}
+                  {% if product_option_value.selected %}
+                    checked
+                  {% endif %}
+                >
+                <span class="variant-option__button-content">
+                  {% if variant_style == 'swatch' %}
+                    {% liquid
+                      assign featured_media = product_option_value.variant.featured_media
+                      if featured_media == blank and product_option_value.product_url
+                        assign featured_media = product_option_value.variant.product.featured_media
+                      endif
+                    %}
+                    {% render 'swatch',
+                      swatch: product_option_value.swatch,
+                      variant_image: featured_media,
+                      mode: 'unscaled'
+                    %}
+                  {% else %}
+                    <span class="variant-option__button-label__text">{{ product_option_value | escape }}</span>
+                  {% endif %}
+                  
+                  {%- if block_settings.show_variant_price and variant_price -%}
+                    <span class="variant-option__price-wrapper">
+                      {%- if variant_compare_price and variant_compare_price > variant_price -%}
+                        <span class="variant-option__compare-price">{{ variant_compare_price | money }}</span>
+                      {%- endif -%}
+                      <span class="variant-option__price">{{ variant_price | money }}</span>
+                      
+                      {%- if block_settings.show_per_gram_price and variant_weight and variant_weight > 0 -%}
+                        {%- liquid
+                          # Convert weight to grams based on stored unit
+                          case block_settings.weight_unit
+                          when 'kg'
+                            assign weight_in_grams = variant_weight | times: 1000
+                          when 'mg'
+                            assign weight_in_grams = variant_weight | divided_by: 1000.0
+                          else
+                            assign weight_in_grams = variant_weight
+                          endcase
+                          
+                          # Calculate price per desired unit
+                          case block_settings.price_per_unit
+                          when 'kg'
+                            assign price_per_unit = variant_price | times: 1000.0 | divided_by: weight_in_grams
+                            assign unit_label = 'kg'
+                          when '100g'
+                            assign price_per_unit = variant_price | times: 100.0 | divided_by: weight_in_grams
+                            assign unit_label = '100g'
+                          else
+                            assign price_per_unit = variant_price | times: 1.0 | divided_by: weight_in_grams
+                            assign unit_label = 'g'
+                          endcase
+                        -%}
+                        <span class="variant-option__per-gram-price">({{ price_per_unit | money }}/{{ unit_label }})</span>
+                      {%- endif -%}
+                    </span>
+                  {%- endif -%}
+                </span>
+                {% render 'strikethrough-variant', product_option: product_option_value %}
+              </label>
+            {%- endfor -%}
+            {% if option_id_attribute %}
+              {% style %}
+                [data-option-id="{{ fieldset_id }}"] {
+                  --variant-ch: {{ longest_value }}ch;
+                }
+              {% endstyle %}
+            {% endif %}
+          </fieldset>
+        {%- elsif block_settings.variant_style == 'dropdowns' -%}
+          {% liquid
+            assign property_being_updated = false
+            if settings.variant_swatch_width != settings.variant_swatch_height
+              assign property_being_updated = true
+              assign new_width = settings.variant_swatch_width | times: 1.0 | divided_by: settings.variant_swatch_height | times: 20
+            endif
+          %}
+
+          <div class="variant-option variant-option--dropdowns">
+            <label for="Option-{{ block.id }}-{{ forloop.index0 }}">{{ product_option.name | escape }}</label>
+            <div
+              class="variant-option__select-wrapper"
+              style="
+                {%- if property_being_updated  -%}
+                  --variant-picker-swatch-width: clamp(10px,{{ new_width }}px, 50px);
+                {%- endif -%}
+              "
+            >
+              <select
+                id="Option-{{ block.id }}-{{ forloop.index0 }}"
+                name="options[{{ product_option.name | escape }}]"
+                class="variant-option__select"
+              >
+                {%- for product_option_value in product_option.values -%}
+                  {%- liquid
+                    assign variant_price = nil
+                    assign variant_weight = nil
+                    
+                    if product_option_value.variant
+                      assign variant_price = product_option_value.variant.price
+                      
+                      if block_settings.weight_metafield != blank
+                        assign weight_parts = block_settings.weight_metafield | split: '.'
+                        if weight_parts.size == 2
+                          assign namespace = weight_parts[0]
+                          assign key = weight_parts[1]
+                          assign variant_weight = product_option_value.variant.metafields[namespace][key]
+                        endif
+                      endif
+                    endif
+                  -%}
+                  
+                  <option
+                    value="{{ product_option_value | escape }}"
+                    data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
+                    data-option-value-id="{{ product_option_value.id }}"
+                    data-variant-id="{{ product_option_value.variant.id }}"
+                    data-connected-product-url="{{ product_option_value.product_url }}"
+                    {% if product_option_value.selected %}
+                      selected="selected"
+                    {% endif %}
+                  >
+                    {{ product_option_value | escape }}
+                    {% if product_option_value.available == false %}
+                      - {{ 'content.unavailable' | t }}
+                    {% elsif block_settings.show_variant_price and variant_price %}
+                      - {{ variant_price | money }}
+                      {%- if block_settings.show_per_gram_price and variant_weight and variant_weight > 0 -%}
+                        {%- liquid
+                          # Convert weight to grams based on stored unit
+                          case block_settings.weight_unit
+                          when 'kg'
+                            assign weight_in_grams = variant_weight | times: 1000
+                          when 'mg'
+                            assign weight_in_grams = variant_weight | divided_by: 1000.0
+                          else
+                            assign weight_in_grams = variant_weight
+                          endcase
+                          
+                          # Calculate price per desired unit
+                          case block_settings.price_per_unit
+                          when 'kg'
+                            assign price_per_unit = variant_price | times: 1000.0 | divided_by: weight_in_grams
+                            assign unit_label = 'kg'
+                          when '100g'
+                            assign price_per_unit = variant_price | times: 100.0 | divided_by: weight_in_grams
+                            assign unit_label = '100g'
+                          else
+                            assign price_per_unit = variant_price | times: 1.0 | divided_by: weight_in_grams
+                            assign unit_label = 'g'
+                          endcase
+                        -%}
+                        ({{ price_per_unit | money }}/{{ unit_label }})
+                      {%- endif -%}
+                    {% endif %}
+                  </option>
+                {%- endfor -%}
+              </select>
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                class="icon icon-caret"
+                viewBox="0 0 10 6"
+              >
+                {%- render 'icon', icon: 'caret' -%}
+              </svg>
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+      <script type="application/json">
+        {{ product_resource.selected_or_first_available_variant | json }}
+      </script>
+    </form>
+  </variant-picker>
+{% endunless %}
+
+{% style %}
+  .variant-picker-with-price .variant-option--with-price .variant-option__button-label {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: var(--padding-sm) var(--padding-md);
+    min-width: 120px;
+  }
+
+  .variant-picker-with-price .variant-option__button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .variant-picker-with-price .variant-option__price-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.875em;
+    width: 100%;
+  }
+
+  .variant-picker-with-price .variant-option__price {
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .variant-picker-with-price .variant-option__compare-price {
+    text-decoration: line-through;
+    opacity: 0.7;
+    font-size: 0.875em;
+  }
+
+  .variant-picker-with-price .variant-option__per-gram-price {
+    font-size: 0.75em;
+    opacity: 0.8;
+    color: var(--color-foreground);
+  }
+
+  .variant-picker-with-price .variant-option__button-label:has(:checked) .variant-option__price {
+    color: inherit;
+  }
+
+  .variant-picker-with-price .variant-option--equal-width-buttons .variant-option__button-label {
+    min-width: max(var(--variant-min-width), 120px);
+  }
+
+  /* Mobile adjustments */
+  @media screen and (max-width: 749px) {
+    .variant-picker-with-price .variant-option__button-label {
+      min-width: 100px;
+      font-size: 0.875rem;
+    }
+    
+    .variant-picker-with-price .variant-option__price-wrapper {
+      font-size: 0.75em;
+    }
+  }
+{% endstyle %}

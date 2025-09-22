@@ -7,7 +7,11 @@
   endif
 -%}
 
-{% render 'variant-main-picker', product_resource: product_resource %}
+{% if block.settings.show_variant_price or block.settings.show_per_gram_price %}
+  {% render 'variant-picker-with-price', product_resource: product_resource, block: block %}
+{% else %}
+  {% render 'variant-main-picker', product_resource: product_resource, block: block %}
+{% endif %}
 
 {% schema %}
 {
@@ -49,6 +53,65 @@
       "id": "alignment",
       "label": "t:settings.alignment",
       "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variant_price",
+      "label": "Show price in variants",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_per_gram_price",
+      "label": "Show per gram pricing",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "weight_metafield",
+      "label": "Weight metafield",
+      "info": "Enter the metafield key that contains variant weight (e.g., 'custom.weight_grams')",
+      "default": "custom.weight_grams"
+    },
+    {
+      "type": "select",
+      "id": "weight_unit",
+      "label": "Weight unit stored in metafield",
+      "options": [
+        {
+          "value": "g",
+          "label": "Grams"
+        },
+        {
+          "value": "kg",
+          "label": "Kilograms"
+        },
+        {
+          "value": "mg",
+          "label": "Milligrams"
+        }
+      ],
+      "default": "g"
+    },
+    {
+      "type": "select",
+      "id": "price_per_unit",
+      "label": "Display price per",
+      "options": [
+        {
+          "value": "g",
+          "label": "Per gram"
+        },
+        {
+          "value": "kg",
+          "label": "Per kilogram"
+        },
+        {
+          "value": "100g",
+          "label": "Per 100g"
+        }
+      ],
+      "default": "g"
     },
     {
       "type": "header",
