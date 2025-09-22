@@ -171,6 +171,21 @@
               },
               "blocks": {}
             },
+            "product_offers_inline": {
+              "type": "product-offers-inline",
+              "settings": {
+                "heading": "Special Offers",
+                "background_color": "#ffffff",
+                "text_color": "#a42325",
+                "indicator_color": "#a42325",
+                "offer_1_label": "10% off order above 499",
+                "offer_1_code": "code10",
+                "offer_2_label": "FREE GIFT",
+                "offer_2_code": "",
+                "offer_3_label": "FREE GIFT",
+                "offer_3_code": ""
+              }
+            },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
               "settings": {
@@ -395,6 +410,7 @@
             "price_a7krng",
             "text_gXMUag",
             "variant_picker_R3rGDr",
+            "product_offers_inline",
             "buy_buttons_eYQEYi",
             "accordion_qxKemj"
           ]
