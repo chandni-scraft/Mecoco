@@ -812,13 +812,6 @@
       this.initializeFirstTab();
       this.setupCarousel();
 
-      // Debug: Log collection handles from tabs
-      const tabs = this.querySelectorAll('.shop-by-concern-tab-{{ ai_gen_id }}');
-      const handles = Array.from(tabs).map(tab => ({
-        handle: tab.dataset.collectionHandle,
-        text: tab.textContent.trim()
-      }));
-      console.log('LoadProducts: Collection handles from tabs on init', handles);
     }
 
     setupEventListeners() {
@@ -892,19 +885,8 @@
       const collectionHandle = tab.dataset.collectionHandle;
       const collectionId = tab.dataset.collectionId;
 
-      console.log('Tab clicked:', { tab, collectionHandle, collectionId, currentCollection: this.currentCollection });
-
-      // Debug: Log all available tab handles
-      const allTabs = this.querySelectorAll('.shop-by-concern-tab-{{ ai_gen_id }}');
-      const tabHandles = Array.from(allTabs).map(t => ({
-        handle: t.dataset.collectionHandle,
-        id: t.dataset.collectionId,
-        text: t.textContent.trim()
-      }));
-      console.log('LoadProducts: All available tab handles', tabHandles);
 
       if ((!collectionHandle && !collectionId) || collectionHandle === this.currentCollection) {
-        console.log('Tab click ignored: no handle/id or same collection');
         return;
       }
 
@@ -1302,10 +1284,16 @@
     formatMoney(price) {
       // Handle both string and number inputs
       const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
-      return new Intl.NumberFormat('en-US', {
+      // Format with RS symbol for Indian Rupees
+      const formatted = new Intl.NumberFormat('en-IN', {
         style: 'currency',
-        currency: 'USD'
+        currency: 'INR',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
       }).format(numericPrice);
+
+      // Replace ₹ symbol with RS
+      return formatted.replace('₹', 'RS');
     }
 
     handleQuantityChange(e) {
