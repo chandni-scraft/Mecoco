@@ -973,59 +973,61 @@
         let response;
         let data;
 
-        // Try to fetch products using collection ID first (more reliable), then fallback to handle
-        if (collectionId) {
-          try {
-            console.log('LoadProducts: Using collection ID for API call', collectionId);
-            response = await fetch(`/collections/${collectionId}/products.json?limit=50`);
+        // Try to fetch products using collection handle first (proven to work), then fallback to ID
+        try {
+          console.log('LoadProducts: Using collection handle for API call', collectionHandle);
+          response = await fetch(`/collections/${collectionHandle}/products.json?limit=50`);
 
-            if (response.ok) {
-              data = await response.json();
-              console.log('LoadProducts: Products API data received using collection ID', {
-                data: data,
-                products: data.products,
-                productsLength: data.products ? data.products.length : 'N/A',
-                fullData: JSON.stringify(data, null, 2)
-              });
+          if (response.ok) {
+            data = await response.json();
+            console.log('LoadProducts: Products API data received using collection handle', {
+              data: data,
+              products: data.products,
+              productsLength: data.products ? data.products.length : 'N/A',
+              fullData: JSON.stringify(data, null, 2)
+            });
 
-              // Check if products exist but are in a different structure
-              if (data.products && data.products.length === 0) {
-                console.log('LoadProducts: Products array is empty, checking for alternative data structures');
-
-                // Try to get products from the collection itself
-                try {
-                  const collectionResponse = await fetch(`/collections/${collectionId}.json`);
-                  if (collectionResponse.ok) {
-                    const collectionData = await collectionResponse.json();
-                    console.log('LoadProducts: Collection data received', {
-                      collection: collectionData.collection,
-                      collectionProducts: collectionData.collection ? collectionData.collection.products : 'N/A'
-                    });
-
-                    // If collection has products, use them
-                    if (collectionData.collection && collectionData.collection.products && collectionData.collection.products.length > 0) {
-                      data = { products: collectionData.collection.products };
-                      console.log('LoadProducts: Using products from collection data');
-                    }
-                  }
-                } catch (collectionError) {
-                  console.log('LoadProducts: Could not fetch collection data', collectionError);
-                }
-              }
+            if (data.products && data.products.length > 0) {
+              console.log('LoadProducts: Successfully found products using handle', data.products.length);
             } else {
-              console.log('LoadProducts: Products API failed with status', response.status);
-              const responseText = await response.text();
-              console.log('LoadProducts: Response text when status not ok', responseText);
+              console.log('LoadProducts: Handle API returned empty products array');
             }
-          } catch (error) {
-            console.log('LoadProducts: Collection ID API call failed', error);
+          } else {
+            console.log('LoadProducts: Handle API failed with status', response.status);
+            const responseText = await response.text();
+            console.log('LoadProducts: Response text when status not ok', responseText);
+          }
+        } catch (error) {
+          console.log('LoadProducts: Collection handle API call failed', error);
+
+          // Fallback: Try collection ID if available
+          if (collectionId) {
+            try {
+              console.log('LoadProducts: Fallback - using collection ID', collectionId);
+              response = await fetch(`/collections/${collectionId}/products.json?limit=50`);
+
+              if (response.ok) {
+                data = await response.json();
+                console.log('LoadProducts: Products API data received using collection ID', {
+                  data: data,
+                  products: data.products,
+                  productsLength: data.products ? data.products.length : 'N/A'
+                });
+              } else {
+                console.log('LoadProducts: Collection ID API also failed with status', response.status);
+              }
+            } catch (idError) {
+              console.log('LoadProducts: Collection ID API call failed', idError);
+            }
           }
         }
 
-        // If collection ID failed or not available, try collection handle
+        // If handle approach failed, try alternative methods
         if (!data || !data.products || data.products.length === 0) {
+          console.log('LoadProducts: Handle approach failed, trying alternatives');
+
+          // Try to get the collection ID by handle first
           try {
-            // Try to get the collection ID by handle first
             const collectionsResponse = await fetch('/collections.json');
             if (collectionsResponse.ok) {
               const collectionsData = await collectionsResponse.json();
@@ -1034,13 +1036,16 @@
               if (foundCollection) {
                 console.log('LoadProducts: Found collection by handle', foundCollection);
 
-                // Now fetch products using the collection ID
-                response = await fetch(`/collections/${foundCollection.id}/products.json?limit=50`);
-                if (response.ok) {
-                  data = await response.json();
-                  console.log('LoadProducts: Products API data received using found collection ID', { data: data, products: data.products });
-                } else {
-                  console.log('LoadProducts: Products API failed with status', response.status);
+                // Try using the found collection ID
+                if (foundCollection.id !== collectionId) {
+                  console.log('LoadProducts: Trying found collection ID', foundCollection.id);
+                  response = await fetch(`/collections/${foundCollection.id}/products.json?limit=50`);
+                  if (response.ok) {
+                    data = await response.json();
+                    console.log('LoadProducts: Products API data received using found collection ID', { data: data, products: data.products });
+                  } else {
+                    console.log('LoadProducts: Found collection ID also failed with status', response.status);
+                  }
                 }
               } else {
                 console.log('LoadProducts: Collection handle not found in collections list', { collectionHandle, availableHandles: collectionsData.collections.map(c => c.handle) });
@@ -1048,22 +1053,6 @@
             }
           } catch (error) {
             console.log('LoadProducts: Collections API call failed', error);
-
-            // Final fallback: Try direct collection endpoint
-            try {
-              response = await fetch(`/collections/${collectionHandle}.json`);
-              if (response.ok) {
-                data = await response.json();
-                console.log('LoadProducts: Fallback collection API data received', { data: data, collection: data.collection });
-
-                // If collection has products, use them
-                if (data.collection && data.collection.products && data.collection.products.length > 0) {
-                  console.log('LoadProducts: Using products from collection data');
-                }
-              }
-            } catch (fallbackError) {
-              console.log('LoadProducts: Fallback API call also failed', fallbackError);
-            }
           }
         }
 
@@ -1109,130 +1098,23 @@
             productsLength: data && data.products ? data.products.length : 'N/A'
           });
 
-          // Debug: Let's check what collections are available
+          // Final check: Verify the collection exists and has products
           try {
-            const debugCollectionsResponse = await fetch('/collections.json');
-            const debugCollectionsData = await debugCollectionsResponse.json();
-            console.log('LoadProducts: Available collections for debugging', debugCollectionsData.collections);
+            const collectionsResponse = await fetch('/collections.json');
+            if (collectionsResponse.ok) {
+              const collectionsData = await collectionsResponse.json();
+              console.log('LoadProducts: Available collections for debugging', collectionsData.collections);
 
-            const matchingCollection = debugCollectionsData.collections.find(c => c.handle === collectionHandle);
-            console.log('LoadProducts: Matching collection found', matchingCollection);
+              const matchingCollection = collectionsData.collections.find(c => c.handle === collectionHandle);
+              console.log('LoadProducts: Matching collection found', matchingCollection);
 
-            // Last resort: Try to fetch products using Shopify's product search by collection
-            if (matchingCollection && matchingCollection.id) {
-              try {
-                console.log('LoadProducts: Trying last resort - products search by collection');
-                const searchResponse = await fetch(`/search?q=collection:${matchingCollection.handle}`);
-                if (searchResponse.ok) {
-                  const searchHtml = await searchResponse.text();
-                  console.log('LoadProducts: Search response received, but this is HTML, not JSON');
+              if (matchingCollection) {
+                console.log('LoadProducts: Collection exists with products_count:', matchingCollection.products_count || 'N/A');
 
-                  // Try to extract product information from the HTML
-                  const parser = new DOMParser();
-                  const doc = parser.parseFromString(searchHtml, 'text/html');
-                  const productElements = doc.querySelectorAll('[data-product-id]');
-
-                  if (productElements.length > 0) {
-                    console.log('LoadProducts: Found products in search HTML', productElements.length);
-                    // This is a complex approach - for now just log that we found products
-                    // In a real implementation, we would need to parse the HTML more carefully
-                  }
+                // If collection exists but products_count is 0, the collection is truly empty
+                if (matchingCollection.products_count === 0) {
+                  console.log('LoadProducts: Collection exists but has no products');
                 }
-
-                // Alternative: Try GraphQL API if available
-                try {
-                  console.log('LoadProducts: Trying GraphQL API as last resort');
-                  const graphqlResponse = await fetch('/api/graphql', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      query: `
-                        query GetCollectionProducts($id: ID!) {
-                          collection(id: $id) {
-                            id
-                            title
-                            products(first: 20) {
-                              edges {
-                                node {
-                                  id
-                                  title
-                                  handle
-                                  featuredImage {
-                                    url
-                                    altText
-                                  }
-                                  priceRange {
-                                    minVariantPrice {
-                                      amount
-                                      currencyCode
-                                    }
-                                  }
-                                  variants(first: 1) {
-                                    edges {
-                                      node {
-                                        id
-                                        price
-                                        availableForSale
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      `,
-                      variables: {
-                        id: `gid://shopify/Collection/${matchingCollection.id}`
-                      }
-                    })
-                  });
-
-                  if (graphqlResponse.ok) {
-                    const graphqlData = await graphqlResponse.json();
-                    console.log('LoadProducts: GraphQL response received', graphqlData);
-
-                    if (graphqlData.data && graphqlData.data.collection && graphqlData.data.collection.products) {
-                      const products = graphqlData.data.collection.products.edges.map(edge => edge.node);
-                      console.log('LoadProducts: Found products via GraphQL', products.length);
-
-                      data = { products: products };
-                      console.log('LoadProducts: Using products from GraphQL data');
-                    } else {
-                      console.log('LoadProducts: GraphQL response has no products', graphqlData);
-                    }
-                  } else {
-                    console.log('LoadProducts: GraphQL API returned non-ok status', graphqlResponse.status);
-                    const errorText = await graphqlResponse.text();
-                    console.log('LoadProducts: GraphQL error response', errorText);
-                  }
-                } catch (graphqlError) {
-                  console.log('LoadProducts: GraphQL API failed', graphqlError);
-                }
-
-                // Ultimate fallback: Try using the Shopify AJAX API
-                if (!data || !data.products || data.products.length === 0) {
-                  try {
-                    console.log('LoadProducts: Trying Shopify AJAX API as ultimate fallback');
-                    const ajaxResponse = await fetch('/collections/' + matchingCollection.handle + '/products.json?limit=20');
-
-                    if (ajaxResponse.ok) {
-                      const ajaxData = await ajaxResponse.json();
-                      console.log('LoadProducts: AJAX API response received', ajaxData);
-
-                      if (ajaxData.products && ajaxData.products.length > 0) {
-                        data = ajaxData;
-                        console.log('LoadProducts: Found products via AJAX API', ajaxData.products.length);
-                      }
-                    }
-                  } catch (ajaxError) {
-                    console.log('LoadProducts: AJAX API also failed', ajaxError);
-                  }
-                }
-              } catch (error) {
-                console.log('LoadProducts: Last resort search failed', error);
               }
             }
           } catch (error) {
