@@ -10,6 +10,9 @@
   padding: 10px 12px;
   margin: 12px 0;
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 /* Custom colors from settings */
@@ -44,6 +47,8 @@
 /* Offers Container */
 .offers-container {
   position: relative;
+  width: 100%;
+  max-width: 100%;
 }
 
 .offers-scroll-wrapper {
@@ -51,7 +56,7 @@
   overflow-y: hidden;
   scrollbar-width: thin;
   -ms-overflow-style: none;
-  width: 100%;
+  max-width: 100%;
 }
 
 .offers-scroll-wrapper::-webkit-scrollbar {
@@ -76,6 +81,7 @@
   display: flex;
   gap: 6px;
   width: max-content;
+  min-width: 0;
 }
 
 /* Offer Items - Compact */
@@ -260,9 +266,22 @@ style[data-section-id] {
 }
 
 /* Ensure proper spacing in product page context */
-.product__info .product-offers-bar {
+.product__info .product-offers-bar,
+.product-details .product-offers-bar,
+.variant-picker + .product-offers-bar {
   margin-left: 0;
   margin-right: 0;
-  margin-top: 20px;
-  margin-bottom: 24px;
+  margin-top: 16px;
+  margin-bottom: 20px;
+}
+
+/* Force scrolling for inline offers */
+.product-offers-inline .offers-scroll-wrapper {
+  overflow-x: scroll !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure offers don't wrap */
+.product-offers-inline .offers-list {
+  flex-wrap: nowrap !important;
 }
