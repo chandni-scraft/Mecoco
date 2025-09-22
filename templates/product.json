@@ -171,6 +171,12 @@
               },
               "blocks": {}
             },
+            "product_offers_block": {
+              "type": "custom-liquid",
+              "settings": {
+                "custom_liquid": "{% section 'product-offers' %}"
+              }
+            },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
               "settings": {
@@ -395,6 +401,7 @@
             "price_a7krng",
             "text_gXMUag",
             "variant_picker_R3rGDr",
+            "product_offers_block",
             "buy_buttons_eYQEYi",
             "accordion_qxKemj"
           ]
@@ -689,53 +696,43 @@
         "offer_1": {
           "type": "offer",
           "settings": {
-            "badge": "FREE SHIPPING",
-            "title": "Free Delivery",
-            "description": "On all orders above ₹500",
-            "show_code": false,
-            "cta_text": "Shop Now",
-            "cta_link": "/collections/all"
+            "label": "FREE GIFT",
+            "code": "FREEBTAN"
           }
         },
         "offer_2": {
           "type": "offer",
           "settings": {
-            "badge": "LIMITED TIME",
-            "title": "15% Off First Order",
-            "description": "New customers get extra savings",
-            "show_code": true,
-            "discount_code": "FIRST15",
-            "cta_text": "Use Code",
-            "cta_link": "/collections/all"
+            "label": "FREE GIFT",
+            "code": "FREEHANDMALAI"
           }
         },
         "offer_3": {
           "type": "offer",
           "settings": {
-            "badge": "BULK SAVE",
-            "title": "Buy 2 Get 10% Off",
-            "description": "Mix and match any products",
-            "show_code": true,
-            "discount_code": "BUNDLE10",
-            "cta_text": "Shop Bundle",
-            "cta_link": "/collections/all"
+            "label": "20% OFF",
+            "code": "NEWHABIT50"
+          }
+        },
+        "offer_4": {
+          "type": "offer",
+          "settings": {
+            "label": "FREE",
+            "code": ""
           }
         }
       },
-      "block_order": ["offer_1", "offer_2", "offer_3"],
+      "block_order": ["offer_1", "offer_2", "offer_3", "offer_4"],
       "settings": {
-        "heading": "Special Offers",
-        "show_navigation": true,
-        "show_dots": true,
-        "auto_rotate": false,
-        "rotation_speed": 5,
-        "color_scheme": "background-1"
+        "heading": "11 Limited Time Offers",
+        "background_color": "#e8f5e9",
+        "text_color": "#1b5e20",
+        "indicator_color": "#4caf50"
       }
     }
   },
   "order": [
     "main",
-    "product_offers_section",
     "product_recommendations_iA6pyd"
   ]
 }

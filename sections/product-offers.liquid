@@ -1,76 +1,56 @@
 {{ 'product-offers.css' | asset_url | stylesheet_tag }}
 
-<div class="product-offers-section color-{{ section.settings.color_scheme }}" data-section-id="{{ section.id }}">
-  <div class="container">
-    {% if section.settings.heading != blank %}
-      <h2 class="offers-heading">{{ section.settings.heading }}</h2>
-    {% endif %}
-    
-    <div class="offers-slider-wrapper">
-      <div class="offers-slider" data-offers-count="{{ section.blocks.size }}">
-        <div class="offers-track">
-          {% for block in section.blocks %}
-            {% case block.type %}
-              {% when 'offer' %}
-                <div class="offer-card" {{ block.shopify_attributes }}>
-                  <div class="offer-content">
-                    {% if block.settings.badge != blank %}
-                      <span class="offer-badge">{{ block.settings.badge }}</span>
-                    {% endif %}
-                    
-                    <h3 class="offer-title">{{ block.settings.title }}</h3>
-                    
-                    {% if block.settings.description != blank %}
-                      <p class="offer-description">{{ block.settings.description }}</p>
-                    {% endif %}
-                    
-                    <div class="offer-footer">
-                      {% if block.settings.show_code and block.settings.discount_code != blank %}
-                        <div class="offer-code-wrapper">
-                          <span class="code-label">Code:</span>
-                          <code class="discount-code" data-code="{{ block.settings.discount_code }}">{{ block.settings.discount_code }}</code>
-                          <button class="copy-code-btn" data-code="{{ block.settings.discount_code }}">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                              <path d="M10.667 5.333V3.733c0-.746 0-1.12-.145-1.405a1.333 1.333 0 0 0-.583-.583C9.653 1.6 9.28 1.6 8.533 1.6H4.267c-.747 0-1.12 0-1.406.145a1.333 1.333 0 0 0-.583.583c-.145.285-.145.658-.145 1.405v4.266c0 .747 0 1.12.145 1.406.128.254.329.455.583.583.285.145.659.145 1.405.145h1.6m2.4-4.8h4.267c.746 0 1.12 0 1.405.145.254.128.455.329.583.583.145.285.145.659.145 1.405v4.267c0 .746 0 1.12-.145 1.405a1.333 1.333 0 0 1-.583.583c-.285.145-.659.145-1.405.145H8.267c-.747 0-1.12 0-1.406-.145a1.333 1.333 0 0 1-.583-.583c-.145-.285-.145-.659-.145-1.405V8.267c0-.747 0-1.12.145-1.406a1.333 1.333 0 0 1 .583-.583c.285-.145.659-.145 1.405-.145Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span class="copy-text">Copy</span>
-                          </button>
-                        </div>
-                      {% endif %}
-                      
-                      {% if block.settings.cta_text != blank and block.settings.cta_link != blank %}
-                        <a href="{{ block.settings.cta_link }}" class="offer-cta-link">
-                          {{ block.settings.cta_text }}
-                        </a>
-                      {% endif %}
-                    </div>
-                  </div>
-                </div>
-            {% endcase %}
-          {% endfor %}
-        </div>
-      </div>
-      
-      {% if section.blocks.size > 1 and section.settings.show_navigation %}
-        <button class="offers-nav offers-nav--prev" aria-label="Previous offer">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-        <button class="offers-nav offers-nav--next" aria-label="Next offer">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      {% endif %}
-    </div>
-    
-    {% if section.blocks.size > 1 and section.settings.show_dots %}
-      <div class="offers-dots">
+<style>
+  .product-offers-bar[data-section-id="{{ section.id }}"] {
+    --offers-bg: {{ section.settings.background_color }};
+    --offers-text: {{ section.settings.text_color }};
+    --offers-indicator: {{ section.settings.indicator_color }};
+    --offers-border: {{ section.settings.background_color | color_mix: '#000000', 10 }};
+  }
+</style>
+
+<div class="product-offers-bar" data-section-id="{{ section.id }}">
+  <div class="offers-header">
+    <span class="offers-indicator"></span>
+    <span class="offers-title">{{ section.settings.heading | default: '11 Limited Time Offers' }}</span>
+  </div>
+  
+  <div class="offers-container">
+    <div class="offers-scroll-wrapper">
+      <div class="offers-list">
         {% for block in section.blocks %}
-          <button class="offers-dot{% if forloop.first %} active{% endif %}" aria-label="Go to offer {{ forloop.index }}"></button>
+          {% case block.type %}
+            {% when 'offer' %}
+              <div class="offer-item" {{ block.shopify_attributes }}>
+                <div class="offer-label">{{ block.settings.label }}</div>
+                {% if block.settings.code != blank %}
+                  <div class="offer-code-group">
+                    <span class="offer-code-text">Code:</span>
+                    <button class="offer-code-button" data-code="{{ block.settings.code }}">
+                      {{ block.settings.code }}
+                      <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M8 4.5V3.3c0-.56 0-.84-.109-1.054a1 1 0 0 0-.437-.437C7.24 1.5 6.96 1.5 6.4 1.5H3.2c-.56 0-.84 0-1.054.109a1 1 0 0 0-.437.437C1.5 2.26 1.5 2.54 1.5 3.1v3.2c0 .56 0 .84.109 1.054a1 1 0 0 0 .437.437c.214.109.494.109 1.054.109h1.2m1.8-3.6h3.2c.56 0 .84 0 1.054.109a1 1 0 0 0 .437.437c.109.214.109.494.109 1.054v3.2c0 .56 0 .84-.109 1.054a1 1 0 0 0-.437.437C9.14 10.5 8.86 10.5 8.3 10.5H5.1c-.56 0-.84 0-1.054-.109a1 1 0 0 1-.437-.437C3.5 9.74 3.5 9.46 3.5 8.9V5.7c0-.56 0-.84.109-1.054a1 1 0 0 1 .437-.437C4.26 4.1 4.54 4.1 5.1 4.1Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                {% endif %}
+              </div>
+          {% endcase %}
         {% endfor %}
       </div>
+    </div>
+    
+    {% if section.blocks.size > 4 %}
+      <button class="offers-nav offers-nav--prev" aria-label="Previous offers">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="offers-nav offers-nav--next" aria-label="Next offers">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     {% endif %}
   </div>
 </div>
@@ -80,163 +60,100 @@
     const section = document.querySelector('[data-section-id="{{ section.id }}"]');
     if (!section) return;
     
-    const track = section.querySelector('.offers-track');
-    const cards = section.querySelectorAll('.offer-card');
+    const scrollWrapper = section.querySelector('.offers-scroll-wrapper');
+    const offersList = section.querySelector('.offers-list');
     const prevBtn = section.querySelector('.offers-nav--prev');
     const nextBtn = section.querySelector('.offers-nav--next');
-    const dots = section.querySelectorAll('.offers-dot');
     
-    if (cards.length <= 1) return;
-    
-    let currentIndex = 0;
-    const cardCount = cards.length;
-    
-    function updateSlider() {
-      const cardWidth = cards[0].offsetWidth;
-      const gap = 16; // Match CSS gap
-      const offset = currentIndex * (cardWidth + gap);
-      track.style.transform = `translateX(-${offset}px)`;
+    // Scroll functionality
+    function scrollOffers(direction) {
+      const scrollAmount = 200;
+      const currentScroll = scrollWrapper.scrollLeft;
       
-      // Update dots
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === currentIndex);
-      });
+      if (direction === 'next') {
+        scrollWrapper.scrollTo({
+          left: currentScroll + scrollAmount,
+          behavior: 'smooth'
+        });
+      } else {
+        scrollWrapper.scrollTo({
+          left: currentScroll - scrollAmount,
+          behavior: 'smooth'
+        });
+      }
     }
     
-    function goToNext() {
-      currentIndex = (currentIndex + 1) % cardCount;
-      updateSlider();
+    // Update button visibility
+    function updateNavButtons() {
+      if (!prevBtn || !nextBtn) return;
+      
+      const scrollLeft = scrollWrapper.scrollLeft;
+      const scrollWidth = offersList.scrollWidth;
+      const clientWidth = scrollWrapper.clientWidth;
+      
+      prevBtn.style.display = scrollLeft > 0 ? 'flex' : 'none';
+      nextBtn.style.display = scrollLeft < scrollWidth - clientWidth - 10 ? 'flex' : 'none';
     }
     
-    function goToPrev() {
-      currentIndex = (currentIndex - 1 + cardCount) % cardCount;
-      updateSlider();
+    // Event listeners
+    if (prevBtn) prevBtn.addEventListener('click', () => scrollOffers('prev'));
+    if (nextBtn) nextBtn.addEventListener('click', () => scrollOffers('next'));
+    
+    if (scrollWrapper) {
+      scrollWrapper.addEventListener('scroll', updateNavButtons);
+      window.addEventListener('resize', updateNavButtons);
+      updateNavButtons();
     }
-    
-    // Navigation
-    if (nextBtn) nextBtn.addEventListener('click', goToNext);
-    if (prevBtn) prevBtn.addEventListener('click', goToPrev);
-    
-    // Dots
-    dots.forEach((dot, index) => {
-      dot.addEventListener('click', () => {
-        currentIndex = index;
-        updateSlider();
-      });
-    });
-    
-    // Auto-rotate
-    {% if section.settings.auto_rotate %}
-      setInterval(goToNext, {{ section.settings.rotation_speed | times: 1000 }});
-    {% endif %}
     
     // Copy code functionality
-    const copyButtons = section.querySelectorAll('.copy-code-btn');
-    copyButtons.forEach(btn => {
+    const codeButtons = section.querySelectorAll('.offer-code-button');
+    codeButtons.forEach(btn => {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
         const code = this.dataset.code;
-        const copyText = this.querySelector('.copy-text');
+        const originalHTML = this.innerHTML;
         
         navigator.clipboard.writeText(code).then(() => {
-          copyText.textContent = 'Copied!';
+          this.innerHTML = 'Copied! <svg class="copy-icon" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 6L5 8L9 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
           this.classList.add('copied');
           
           setTimeout(() => {
-            copyText.textContent = 'Copy';
+            this.innerHTML = originalHTML;
             this.classList.remove('copied');
           }, 2000);
         });
       });
     });
-    
-    // Touch/swipe support
-    let touchStartX = 0;
-    let touchEndX = 0;
-    
-    track.addEventListener('touchstart', e => {
-      touchStartX = e.changedTouches[0].screenX;
-    });
-    
-    track.addEventListener('touchend', e => {
-      touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
-    });
-    
-    function handleSwipe() {
-      const swipeThreshold = 50;
-      const diff = touchStartX - touchEndX;
-      
-      if (Math.abs(diff) > swipeThreshold) {
-        if (diff > 0) {
-          goToNext();
-        } else {
-          goToPrev();
-        }
-      }
-    }
-    
-    // Resize handler
-    window.addEventListener('resize', updateSlider);
   });
 </script>
 
 {% schema %}
 {
-  "name": "Product Offers",
+  "name": "Product Offers Bar",
   "settings": [
     {
       "type": "text",
       "id": "heading",
-      "label": "Section heading",
-      "default": "Special Offers"
+      "label": "Heading",
+      "default": "11 Limited Time Offers"
     },
     {
-      "type": "checkbox",
-      "id": "show_navigation",
-      "label": "Show navigation arrows",
-      "default": true
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#e8f5e9"
     },
     {
-      "type": "checkbox",
-      "id": "show_dots",
-      "label": "Show dots navigation",
-      "default": true
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1b5e20"
     },
     {
-      "type": "checkbox",
-      "id": "auto_rotate",
-      "label": "Auto-rotate offers",
-      "default": false
-    },
-    {
-      "type": "range",
-      "id": "rotation_speed",
-      "label": "Rotation speed (seconds)",
-      "min": 3,
-      "max": 10,
-      "step": 1,
-      "default": 5
-    },
-    {
-      "type": "select",
-      "id": "color_scheme",
-      "label": "Color scheme",
-      "options": [
-        {
-          "value": "background-1",
-          "label": "Background 1"
-        },
-        {
-          "value": "background-2",
-          "label": "Background 2"
-        },
-        {
-          "value": "inverse",
-          "label": "Inverse"
-        }
-      ],
-      "default": "background-1"
+      "type": "color",
+      "id": "indicator_color",
+      "label": "Indicator color",
+      "default": "#4caf50"
     }
   ],
   "blocks": [
@@ -246,87 +163,49 @@
       "settings": [
         {
           "type": "text",
-          "id": "badge",
-          "label": "Badge text",
-          "default": "LIMITED TIME",
-          "info": "Small text shown above the title"
+          "id": "label",
+          "label": "Offer label",
+          "default": "FREE GIFT"
         },
         {
           "type": "text",
-          "id": "title",
-          "label": "Offer title",
-          "default": "Get 10% Off"
-        },
-        {
-          "type": "textarea",
-          "id": "description",
-          "label": "Description",
-          "default": "Save on all orders above ₹500"
-        },
-        {
-          "type": "checkbox",
-          "id": "show_code",
-          "label": "Show discount code",
-          "default": true
-        },
-        {
-          "type": "text",
-          "id": "discount_code",
-          "label": "Discount code",
-          "default": "SAVE10",
-          "info": "Create matching discount in Shopify admin"
-        },
-        {
-          "type": "text",
-          "id": "cta_text",
-          "label": "Button text",
-          "default": "Shop Now"
-        },
-        {
-          "type": "url",
-          "id": "cta_link",
-          "label": "Button link"
+          "id": "code",
+          "label": "Offer code",
+          "info": "Leave empty for offers without codes"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Product Offers",
+      "name": "Product Offers Bar",
       "blocks": [
         {
           "type": "offer",
           "settings": {
-            "badge": "FREE SHIPPING",
-            "title": "Free Delivery",
-            "description": "On all orders above ₹500",
-            "show_code": false,
-            "cta_text": "Shop Now",
-            "cta_link": "/collections/all"
+            "label": "FREE GIFT",
+            "code": "FREEBTAN"
           }
         },
         {
           "type": "offer",
           "settings": {
-            "badge": "LIMITED TIME",
-            "title": "15% Off First Order",
-            "description": "New customers get extra savings",
-            "show_code": true,
-            "discount_code": "FIRST15",
-            "cta_text": "Use Code",
-            "cta_link": "/collections/all"
+            "label": "FREE GIFT",
+            "code": "FREEHANDMALAI"
           }
         },
         {
           "type": "offer",
           "settings": {
-            "badge": "BULK SAVE",
-            "title": "Buy 2 Get 10% Off",
-            "description": "Mix and match any products",
-            "show_code": true,
-            "discount_code": "BUNDLE10",
-            "cta_text": "Shop Bundle",
-            "cta_link": "/collections/all"
+            "label": "20% OFF",
+            "code": "NEWHABIT50"
+          }
+        },
+        {
+          "type": "offer",
+          "settings": {
+            "label": "FREE",
+            "code": ""
           }
         }
       ]
