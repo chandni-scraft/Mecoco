@@ -564,8 +564,8 @@
                   <div class="shop-by-concern-badge-{{ ai_gen_id }}">
                     Sale
                   </div>
-                {% endif %}
-              </div>
+        {% endif %}
+      </div>
 
               <div class="shop-by-concern-content-{{ ai_gen_id }}">
                 <h3 class="shop-by-concern-product-title-{{ ai_gen_id }}">
@@ -576,8 +576,8 @@
                   <span class="shop-by-concern-price-{{ ai_gen_id }}">{{ product.price | money }}</span>
                   {% if product.compare_at_price > product.price %}
                     <span class="shop-by-concern-compare-price-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
-                  {% endif %}
-                </div>
+          {% endif %}
+        </div>
 
                 {% if block.settings.show_ratings %}
                   <div class="shop-by-concern-rating-{{ ai_gen_id }}">
@@ -585,9 +585,9 @@
                       {% for i in (1..5) %}
                         <svg class="shop-by-concern-star-{{ ai_gen_id }}" viewBox="0 0 24 24">
                           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
+          </svg>
                       {% endfor %}
-                    </div>
+      </div>
                     <span class="shop-by-concern-rating-text-{{ ai_gen_id }}">(4.5)</span>
                   </div>
                 {% endif %}
@@ -598,7 +598,7 @@
                     {% for attribute in attributes limit: 3 %}
                       <span class="shop-by-concern-attribute-{{ ai_gen_id }}">{{ attribute | strip }}</span>
                     {% endfor %}
-                  </div>
+      </div>
                 {% endif %}
 
                 {% if block.settings.show_variant_dropdown and product.variants.size > 1 %}
@@ -624,7 +624,7 @@
                     >
                     <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="increase" aria-label="Increase quantity">+</button>
                   </div>
-                </div>
+      </div>
 
                 <button
                   class="shop-by-concern-add-to-cart-{{ ai_gen_id }}"
@@ -637,12 +637,12 @@
                   {% else %}
                     Sold Out
                   {% endif %}
-                </button>
-              </div>
+          </button>
+        </div>
             </div>
           {% endfor %}
-        {% endif %}
-      </div>
+      {% endif %}
+  </div>
 
       <div class="shop-by-concern-carousel-{{ ai_gen_id }}" id="products-carousel-{{ ai_gen_id }}">
         <button class="shop-by-concern-carousel-nav-{{ ai_gen_id }} shop-by-concern-carousel-prev-{{ ai_gen_id }}" aria-label="Previous products">
@@ -653,110 +653,110 @@
         <div class="shop-by-concern-carousel-track-{{ ai_gen_id }}" id="carousel-track-{{ ai_gen_id }}">
           {% if first_collection != blank %}
             {% for product in collections[first_collection.handle].products limit: block.settings.products_per_page %}
-              <div class="shop-by-concern-card-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
-                <div class="shop-by-concern-image-wrapper-{{ ai_gen_id }}">
-                  {% if product.featured_image %}
-                    <img
-                      class="shop-by-concern-image-{{ ai_gen_id }}"
-                      src="{{ product.featured_image | image_url: width: 400 }}"
-                      alt="{{ product.featured_image.alt | escape }}"
-                      loading="lazy"
-                      width="400"
-                      height="400"
-                      sizes="(max-width: 480px) 280px, (max-width: 768px) 300px, (max-width: 1024px) 350px, 400px"
-                      srcset="{{ product.featured_image | image_url: width: 280 }} 280w,
-                              {{ product.featured_image | image_url: width: 300 }} 300w,
-                              {{ product.featured_image | image_url: width: 350 }} 350w,
-                              {{ product.featured_image | image_url: width: 400 }} 400w,
-                              {{ product.featured_image | image_url: width: 600 }} 600w,
-                              {{ product.featured_image | image_url: width: 800 }} 800w"
-                    >
-                  {% else %}
-                    <div class="shop-by-concern-image-placeholder-{{ ai_gen_id }}">
-                      {{ 'product-1' | placeholder_svg_tag }}
-                    </div>
-                  {% endif %}
+  <div class="shop-by-concern-card-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
+    <div class="shop-by-concern-image-wrapper-{{ ai_gen_id }}">
+      {% if product.featured_image %}
+        <img
+          class="shop-by-concern-image-{{ ai_gen_id }}"
+          src="{{ product.featured_image | image_url: width: 400 }}"
+          alt="{{ product.featured_image.alt | escape }}"
+          loading="lazy"
+          width="400"
+          height="400"
+          sizes="(max-width: 480px) 280px, (max-width: 768px) 300px, (max-width: 1024px) 350px, 400px"
+          srcset="{{ product.featured_image | image_url: width: 280 }} 280w,
+                  {{ product.featured_image | image_url: width: 300 }} 300w,
+                  {{ product.featured_image | image_url: width: 350 }} 350w,
+                  {{ product.featured_image | image_url: width: 400 }} 400w,
+                  {{ product.featured_image | image_url: width: 600 }} 600w,
+                  {{ product.featured_image | image_url: width: 800 }} 800w"
+        >
+      {% else %}
+        <div class="shop-by-concern-image-placeholder-{{ ai_gen_id }}">
+          {{ 'product-1' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
 
-                  {% if block.settings.show_badges and product.compare_at_price > product.price %}
-                    <div class="shop-by-concern-badge-{{ ai_gen_id }}">
-                      Sale
-                    </div>
-                  {% endif %}
-                </div>
+      {% if block.settings.show_badges and product.compare_at_price > product.price %}
+        <div class="shop-by-concern-badge-{{ ai_gen_id }}">
+          Sale
+        </div>
+      {% endif %}
+    </div>
 
-                <div class="shop-by-concern-content-{{ ai_gen_id }}">
-                  <h3 class="shop-by-concern-product-title-{{ ai_gen_id }}">
-                    <a href="{{ product.url }}">{{ product.title }}</a>
-                  </h3>
+    <div class="shop-by-concern-content-{{ ai_gen_id }}">
+      <h3 class="shop-by-concern-product-title-{{ ai_gen_id }}">
+        <a href="{{ product.url }}">{{ product.title }}</a>
+      </h3>
 
-                  <div class="shop-by-concern-price-wrapper-{{ ai_gen_id }}">
-                    <span class="shop-by-concern-price-{{ ai_gen_id }}">{{ product.price | money }}</span>
-                    {% if product.compare_at_price > product.price %}
-                      <span class="shop-by-concern-compare-price-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
-                    {% endif %}
-                  </div>
+      <div class="shop-by-concern-price-wrapper-{{ ai_gen_id }}">
+        <span class="shop-by-concern-price-{{ ai_gen_id }}">{{ product.price | money }}</span>
+        {% if product.compare_at_price > product.price %}
+          <span class="shop-by-concern-compare-price-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
+        {% endif %}
+      </div>
 
-                  {% if block.settings.show_ratings %}
-                    <div class="shop-by-concern-rating-{{ ai_gen_id }}">
-                      <div class="shop-by-concern-stars-{{ ai_gen_id }}">
-                        {% for i in (1..5) %}
-                          <svg class="shop-by-concern-star-{{ ai_gen_id }}" viewBox="0 0 24 24">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                          </svg>
-                        {% endfor %}
-                      </div>
-                      <span class="shop-by-concern-rating-text-{{ ai_gen_id }}">(4.5)</span>
-                    </div>
-                  {% endif %}
+      {% if block.settings.show_ratings %}
+        <div class="shop-by-concern-rating-{{ ai_gen_id }}">
+          <div class="shop-by-concern-stars-{{ ai_gen_id }}">
+            {% for i in (1..5) %}
+              <svg class="shop-by-concern-star-{{ ai_gen_id }}" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            {% endfor %}
+          </div>
+          <span class="shop-by-concern-rating-text-{{ ai_gen_id }}">(4.5)</span>
+        </div>
+      {% endif %}
 
-                  {% if product.metafields.custom.attributes %}
-                    <div class="shop-by-concern-attributes-{{ ai_gen_id }}">
-                      {% assign attributes = product.metafields.custom.attributes | split: ',' %}
-                      {% for attribute in attributes limit: 3 %}
-                        <span class="shop-by-concern-attribute-{{ ai_gen_id }}">{{ attribute | strip }}</span>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
+      {% if product.metafields.custom.attributes %}
+        <div class="shop-by-concern-attributes-{{ ai_gen_id }}">
+          {% assign attributes = product.metafields.custom.attributes | split: ',' %}
+          {% for attribute in attributes limit: 3 %}
+            <span class="shop-by-concern-attribute-{{ ai_gen_id }}">{{ attribute | strip }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
 
-                  {% if block.settings.show_variant_dropdown and product.variants.size > 1 %}
-                    <select class="shop-by-concern-variant-select-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
-                      {% for variant in product.variants %}
-                        <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %}>
-                          {{ variant.title }} - {{ variant.price | money }}
-                        </option>
-                      {% endfor %}
-                    </select>
-                  {% endif %}
+      {% if block.settings.show_variant_dropdown and product.variants.size > 1 %}
+        <select class="shop-by-concern-variant-select-{{ ai_gen_id }}" data-product-id="{{ product.id }}">
+          {% for variant in product.variants %}
+            <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %}>
+              {{ variant.title }} - {{ variant.price | money }}
+            </option>
+          {% endfor %}
+        </select>
+      {% endif %}
 
-                  <div class="shop-by-concern-quantity-wrapper-{{ ai_gen_id }}">
-                    <span class="shop-by-concern-quantity-label-{{ ai_gen_id }}">Qty:</span>
-                    <div class="shop-by-concern-quantity-controls-{{ ai_gen_id }}">
-                      <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="decrease" aria-label="Decrease quantity">−</button>
-                      <input
-                        type="number"
-                        class="shop-by-concern-quantity-input-{{ ai_gen_id }}"
-                        value="1"
-                        min="1"
-                        aria-label="Quantity"
-                      >
-                      <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="increase" aria-label="Increase quantity">+</button>
-                    </div>
-                  </div>
+      <div class="shop-by-concern-quantity-wrapper-{{ ai_gen_id }}">
+        <span class="shop-by-concern-quantity-label-{{ ai_gen_id }}">Qty:</span>
+        <div class="shop-by-concern-quantity-controls-{{ ai_gen_id }}">
+          <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="decrease" aria-label="Decrease quantity">−</button>
+          <input
+            type="number"
+            class="shop-by-concern-quantity-input-{{ ai_gen_id }}"
+            value="1"
+            min="1"
+            aria-label="Quantity"
+          >
+          <button class="shop-by-concern-quantity-btn-{{ ai_gen_id }}" data-action="increase" aria-label="Increase quantity">+</button>
+        </div>
+      </div>
 
-                  <button
-                    class="shop-by-concern-add-to-cart-{{ ai_gen_id }}"
-                    data-product-id="{{ product.id }}"
+      <button
+        class="shop-by-concern-add-to-cart-{{ ai_gen_id }}"
+        data-product-id="{{ product.id }}"
                     data-variant-id="{{ product.selected_or_first_available_variant.id | default: product.variants.first.id }}"
-                    {% unless product.available %}disabled{% endunless %}
-                  >
-                    {% if product.available %}
-                      Add to Cart
-                    {% else %}
-                      Sold Out
-                    {% endif %}
-                  </button>
-                </div>
-              </div>
+        {% unless product.available %}disabled{% endunless %}
+      >
+        {% if product.available %}
+          Add to Cart
+        {% else %}
+          Sold Out
+        {% endif %}
+      </button>
+    </div>
+  </div>
             {% endfor %}
           {% endif %}
         </div>
@@ -772,7 +772,10 @@
       </div>
 
       <div class="shop-by-concern-empty-{{ ai_gen_id }}" id="empty-{{ ai_gen_id }}" style="display: none;">
-        No products found in this category.
+        <p>No products found in this category.</p>
+        <p style="font-size: 12px; color: rgba(0,0,0,0.6); margin-top: 8px;">
+          This collection appears to be empty or may not exist. Please check the collection settings in your Shopify admin.
+        </p>
       </div>
 
       {% if block.settings.show_load_more %}
@@ -807,6 +810,14 @@
       this.setupEventListeners();
       this.initializeFirstTab();
       this.setupCarousel();
+
+      // Debug: Log collection handles from tabs
+      const tabs = this.querySelectorAll('.shop-by-concern-tab-{{ ai_gen_id }}');
+      const handles = Array.from(tabs).map(tab => ({
+        handle: tab.dataset.collectionHandle,
+        text: tab.textContent.trim()
+      }));
+      console.log('LoadProducts: Collection handles from tabs on init', handles);
     }
 
     setupEventListeners() {
@@ -878,8 +889,13 @@
       e.preventDefault();
       const tab = e.target;
       const collectionHandle = tab.dataset.collectionHandle;
-
+      
       console.log('Tab clicked:', { tab, collectionHandle, currentCollection: this.currentCollection });
+
+      // Debug: Log all available tab handles
+      const allTabs = this.querySelectorAll('.shop-by-concern-tab-{{ ai_gen_id }}');
+      const tabHandles = Array.from(allTabs).map(t => t.dataset.collectionHandle);
+      console.log('LoadProducts: All available tab handles', tabHandles);
 
       if (!collectionHandle || collectionHandle === this.currentCollection) {
         console.log('Tab click ignored: no handle or same collection');
@@ -893,7 +909,7 @@
 
       // Add a small delay to show the loading state smoothly
       setTimeout(() => {
-        this.loadProducts(collectionHandle);
+      this.loadProducts(collectionHandle);
       }, 100);
     }
 
@@ -959,27 +975,46 @@
           if (response.ok) {
             data = await response.json();
             console.log('LoadProducts: API data received', { data: data, collection: data.collection });
+
+            // If we got collection data but no products in the collection object, try direct products endpoint
+            if (data.collection && (!data.collection.products || data.collection.products.length === 0)) {
+              console.log('LoadProducts: Collection has no products, trying direct products endpoint');
+              try {
+                const productsResponse = await fetch(`/collections/${data.collection.id}/products.json?limit=50`);
+                if (productsResponse.ok) {
+                  const productsData = await productsResponse.json();
+                  console.log('LoadProducts: Direct products API data received', { productsData: productsData, products: productsData.products });
+
+                  if (productsData.products && productsData.products.length > 0) {
+                    data = productsData; // Use the products data instead
+                  }
+                }
+              } catch (error) {
+                console.log('LoadProducts: Direct products API call failed', error);
+              }
+            }
           }
         } catch (error) {
           console.log('LoadProducts: First API call failed, trying alternative', error);
         }
 
         // If first attempt failed or returned empty, try the all collections endpoint
-        if (!data || !data.collection || !data.collection.products || data.collection.products.length === 0) {
+        if (!data || !data.collection) {
           try {
             const collectionsResponse = await fetch('/collections.json');
             const collectionsData = await collectionsResponse.json();
             const foundCollection = collectionsData.collections.find(c => c.handle === collectionHandle);
 
             if (foundCollection) {
-              response = await fetch(`/collections/${foundCollection.id}/products.json?limit=50`);
+              console.log('LoadProducts: Found collection in collections list', foundCollection);
+              response = await fetch(`/collections/${foundCollection.id}.json`);
               if (response.ok) {
                 data = await response.json();
-                console.log('LoadProducts: Alternative API data received', { data: data, products: data.products });
+                console.log('LoadProducts: Collection data from collections list', { data: data, collection: data.collection });
               }
             }
           } catch (error) {
-            console.log('LoadProducts: Alternative API call failed', error);
+            console.log('LoadProducts: Collections list API call failed', error);
           }
         }
 
@@ -988,18 +1023,58 @@
         }
 
         let products = [];
+        console.log('LoadProducts: Processing data for products', {
+          dataType: data.products ? 'direct_products' : data.collection ? 'collection' : 'unknown',
+          hasProducts: !!(data.products && data.products.length > 0),
+          hasCollectionProducts: !!(data.collection && data.collection.products && data.collection.products.length > 0),
+          productsCount: data.products ? data.products.length : (data.collection ? data.collection.products.length : 0)
+        });
+
         if (data && data.products && data.products.length > 0) {
           const startIndex = (page - 1) * this.productsPerPage;
           const endIndex = startIndex + this.productsPerPage;
           products = data.products.slice(startIndex, endIndex);
-          console.log('LoadProducts: Products extracted', { productsLength: products.length, startIndex, endIndex });
+          console.log('LoadProducts: Products extracted from direct products response', { productsLength: products.length, startIndex, endIndex });
         } else if (data && data.collection && data.collection.products && data.collection.products.length > 0) {
           const startIndex = (page - 1) * this.productsPerPage;
           const endIndex = startIndex + this.productsPerPage;
           products = data.collection.products.slice(startIndex, endIndex);
-          console.log('LoadProducts: Products extracted from collection', { productsLength: products.length, startIndex, endIndex });
+          console.log('LoadProducts: Products extracted from collection response', { productsLength: products.length, startIndex, endIndex });
         } else {
-          console.log('LoadProducts: No products found in any data format', { data });
+          console.log('LoadProducts: No products found in data', {
+            data: data,
+            hasData: !!data,
+            hasProducts: !!(data && data.products),
+            hasCollection: !!(data && data.collection),
+            collectionProductsLength: data && data.collection ? data.collection.products.length : 'N/A'
+          });
+
+          // Debug: Let's check what collections are available
+          try {
+            const debugCollectionsResponse = await fetch('/collections.json');
+            const debugCollectionsData = await debugCollectionsResponse.json();
+            console.log('LoadProducts: Available collections for debugging', debugCollectionsData.collections);
+
+            const matchingCollection = debugCollectionsData.collections.find(c => c.handle === collectionHandle);
+            console.log('LoadProducts: Matching collection found', matchingCollection);
+
+            // Last resort: Try to fetch products using Shopify's product search by collection
+            if (matchingCollection && matchingCollection.id) {
+              try {
+                console.log('LoadProducts: Trying last resort - products search by collection');
+                const searchResponse = await fetch(`/search?q=collection:${matchingCollection.handle}`);
+                if (searchResponse.ok) {
+                  const searchHtml = await searchResponse.text();
+                  console.log('LoadProducts: Search response received, but this is HTML, not JSON');
+                  // Note: This returns HTML, not JSON, so we can't parse products from it easily
+                }
+              } catch (error) {
+                console.log('LoadProducts: Last resort search failed', error);
+              }
+            }
+          } catch (error) {
+            console.log('LoadProducts: Could not fetch collections for debugging', error);
+          }
         }
 
         if (page === 1) {
@@ -1035,7 +1110,7 @@
       }
 
       const productsHTML = products.map(product => this.createProductCard(product)).join('');
-
+      
       if (grid) {
         grid.classList.add('loading');
         grid.innerHTML = productsHTML;
@@ -1078,7 +1153,7 @@
       return `
         <div class="shop-by-concern-card-{{ ai_gen_id }}" data-product-id="${product.id}">
           <div class="shop-by-concern-image-wrapper-{{ ai_gen_id }}">
-            ${product.featured_image ?
+            ${product.featured_image ? 
               `<img
                 class="shop-by-concern-image-{{ ai_gen_id }}"
                 src="${product.featured_image.src || product.featured_image}"
@@ -1178,7 +1253,7 @@
       const card = select.closest('.shop-by-concern-card-{{ ai_gen_id }}');
       const addToCartBtn = card.querySelector('.shop-by-concern-add-to-cart-{{ ai_gen_id }}');
       const variantId = select.value;
-
+      
       if (addToCartBtn) {
         addToCartBtn.dataset.variantId = variantId;
       }
@@ -1186,7 +1261,7 @@
 
     async handleAddToCart(e) {
       e.preventDefault();
-
+      
       const button = e.target;
       const card = button.closest('.shop-by-concern-card-{{ ai_gen_id }}');
       const variantId = button.dataset.variantId;
@@ -1212,7 +1287,7 @@
         if (response.ok) {
           this.showSuccessState(button);
           this.showToast();
-
+          
           // Trigger cart update event
           document.dispatchEvent(new CustomEvent('cart:updated'));
         } else {
