@@ -173,12 +173,12 @@
                 "offers_background_color": "#ffffff",
                 "offers_text_color": "#a42325",
                 "offers_indicator_color": "#a42325",
-                "offer_1_label": "10% off order above 499",
-                "offer_1_code": "code10",
+                "offer_1_label": "10% off",
+                "offer_1_code": "test10",
                 "offer_2_label": "FREE GIFT",
-                "offer_2_code": "",
-                "offer_3_label": "FREE GIFT",
-                "offer_3_code": ""
+                "offer_2_code": "Festive20",
+                "offer_3_label": "diwali offer",
+                "offer_3_code": "Divali15"
               },
               "blocks": {}
             },
