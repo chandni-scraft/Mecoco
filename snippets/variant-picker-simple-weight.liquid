@@ -1,0 +1,147 @@
+{%- doc -%}
+  Simple variant picker with weight-based pricing using Shopify's built-in weight
+{%- enddoc -%}
+
+{% assign block_settings = block.settings %}
+
+{% unless product_resource.has_only_default_variant %}
+  <variant-picker
+    class="variant-picker spacing-style variant-picker--{{ block_settings.alignment }} variant-picker-with-price"
+    style="{% render 'spacing-style', settings: block_settings %}"
+    data-section-id="{{ section.id }}"
+    data-product-id="{{ product_resource.id }}"
+    {{ block.shopify_attributes }}
+  >
+    <form class="variant-picker__form">
+      {%- for product_option in product_resource.options_with_values -%}
+        <fieldset class="variant-option variant-option--buttons variant-option--with-price">
+          <legend>{{ product_option.name | escape }}</legend>
+          {%- for product_option_value in product_option.values -%}
+            {%- liquid
+              assign current_variant = nil
+              for variant in product_resource.variants
+                if variant.option1 == product_option_value or variant.option2 == product_option_value or variant.option3 == product_option_value
+                  if product_option.position == 1 and variant.option1 == product_option_value
+                    assign current_variant = variant
+                    break
+                  elsif product_option.position == 2 and variant.option2 == product_option_value
+                    assign current_variant = variant
+                    break
+                  elsif product_option.position == 3 and variant.option3 == product_option_value
+                    assign current_variant = variant
+                    break
+                  endif
+                endif
+              endfor
+            -%}
+            
+            <label class="variant-option__button-label variant-option__button-label--with-price">
+              <input
+                type="radio"
+                name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
+                value="{{ product_option_value | escape }}"
+                {% if product_option_value.selected %}checked{% endif %}
+                {% if current_variant %}
+                  data-variant-id="{{ current_variant.id }}"
+                  data-variant-price="{{ current_variant.price }}"
+                  data-variant-weight="{{ current_variant.weight }}"
+                {% endif %}
+              >
+              <span class="variant-option__button-content">
+                <span class="variant-option__button-label__text">{{ product_option_value | escape }}</span>
+                
+                {%- if block_settings.show_variant_price and current_variant -%}
+                  <span class="variant-option__price-wrapper">
+                    {%- if current_variant.compare_at_price and current_variant.compare_at_price > current_variant.price -%}
+                      <span class="variant-option__compare-price">{{ current_variant.compare_at_price | money }}</span>
+                    {%- endif -%}
+                    <span class="variant-option__price">{{ current_variant.price | money }}</span>
+                    
+                    {%- if block_settings.show_per_gram_price and current_variant.weight and current_variant.weight > 0 -%}
+                      {%- comment -%}
+                        Shopify stores weight in grams by default
+                        We'll show price per gram, per 100g, or per kg based on settings
+                      {%- endcomment -%}
+                      {%- liquid
+                        assign weight_in_grams = current_variant.weight
+                        
+                        case block_settings.price_per_unit
+                        when 'kg'
+                          assign price_per_unit = current_variant.price | times: 1000.0 | divided_by: weight_in_grams
+                          assign unit_label = 'kg'
+                        when '100g'
+                          assign price_per_unit = current_variant.price | times: 100.0 | divided_by: weight_in_grams
+                          assign unit_label = '100g'
+                        else
+                          assign price_per_unit = current_variant.price | times: 1.0 | divided_by: weight_in_grams
+                          assign unit_label = 'g'
+                        endcase
+                      -%}
+                      <span class="variant-option__per-gram-price">({{ price_per_unit | money }}/{{ unit_label }})</span>
+                      
+                      {%- comment -%} Debug info - remove in production {%- endcomment -%}
+                      {%- if request.design_mode -%}
+                        <span style="display: block; font-size: 10px; color: red;">
+                          Weight: {{ current_variant.weight }}g
+                        </span>
+                      {%- endif -%}
+                    {%- elsif block_settings.show_per_gram_price -%}
+                      {%- if request.design_mode -%}
+                        <span style="display: block; font-size: 10px; color: red;">
+                          No weight data for variant {{ current_variant.id }}
+                        </span>
+                      {%- endif -%}
+                    {%- endif -%}
+                  </span>
+                {%- endif -%}
+              </span>
+            </label>
+          {%- endfor -%}
+        </fieldset>
+      {%- endfor -%}
+    </form>
+  </variant-picker>
+{% endunless %}
+
+{% style %}
+  .variant-picker-with-price .variant-option--with-price .variant-option__button-label {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: var(--padding-sm) var(--padding-md);
+    min-width: 120px;
+  }
+
+  .variant-picker-with-price .variant-option__button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .variant-picker-with-price .variant-option__price-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.875em;
+    width: 100%;
+  }
+
+  .variant-picker-with-price .variant-option__price {
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .variant-picker-with-price .variant-option__compare-price {
+    text-decoration: line-through;
+    opacity: 0.7;
+    font-size: 0.875em;
+  }
+
+  .variant-picker-with-price .variant-option__per-gram-price {
+    font-size: 0.75em;
+    opacity: 0.8;
+    color: var(--color-foreground);
+  }
+{% endstyle %}

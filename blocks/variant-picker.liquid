@@ -8,7 +8,11 @@
 -%}
 
 {% if block.settings.show_variant_price or block.settings.show_per_gram_price %}
-  {% render 'variant-picker-with-price', product_resource: product_resource, block: block %}
+  {% if block.settings.use_simple_weight %}
+    {% render 'variant-picker-simple-weight', product_resource: product_resource, block: block %}
+  {% else %}
+    {% render 'variant-picker-with-price', product_resource: product_resource, block: block %}
+  {% endif %}
 {% else %}
   {% render 'variant-main-picker', product_resource: product_resource, block: block %}
 {% endif %}
@@ -112,6 +116,13 @@
         }
       ],
       "default": "g"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_simple_weight",
+      "label": "Use Shopify's built-in weight field",
+      "info": "Enable this if custom metafields aren't working. Uses the weight from the Shipping section.",
+      "default": false
     },
     {
       "type": "header",

@@ -84,6 +84,31 @@
                       assign namespace = weight_parts[0]
                       assign key = weight_parts[1]
                       assign variant_weight = product_option_value.variant.metafields[namespace][key]
+                    elsif weight_parts.size == 1
+                      # Try direct metafield access without namespace
+                      assign variant_weight = product_option_value.variant.metafields[block_settings.weight_metafield].value
+                      # Also try as a direct field
+                      if variant_weight == blank
+                        assign variant_weight = product_option_value.variant[block_settings.weight_metafield]
+                      endif
+                    endif
+                    
+                    # Also try common weight fields as fallback
+                    if variant_weight == blank
+                      assign variant_weight = product_option_value.variant.weight
+                    endif
+                    
+                    # Try grams field specifically
+                    if variant_weight == blank
+                      assign variant_weight = product_option_value.variant.grams
+                    endif
+                    
+                    # Debug output (remove in production)
+                    if request.design_mode
+                      assign debug_msg = 'Weight Debug - Metafield: ' | append: block_settings.weight_metafield | append: ', Value: ' | append: variant_weight | append: ', Variant ID: ' | append: product_option_value.variant.id
+                      comment
+                        echo debug_msg
+                      endcomment
                     endif
                   endif
                 endif
@@ -133,7 +158,8 @@
                       {%- endif -%}
                       <span class="variant-option__price">{{ variant_price | money }}</span>
                       
-                      {%- if block_settings.show_per_gram_price and variant_weight and variant_weight > 0 -%}
+                      {%- if block_settings.show_per_gram_price -%}
+                        {%- if variant_weight and variant_weight > 0 -%}
                         {%- liquid
                           # Convert weight to grams based on stored unit
                           case block_settings.weight_unit
@@ -159,6 +185,11 @@
                           endcase
                         -%}
                         <span class="variant-option__per-gram-price">({{ price_per_unit | money }}/{{ unit_label }})</span>
+                        {%- else -%}
+                          {%- if request.design_mode -%}
+                            <span class="variant-option__per-gram-price debug-mode">(No weight data)</span>
+                          {%- endif -%}
+                        {%- endif -%}
                       {%- endif -%}
                     </span>
                   {%- endif -%}
@@ -212,6 +243,19 @@
                           assign namespace = weight_parts[0]
                           assign key = weight_parts[1]
                           assign variant_weight = product_option_value.variant.metafields[namespace][key]
+                        elsif weight_parts.size == 1
+                          assign variant_weight = product_option_value.variant.metafields[block_settings.weight_metafield].value
+                          if variant_weight == blank
+                            assign variant_weight = product_option_value.variant[block_settings.weight_metafield]
+                          endif
+                        endif
+                        
+                        if variant_weight == blank
+                          assign variant_weight = product_option_value.variant.weight
+                        endif
+                        
+                        if variant_weight == blank
+                          assign variant_weight = product_option_value.variant.grams
                         endif
                       endif
                     endif
@@ -232,7 +276,8 @@
                       - {{ 'content.unavailable' | t }}
                     {% elsif block_settings.show_variant_price and variant_price %}
                       - {{ variant_price | money }}
-                      {%- if block_settings.show_per_gram_price and variant_weight and variant_weight > 0 -%}
+                      {%- if block_settings.show_per_gram_price -%}
+                        {%- if variant_weight and variant_weight > 0 -%}
                         {%- liquid
                           # Convert weight to grams based on stored unit
                           case block_settings.weight_unit
