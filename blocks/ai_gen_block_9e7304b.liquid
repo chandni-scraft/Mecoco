@@ -42,16 +42,17 @@
 
   .shop-by-concern-tabs-{{ ai_gen_id }} {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
     gap: 12px;
     margin-bottom: 32px;
     padding: 0;
     list-style: none;
     max-width: 100%;
-    overflow-x: auto; /* prevent tab labels from causing page overflow */
+    overflow-x: auto;
     -ms-overflow-style: none; /* IE/Edge */
     scrollbar-width: none; /* Firefox */
+    scroll-behavior: smooth;
   }
 
   .shop-by-concern-tabs-{{ ai_gen_id }}::-webkit-scrollbar { display: none; }
@@ -69,6 +70,8 @@
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .shop-by-concern-tab-{{ ai_gen_id }}:hover,
@@ -465,11 +468,28 @@
 
     .shop-by-concern-tabs-{{ ai_gen_id }} {
       gap: 8px;
+      padding: 0 16px;
+      margin-left: -16px;
+      margin-right: -16px;
+      width: calc(100% + 32px);
+      justify-content: flex-start;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .shop-by-concern-tab-{{ ai_gen_id }} {
       padding: 8px 16px;
       font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    /* Add padding to first and last tab on mobile */
+    .shop-by-concern-tab-{{ ai_gen_id }}:first-child {
+      margin-left: 16px;
+    }
+
+    .shop-by-concern-tab-{{ ai_gen_id }}:last-child {
+      margin-right: 16px;
     }
   }
 
@@ -485,7 +505,7 @@
       padding: 0 16px;
       width: 100%;
       max-width: 100%;
-      overflow: hidden;
+      overflow: visible; /* Allow tabs to scroll horizontally */
     }
 
     .shop-by-concern-grid-{{ ai_gen_id }} {
@@ -568,6 +588,12 @@
 
     .shop-by-concern-carousel-nav-{{ ai_gen_id }} {
       display: none;
+    }
+
+    /* Center tabs on desktop */
+    .shop-by-concern-tabs-{{ ai_gen_id }} {
+      justify-content: center;
+      flex-wrap: wrap;
     }
   }
 
