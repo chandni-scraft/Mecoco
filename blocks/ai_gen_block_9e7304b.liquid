@@ -77,7 +77,6 @@
   }
 
   .shop-by-concern-tab-{{ ai_gen_id }}.loading {
-    opacity: 0.6;
     pointer-events: none;
   }
 
@@ -546,7 +545,7 @@
           <div style="display: none;" id="collection-debug-{{ ai_gen_id }}">
             First collection: {{ first_collection.title | default: 'No title' }}<br>
             Products count: {{ first_collection_products | size }}<br>
-            First product: {{ first_collection_products.first.title | default: 'N/A' }}<br>
+            First product: {{ first_collection_products.first.title | default: 'No products available' }}<br>
             Collection handle: {{ first_collection.handle | default: 'No handle' }}
           </div>
           {% for product in first_collection_products limit: block.settings.products_per_page %}
@@ -1080,11 +1079,7 @@
           products = allProducts.slice(startIndex, endIndex);
           console.log('LoadProducts: Products extracted from GraphQL response', { productsLength: products.length, startIndex, endIndex, totalProducts: allProducts.length });
         } else {
-          console.log('LoadProducts: No products found in collection data', {
-            collectionHandle: collectionHandle,
-            hasData: !!data,
-            productsLength: data && data.products ? data.products.length : 'N/A'
-          });
+          console.log('LoadProducts: No products found for collection:', collectionHandle);
 
           // Final check: Verify the collection exists and has products
           try {
@@ -1241,7 +1236,7 @@
       return `
         <div class="shop-by-concern-card-{{ ai_gen_id }}" data-product-id="${product.id}">
           <div class="shop-by-concern-image-wrapper-{{ ai_gen_id }}">
-            ${featuredImage ?
+            ${featuredImage && typeof featuredImage === 'string' ?
               `<img
                 class="shop-by-concern-image-{{ ai_gen_id }}"
                 src="${featuredImage}"
@@ -1391,22 +1386,47 @@
           document.dispatchEvent(new CustomEvent('cart:updated'));
           document.dispatchEvent(new CustomEvent('cart:refresh'));
           document.dispatchEvent(new CustomEvent('cart-update'));
+          document.dispatchEvent(new CustomEvent('cart:change'));
 
           // Force cart drawer refresh if it exists
-          const cartDrawer = document.querySelector('[data-cart-drawer], .cart-drawer, #cart-drawer');
+          const cartDrawer = document.querySelector('[data-cart-drawer], .cart-drawer, #cart-drawer, .drawer');
           if (cartDrawer) {
             // Try to trigger cart drawer update
             if (typeof cartDrawer.updateCart === 'function') {
               cartDrawer.updateCart();
             } else if (typeof cartDrawer.refresh === 'function') {
               cartDrawer.refresh();
+            } else if (typeof cartDrawer.update === 'function') {
+              cartDrawer.update();
             } else if (cartDrawer.dataset.cartDrawer) {
               // Trigger click on cart icon to refresh drawer
-              const cartIcon = document.querySelector('.cart-icon, [data-cart-icon]');
+              const cartIcon = document.querySelector('.cart-icon, [data-cart-icon], .cart-toggle');
               if (cartIcon) {
                 cartIcon.click();
+                // Trigger another click after a short delay to ensure it works
+                setTimeout(() => {
+                  cartIcon.click();
+                }, 100);
               }
             }
+
+            // Try to find and trigger cart drawer by various methods
+            const cartElements = document.querySelectorAll('[data-cart], [data-drawer], .cart-drawer');
+            cartElements.forEach(element => {
+              if (typeof element.refreshCart === 'function') {
+                element.refreshCart();
+              } else if (typeof element.updateCart === 'function') {
+                element.updateCart();
+              }
+            });
+          }
+
+          // Try to refresh cart using window methods (for some themes)
+          if (typeof window.refreshCart === 'function') {
+            window.refreshCart();
+          }
+          if (typeof window.updateCart === 'function') {
+            window.updateCart();
           }
         } else {
           throw new Error('Failed to add to cart');
