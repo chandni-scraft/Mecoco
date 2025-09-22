@@ -292,7 +292,7 @@ style[data-section-id] {
 /* Desktop specific scrolling */
 @media screen and (min-width: 750px) {
   .product-offers-inline {
-    max-width: 600px; /* Limit width on desktop to force scroll */
+    max-width: 100%; /* Use full width of the 50% column */
   }
   
   .product-offers-inline .offers-scroll-wrapper {
