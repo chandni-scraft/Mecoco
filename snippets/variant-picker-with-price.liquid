@@ -371,7 +371,21 @@
   }
 
   .variant-picker-with-price .variant-option__button-label:has(:checked) .variant-option__price {
-    color: inherit;
+    color: var(--color-selected-variant-text);
+  }
+  
+  .variant-picker-with-price .variant-option__button-label:has(:checked) .variant-option__price-wrapper {
+    color: var(--color-selected-variant-text);
+  }
+  
+  .variant-picker-with-price .variant-option__button-label:has(:checked) .variant-option__per-gram-price {
+    color: var(--color-selected-variant-text);
+    opacity: 0.9;
+  }
+  
+  .variant-picker-with-price .variant-option__button-label:has(:checked) .variant-option__compare-price {
+    color: var(--color-selected-variant-text);
+    opacity: 0.7;
   }
 
   .variant-picker-with-price .variant-option--equal-width-buttons .variant-option__button-label {

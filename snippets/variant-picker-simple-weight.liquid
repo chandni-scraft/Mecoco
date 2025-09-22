@@ -78,19 +78,6 @@
                         endcase
                       -%}
                       <span class="variant-option__per-gram-price">({{ price_per_unit | money }}/{{ unit_label }})</span>
-                      
-                      {%- comment -%} Debug info - remove in production {%- endcomment -%}
-                      {%- if request.design_mode -%}
-                        <span style="display: block; font-size: 10px; color: red;">
-                          Weight: {{ current_variant.weight }}g
-                        </span>
-                      {%- endif -%}
-                    {%- elsif block_settings.show_per_gram_price -%}
-                      {%- if request.design_mode -%}
-                        <span style="display: block; font-size: 10px; color: red;">
-                          No weight data for variant {{ current_variant.id }}
-                        </span>
-                      {%- endif -%}
                     {%- endif -%}
                   </span>
                 {%- endif -%}
@@ -143,5 +130,19 @@
     font-size: 0.75em;
     opacity: 0.8;
     color: var(--color-foreground);
+  }
+  
+  /* Fix visibility on selected variant with dark background */
+  .variant-picker-with-price .variant-option__button-label:has(:checked) .variant-option__price-wrapper {
+    color: var(--color-selected-variant-text);
+  }
+  
+  .variant-picker-with-price .variant-option__button-label:has(:checked) .variant-option__price {
+    color: var(--color-selected-variant-text);
+  }
+  
+  .variant-picker-with-price .variant-option__button-label:has(:checked) .variant-option__per-gram-price {
+    color: var(--color-selected-variant-text);
+    opacity: 0.9;
   }
 {% endstyle %}
