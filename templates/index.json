@@ -642,9 +642,7 @@
       "block_order": [
         "group_qeMyUq"
       ],
-      "custom_css": [
-        "/* Mobile only */@media only screen and (max-width: 768px) {.spacing-style.text-block.text-block--AVG5RQUxqRVRMYmVsQ__collection_title_HgTzWb-3.custom.text-block--align-center.custom-typography.custom-font-size.custom-color.text-block--background {font-size: 12px; }}"
-      ],
+      "custom_css": [],
       "name": "t:names.collections_grid",
       "settings": {
         "collection_list": [
