@@ -1,58 +1,59 @@
 {% liquid
   assign product = closest.product
-  if product == blank
-    exit
-  endif
+  assign show_dropdown = false
   
-  # Only show if product has variants
-  if product.variants.size <= 1
-    exit
+  if product != blank and product.variants.size > 1
+    assign show_dropdown = true
   endif
 %}
 
-<variant-dropdown-component 
-  class="product-card-variant-dropdown"
-  data-product-id="{{ product.id }}"
-  data-section-id="{{ section.id }}"
->
-  <form class="variant-dropdown-form">
-    {% for option in product.options_with_values %}
-      <div class="variant-dropdown__option">
-        <label for="variant-dropdown-{{ product.id }}-{{ forloop.index0 }}" class="variant-dropdown__label">
-          {{ option.name }}
-        </label>
-        <select 
-          id="variant-dropdown-{{ product.id }}-{{ forloop.index0 }}"
-          name="options[{{ option.name | escape }}]"
-          class="variant-dropdown__select"
-          data-option-index="{{ forloop.index0 }}"
-        >
-          {% for value in option.values %}
-            <option 
-              value="{{ value | escape }}"
-              {% if option.selected_value == value %}selected{% endif %}
-            >
-              {{ value | escape }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-    {% endfor %}
-    
-    <select name="id" class="variant-dropdown__id" style="display: none;">
-      {% for variant in product.variants %}
-        <option 
-          value="{{ variant.id }}"
-          data-options="{{ variant.options | join: ',' | escape }}"
-          {% unless variant.available %}disabled{% endunless %}
-          {% if variant == product.selected_or_first_available_variant %}selected{% endif %}
-        >
-          {{ variant.title | escape }}
-        </option>
+{% if show_dropdown %}
+  <variant-dropdown-component 
+    class="product-card-variant-dropdown"
+    data-product-id="{{ product.id }}"
+    data-section-id="{{ section.id }}"
+  >
+    <form class="variant-dropdown-form">
+      {% for option in product.options_with_values %}
+        <div class="variant-dropdown__option">
+          {% if block.settings.show_option_labels %}
+            <label for="variant-dropdown-{{ product.id }}-{{ forloop.index0 }}" class="variant-dropdown__label">
+              {{ option.name }}
+            </label>
+          {% endif %}
+          <select 
+            id="variant-dropdown-{{ product.id }}-{{ forloop.index0 }}"
+            name="options[{{ option.name | escape }}]"
+            class="variant-dropdown__select variant-dropdown__select--{{ block.settings.dropdown_style }}"
+            data-option-index="{{ forloop.index0 }}"
+          >
+            {% for value in option.values %}
+              <option 
+                value="{{ value | escape }}"
+                {% if option.selected_value == value %}selected{% endif %}
+              >
+                {{ value | escape }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
       {% endfor %}
-    </select>
-  </form>
-</variant-dropdown-component>
+      
+      <select name="id" class="variant-dropdown__id" style="display: none;">
+        {% for variant in product.variants %}
+          <option 
+            value="{{ variant.id }}"
+            data-options="{{ variant.options | join: ',' | escape }}"
+            {% unless variant.available %}disabled{% endunless %}
+            {% if variant == product.selected_or_first_available_variant %}selected{% endif %}
+          >
+            {{ variant.title | escape }}
+          </option>
+        {% endfor %}
+      </select>
+    </form>
+  </variant-dropdown-component>
+{% endif %}
 
 <script>
 class VariantDropdownComponent extends HTMLElement {
@@ -151,6 +152,28 @@ if (!customElements.get('variant-dropdown-component')) {
     outline: none;
     border-color: var(--color-foreground);
     box-shadow: 0 0 0 2px rgba(var(--color-foreground-rgb), 0.1);
+  }
+  
+  /* Minimal style */
+  .variant-dropdown__select--minimal {
+    border: none;
+    border-bottom: 1px solid var(--color-border);
+    border-radius: 0;
+    padding-left: 0;
+    padding-right: 1.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath fill='%23666' d='M0 0l6 7 6-7z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+  }
+  
+  .variant-dropdown__select--minimal:hover,
+  .variant-dropdown__select--minimal:focus {
+    border-bottom-color: var(--color-foreground);
+  }
+  
+  /* Rounded style */
+  .variant-dropdown__select--rounded {
+    border-radius: 2rem;
   }
   
   @media screen and (max-width: 749px) {
