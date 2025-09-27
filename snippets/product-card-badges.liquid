@@ -48,11 +48,13 @@
     {%- assign badge_lines = badge_content | split: '
 ' -%}
     {%- assign badge_count = 0 -%}
+    <!-- Debug: Found {{ badge_lines.size }} badge lines -->
     {%- for badge_line in badge_lines -%}
       {%- if badge_count >= 2 -%}
         {%- break -%}
       {%- endif -%}
       {%- assign badge_line = badge_line | strip -%}
+      <!-- Debug: Processing line: "{{ badge_line }}" -->
       {%- if badge_line != blank -%}
         {%- assign badge_parts = badge_line | split: '|' -%}
         {%- assign badge_text = badge_parts[0] | strip -%}
@@ -60,6 +62,7 @@
         {%- assign badge_text_color = badge_parts[2] | strip -%}
         {%- if badge_text != blank -%}
           {%- assign badge_count = badge_count | plus: 1 -%}
+          <!-- Badge {{ badge_count }}: {{ badge_text }} -->
           <div
             class="product-badges__badge product-badges__badge--rectangle product-badges__badge--custom product-badges__badge--{{ badge_count }}"
             style="
@@ -85,9 +88,11 @@
 
     position: absolute;
     z-index: var(--layer-flat);
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
   }
 
   .product-badges--bottom-left {
@@ -137,12 +142,18 @@
   /* Left and right badge positioning */
   .product-badges__badge--1 {
     position: absolute;
-    left: calc(var(--badge-inset) + var(--padding-inline-start));
+    left: 8px;
+    top: 8px;
+    background-color: #00C851 !important;
+    color: #FFFFFF !important;
   }
 
   .product-badges__badge--2 {
     position: absolute;
-    right: calc(var(--badge-inset) + var(--padding-inline-start));
+    right: 8px;
+    top: 8px;
+    background-color: #FF6B35 !important;
+    color: #FFFFFF !important;
   }
 
   /* Adjust positioning based on badge position setting */
@@ -164,6 +175,12 @@
   .product-badges--top-right .product-badges__badge--2,
   .product-badges--bottom-right .product-badges__badge--2 {
     right: calc(var(--badge-inset) + var(--padding-inline-start));
+  }
+
+  /* Ensure badges don't overlap */
+  .product-badges__badge--custom {
+    position: absolute;
+    z-index: var(--layer-flat);
   }
 
   @media screen and (max-width: 749px) {
