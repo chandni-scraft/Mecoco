@@ -1280,12 +1280,20 @@
                 "padding-inline-end": 0
               },
               "blocks": {}
+            },
+            "variant_dropdown_custom": {
+              "type": "product-card-variant-dropdown",
+              "settings": {
+                "show_option_labels": true,
+                "dropdown_style": "default"
+              }
             }
           },
           "block_order": [
             "product_card_gallery_pfTwke",
             "product_title_r3GVkt",
-            "price_b9bGDC"
+            "price_b9bGDC",
+            "variant_dropdown_custom"
           ]
         }
       },
@@ -2025,12 +2033,20 @@
                 "padding-inline-end": 0
               },
               "blocks": {}
+            },
+            "variant_dropdown_9efECi": {
+              "type": "product-card-variant-dropdown",
+              "settings": {
+                "show_option_labels": true,
+                "dropdown_style": "default"
+              }
             }
           },
           "block_order": [
             "product_card_gallery_bcNVQL",
             "product_title_3K7DBP",
-            "price_jBqq9x"
+            "price_jBqq9x",
+            "variant_dropdown_9efECi"
           ]
         }
       },
