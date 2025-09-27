@@ -13,7 +13,7 @@
 
 {% capture children %}
   {% unless closest.product == blank %}
-    {% render 'product-card-badges', product: closest.product, settings: settings %}
+    {% render 'product-card-badges', product: closest.product, settings: settings, closest.collection: collection %}
     {%  if settings.quick_add or settings.mobile_quick_add %}
       {% render 'quick-add', product: closest.product, section_id: section.id %}
     {% endif %}

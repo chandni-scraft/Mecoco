@@ -1,11 +1,13 @@
 {%- doc -%}
   Renders product badges for the product card.
+  Checks collection badges first, then falls back to product badges.
 
   @param {object} product - The product object.
   @param {object} settings - The theme settings object.
+  @param {object} closest.collection - The collection object (optional).
 
   @example
-  {% render 'product-card-badges', product: product, settings: settings %}
+  {% render 'product-card-badges', product: product, settings: settings, closest.collection: collection %}
 {%- enddoc -%}
 
 <div
@@ -31,12 +33,25 @@
     </div>
   {%- endif -%}
 
-  {%- comment -%} Custom meta field badges {%- endcomment -%}
-  {%- if product.metafields.custom.product_badges_simple != blank -%}
+  {%- comment -%} Custom meta field badges - Collection badges take priority over product badges {%- endcomment -%}
+  {%- assign badge_content = blank -%}
+  
+  {%- comment -%} Check for collection badges first {%- endcomment -%}
+  {%- if closest.collection and closest.collection.metafields.custom.collection_badges_simple != blank -%}
+    {%- assign badge_content = closest.collection.metafields.custom.collection_badges_simple -%}
+  {%- comment -%} Fall back to product badges if no collection badges {%- endcomment -%}
+  {%- elsif product.metafields.custom.product_badges_simple != blank -%}
     {%- assign badge_content = product.metafields.custom.product_badges_simple -%}
+  {%- endif -%}
+  
+  {%- if badge_content != blank -%}
     {%- assign badge_lines = badge_content | split: '
 ' -%}
+    {%- assign badge_count = 0 -%}
     {%- for badge_line in badge_lines -%}
+      {%- if badge_count >= 2 -%}
+        {%- break -%}
+      {%- endif -%}
       {%- assign badge_line = badge_line | strip -%}
       {%- if badge_line != blank -%}
         {%- assign badge_parts = badge_line | split: '|' -%}
@@ -44,8 +59,9 @@
         {%- assign badge_bg = badge_parts[1] | strip -%}
         {%- assign badge_text_color = badge_parts[2] | strip -%}
         {%- if badge_text != blank -%}
+          {%- assign badge_count = badge_count | plus: 1 -%}
           <div
-            class="product-badges__badge product-badges__badge--rectangle product-badges__badge--custom"
+            class="product-badges__badge product-badges__badge--rectangle product-badges__badge--custom product-badges__badge--{{ badge_count }}"
             style="
               {%- if badge_bg != blank -%}
                 background-color: {{ badge_bg }};
@@ -116,6 +132,38 @@
     word-wrap: break-word;
     white-space: normal;
     text-align: center;
+  }
+
+  /* Left and right badge positioning */
+  .product-badges__badge--1 {
+    position: absolute;
+    left: calc(var(--badge-inset) + var(--padding-inline-start));
+  }
+
+  .product-badges__badge--2 {
+    position: absolute;
+    right: calc(var(--badge-inset) + var(--padding-inline-start));
+  }
+
+  /* Adjust positioning based on badge position setting */
+  .product-badges--top-left .product-badges__badge--1,
+  .product-badges--bottom-left .product-badges__badge--1 {
+    left: calc(var(--badge-inset) + var(--padding-inline-start));
+  }
+
+  .product-badges--top-left .product-badges__badge--2,
+  .product-badges--bottom-left .product-badges__badge--2 {
+    right: calc(var(--badge-inset) + var(--padding-inline-start));
+  }
+
+  .product-badges--top-right .product-badges__badge--1,
+  .product-badges--bottom-right .product-badges__badge--1 {
+    left: calc(var(--badge-inset) + var(--padding-inline-start));
+  }
+
+  .product-badges--top-right .product-badges__badge--2,
+  .product-badges--bottom-right .product-badges__badge--2 {
+    right: calc(var(--badge-inset) + var(--padding-inline-start));
   }
 
   @media screen and (max-width: 749px) {

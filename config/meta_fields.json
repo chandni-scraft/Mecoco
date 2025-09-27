@@ -17,6 +17,24 @@
         }
       ],
       "default": ""
+    },
+    {
+      "namespace": "custom",
+      "key": "collection_badges_simple",
+      "name": "Collection Badges (Simple)",
+      "description": "Add multiple badges for all products in this collection. Format: Badge Text|Background Color|Text Color (one per line). Example: New Collection|#00C851|#FFFFFF",
+      "type": "multi_line_text",
+      "access": {
+        "admin": "merchant_write",
+        "storefront": "public_read"
+      },
+      "validations": [
+        {
+          "name": "length",
+          "value": "500"
+        }
+      ],
+      "default": ""
     }
   ]
 }

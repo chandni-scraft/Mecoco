@@ -1,10 +1,13 @@
 # Product Badges Meta Field Setup Guide
 
-This guide explains how to set up and use the custom product badges system that allows you to create multiple badges per product with custom colors for display in collections.
+This guide explains how to set up and use the custom product badges system that allows you to create multiple badges with custom colors for display in collections. You can now set badges at both the **collection level** (applies to all products in the collection) and **product level** (individual product badges).
 
 ## Features
 
-- ✅ Multiple badges per product
+- ✅ **Collection-level badges** - Set badges once for entire collections
+- ✅ **Product-level badges** - Individual product badges (fallback)
+- ✅ **Priority system** - Collection badges override product badges
+- ✅ **Maximum 2 badges** - one left, one right positioning
 - ✅ Custom background colors
 - ✅ Custom text colors  
 - ✅ Custom border colors
@@ -16,17 +19,29 @@ This guide explains how to set up and use the custom product badges system that 
 
 ### 1. Meta Field Configuration
 
-The system uses a meta field called `custom.product_badges` that stores an array of badge objects. Each badge can have:
+The system uses two meta fields:
+- `custom.collection_badges_simple` - For collection-level badges (recommended)
+- `custom.product_badges_simple` - For individual product badges (fallback)
 
+Each badge can have:
 - `text` (required): The badge text (max 50 characters)
 - `background_color` (optional): Hex color code (e.g., "#FF0000")
 - `text_color` (optional): Hex color code (e.g., "#FFFFFF")
-- `border_color` (optional): Hex color code (e.g., "#000000")
 
-### 2. Creating Meta Field in Shopify Admin
+### 2. Creating Meta Fields in Shopify Admin
 
-You only need to create **1 single meta field** for all badges:
+You need to create **2 meta fields**:
 
+#### Collection Badges (Recommended)
+1. Go to **Settings** > **Custom data** > **Collections**
+2. Click **Add definition**
+3. Set the following:
+   - **Name**: Collection Badges (Simple)
+   - **Namespace and key**: `custom.collection_badges_simple`
+   - **Type**: Multi-line text
+   - **Description**: Add multiple badges for all products in this collection. Format: Badge Text|Background Color|Text Color (one per line)
+
+#### Product Badges (Fallback)
 1. Go to **Settings** > **Custom data** > **Products**
 2. Click **Add definition**
 3. Set the following:
@@ -35,11 +50,13 @@ You only need to create **1 single meta field** for all badges:
    - **Type**: Multi-line text
    - **Description**: Add multiple badges with text and colors. Format: Badge Text|Background Color|Text Color (one per line)
 
-### 3. Adding Badges to Products
+### 3. Adding Badges
 
-1. Go to **Products** in your Shopify admin
-2. Select a product
-3. Scroll down to find the **"Product Badges (Simple)"** field
+#### Option A: Collection-Level Badges (Recommended)
+
+1. Go to **Products** > **Collections** in your Shopify admin
+2. Select a collection
+3. Scroll down to find the **"Collection Badges (Simple)"** field
 4. Add badges using this simple format (one badge per line):
 
 **Format:** `Badge Text|Background Color|Text Color`
@@ -48,15 +65,16 @@ You only need to create **1 single meta field** for all badges:
 
 **Single Badge:**
 ```
-New Arrival|#00C851|#FFFFFF
+New Collection|#00C851|#FFFFFF
 ```
 
-**Multiple Badges:**
+**Multiple Badges (Max 2):**
 ```
-New Arrival|#00C851|#FFFFFF
-Best Seller|#FF6B35|#FFFFFF
-Limited Edition|#8B5CF6|#FFFFFF
+New Collection|#00C851|#FFFFFF
+Best Sellers|#FF6B35|#FFFFFF
 ```
+
+**Note:** Only the first 2 badges will be displayed - first badge on the left, second badge on the right.
 
 **Simple Badge (no colors):**
 ```
@@ -67,6 +85,15 @@ Sale
 ```
 Premium|#FFD700
 ```
+
+#### Option B: Product-Level Badges (Fallback)
+
+1. Go to **Products** in your Shopify admin
+2. Select a product
+3. Scroll down to find the **"Product Badges (Simple)"** field
+4. Add badges using the same format as above
+
+**Note:** Collection badges will override product badges when both are set.
 
 ### 4. Badge Configuration Options
 
