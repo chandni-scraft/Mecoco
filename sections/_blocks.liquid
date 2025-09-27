@@ -1,7 +1,14 @@
 
 
 {% capture children %}
-  {% content_for 'blocks' %}
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when '_hero-slider' %}
+        {% render '_hero-slider', block: block %}
+      {% else %}
+        {% render block %}
+    {% endcase %}
+  {% endfor %}
 {% endcapture %}
 
 {% render 'section', section: section, children: children %}
@@ -19,6 +26,9 @@
     },
     {
       "type": "_divider"
+    },
+    {
+      "type": "_hero-slider"
     }
   ],
   "settings": [
