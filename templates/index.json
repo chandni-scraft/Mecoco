@@ -1287,13 +1287,24 @@
                 "show_option_labels": true,
                 "dropdown_style": "default"
               }
+            },
+            "add_to_cart_button": {
+              "type": "product-card-add-to-cart",
+              "settings": {
+                "button_text": "Add to Cart",
+                "select_options_text": "Select Options",
+                "sold_out_text": "Sold Out",
+                "adding_text": "Adding...",
+                "added_text": "Added!"
+              }
             }
           },
           "block_order": [
             "product_card_gallery_pfTwke",
             "product_title_r3GVkt",
             "price_b9bGDC",
-            "variant_dropdown_custom"
+            "variant_dropdown_custom",
+            "add_to_cart_button"
           ]
         }
       },
@@ -2040,13 +2051,24 @@
                 "show_option_labels": true,
                 "dropdown_style": "default"
               }
+            },
+            "add_to_cart_button_9efECi": {
+              "type": "product-card-add-to-cart",
+              "settings": {
+                "button_text": "Add to Cart",
+                "select_options_text": "Select Options",
+                "sold_out_text": "Sold Out",
+                "adding_text": "Adding...",
+                "added_text": "Added!"
+              }
             }
           },
           "block_order": [
             "product_card_gallery_bcNVQL",
             "product_title_3K7DBP",
             "price_jBqq9x",
-            "variant_dropdown_9efECi"
+            "variant_dropdown_9efECi",
+            "add_to_cart_button_9efECi"
           ]
         }
       },

@@ -189,17 +189,14 @@
     display: none;
   }
 
-  /* Hover effect for single variant product cards and product blocks */
-
+  /* Remove hover effect - always show add to cart button */
   /* stylelint-disable selector-max-specificity */
-  :is(.product-card):has(.quick-add__product-form-component--single-variant) .card-gallery:hover {
-    & .quick-add__button--choose {
-      display: none;
-    }
+  :is(.product-card):has(.quick-add__product-form-component--single-variant) .quick-add__button--choose {
+    display: none;
+  }
 
-    & .quick-add__button--add {
-      display: grid;
-    }
+  :is(.product-card):has(.quick-add__product-form-component--single-variant) .quick-add__button--add {
+    display: grid;
   }
 
   .product-card[data-no-swatch-selected] slideshow-component[data-generic-media-size='1'] slideshow-arrows {
