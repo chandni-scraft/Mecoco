@@ -1,0 +1,46 @@
+{% liquid
+  assign product = closest.product
+  assign show_dropdown = false
+  
+  if product != blank and product.variants.size > 1
+    assign show_dropdown = true
+  endif
+%}
+
+{% if show_dropdown %}
+  <div class="variant-dropdown-test" style="padding: 10px 0;">
+    {% for option in product.options_with_values %}
+      <div style="margin-bottom: 10px;">
+        {% if block.settings.show_option_labels %}
+          <label style="display: block; margin-bottom: 5px; font-size: 14px;">
+            {{ option.name }}:
+          </label>
+        {% endif %}
+        <select 
+          style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; cursor: pointer;"
+          onchange="console.log('Selected:', this.value)"
+        >
+          {% for value in option.values %}
+            <option value="{{ value | escape }}">
+              {{ value | escape }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Variant Dropdown Test",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_option_labels",
+      "label": "Show option labels",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

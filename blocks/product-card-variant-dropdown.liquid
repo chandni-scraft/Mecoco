@@ -59,13 +59,25 @@
 class VariantDropdownComponent extends HTMLElement {
   constructor() {
     super();
+  }
+  
+  connectedCallback() {
     this.productId = this.dataset.productId;
     this.form = this.querySelector('form');
     this.optionSelects = this.querySelectorAll('[data-option-index]');
     this.variantSelect = this.querySelector('.variant-dropdown__id');
     
+    // Debug logging
+    console.log('Variant dropdown initialized for product:', this.productId);
+    console.log('Found selects:', this.optionSelects.length);
+    
     this.optionSelects.forEach(select => {
       select.addEventListener('change', this.onOptionChange.bind(this));
+      
+      // Test click event
+      select.addEventListener('click', () => {
+        console.log('Dropdown clicked');
+      });
     });
   }
   
@@ -115,6 +127,17 @@ if (!customElements.get('variant-dropdown-component')) {
   .product-card-variant-dropdown {
     width: 100%;
     padding: 0.5rem 0;
+    position: relative;
+  }
+  
+  /* Ensure dropdowns are not cut off */
+  .product-card__content {
+    overflow: visible !important;
+  }
+  
+  .variant-dropdown-form {
+    position: relative;
+    z-index: 1;
   }
   
   .variant-dropdown__option {
@@ -135,13 +158,23 @@ if (!customElements.get('variant-dropdown-component')) {
   .variant-dropdown__select {
     width: 100%;
     padding: 0.5rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-base);
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    padding-right: 2rem;
+    border: 1px solid var(--color-border, #e5e5e5);
+    border-radius: var(--border-radius-base, 4px);
+    background-color: var(--color-background, #fff);
+    color: var(--color-foreground, #000);
     font-size: 0.875rem;
     cursor: pointer;
     transition: border-color 0.2s ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath fill='%23000' d='M0 0l6 7 6-7z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 12px;
+    position: relative;
+    z-index: 1;
   }
   
   .variant-dropdown__select:hover {
