@@ -1,0 +1,38 @@
+<div style="padding: 20px; background: #f0f0f0; margin: 20px 0;">
+  <h3>Dropdown Test</h3>
+  
+  <!-- Basic HTML Select Test -->
+  <p>Basic HTML Select (should always work):</p>
+  <select style="width: 200px; padding: 10px;">
+    <option>Option 1</option>
+    <option>Option 2</option>
+    <option>Option 3</option>
+  </select>
+  
+  <!-- Styled Select Test -->
+  <p style="margin-top: 20px;">Styled Select:</p>
+  <select style="width: 200px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: white; cursor: pointer;">
+    <option>Small</option>
+    <option>Medium</option>
+    <option>Large</option>
+  </select>
+  
+  <!-- Check for JavaScript errors -->
+  <p style="margin-top: 20px;">JavaScript Status: <span id="js-status">Checking...</span></p>
+  
+  <script>
+    document.getElementById('js-status').textContent = 'Working';
+    console.log('Dropdown debug: JavaScript is working');
+    
+    // Test if selects are clickable
+    document.querySelectorAll('select').forEach((select, index) => {
+      select.addEventListener('click', () => {
+        console.log(`Select ${index} clicked`);
+      });
+      
+      select.addEventListener('change', (e) => {
+        console.log(`Select ${index} changed to:`, e.target.value);
+      });
+    });
+  </script>
+</div>

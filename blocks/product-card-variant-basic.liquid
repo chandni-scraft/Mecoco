@@ -1,0 +1,30 @@
+{% if closest.product.variants.size > 1 %}
+  <div style="padding: 10px 0;">
+    {% for option in closest.product.options_with_values %}
+      <div style="margin-bottom: 10px;">
+        <label style="display: block; font-size: 12px; margin-bottom: 5px;">{{ option.name }}</label>
+        <select 
+          style="
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+          "
+          onchange="console.log('Changed:', this.value)"
+        >
+          {% for value in option.values %}
+            <option>{{ value }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Basic Variant Select"
+}
+{% endschema %}

@@ -1,0 +1,105 @@
+<div class="page-width" style="padding: 40px 20px;">
+  <h1>Dropdown Functionality Test</h1>
+  
+  <div style="margin: 40px 0; padding: 20px; background: #f5f5f5; border-radius: 8px;">
+    <h2>Test 1: Basic HTML Select</h2>
+    <p>This is a plain HTML select element. If this doesn't work, there's a browser issue:</p>
+    <select style="width: 200px; padding: 10px; font-size: 16px;">
+      <option>Option 1</option>
+      <option>Option 2</option>
+      <option>Option 3</option>
+    </select>
+  </div>
+
+  <div style="margin: 40px 0; padding: 20px; background: #f5f5f5; border-radius: 8px;">
+    <h2>Test 2: Styled Select with Custom Arrow</h2>
+    <p>This tests CSS styling:</p>
+    <div style="position: relative; width: 200px;">
+      <select style="
+        width: 100%;
+        padding: 10px 40px 10px 10px;
+        font-size: 16px;
+        border: 2px solid #333;
+        border-radius: 4px;
+        background: white;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        cursor: pointer;
+      ">
+        <option>Small</option>
+        <option>Medium</option>
+        <option>Large</option>
+      </select>
+      <span style="
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+      ">▼</span>
+    </div>
+  </div>
+
+  <div style="margin: 40px 0; padding: 20px; background: #f5f5f5; border-radius: 8px;">
+    <h2>Test 3: JavaScript Event Handling</h2>
+    <p>This tests if JavaScript events work:</p>
+    <select id="test-select" style="width: 200px; padding: 10px; font-size: 16px;">
+      <option>Red</option>
+      <option>Green</option>
+      <option>Blue</option>
+    </select>
+    <p>Selected value: <span id="selected-value" style="font-weight: bold;">Red</span></p>
+  </div>
+
+  <div style="margin: 40px 0; padding: 20px; background: #f5f5f5; border-radius: 8px;">
+    <h2>Test 4: Z-Index Test</h2>
+    <p>This tests if dropdowns can appear above other elements:</p>
+    <div style="position: relative; z-index: 1;">
+      <select style="width: 200px; padding: 10px; font-size: 16px; position: relative; z-index: 1000;">
+        <option>Test 1</option>
+        <option>Test 2</option>
+        <option>Test 3</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="margin: 40px 0; padding: 20px; background: #ffeeee; border-radius: 8px;">
+    <h2>Debug Information</h2>
+    <p><strong>Browser:</strong> <span id="browser-info"></span></p>
+    <p><strong>Touch Device:</strong> <span id="touch-info"></span></p>
+    <p><strong>JavaScript Status:</strong> <span id="js-status">Not working</span></p>
+    <p><strong>CSS Support:</strong> <span id="css-support"></span></p>
+  </div>
+
+  <script>
+    // Update debug info
+    document.getElementById('js-status').textContent = 'Working';
+    document.getElementById('browser-info').textContent = navigator.userAgent;
+    document.getElementById('touch-info').textContent = 'ontouchstart' in window ? 'Yes' : 'No';
+    document.getElementById('css-support').textContent = CSS.supports('appearance', 'none') ? 'Supported' : 'Not supported';
+    
+    // Test select change event
+    document.getElementById('test-select').addEventListener('change', function(e) {
+      document.getElementById('selected-value').textContent = e.target.value;
+    });
+    
+    // Log all clicks on selects
+    document.querySelectorAll('select').forEach((select, index) => {
+      select.addEventListener('click', () => {
+        console.log(`Select ${index + 1} clicked`);
+      });
+      
+      select.addEventListener('focus', () => {
+        console.log(`Select ${index + 1} focused`);
+      });
+    });
+    
+    // Check for any blocking elements
+    document.addEventListener('click', (e) => {
+      if (e.target.tagName === 'SELECT') {
+        console.log('Select clicked directly');
+      }
+    });
+  </script>
+</div>

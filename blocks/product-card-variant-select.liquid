@@ -1,0 +1,202 @@
+{% liquid
+  assign product = closest.product
+  assign show_selects = false
+  
+  if product != blank and product.variants.size > 1
+    assign show_selects = true
+    assign current_variant = product.selected_or_first_available_variant
+  endif
+%}
+
+{% if show_selects %}
+
+<div class="product-variant-selects" data-product-id="{{ product.id }}">
+  {% for option in product.options_with_values %}
+    <div class="variant-select-wrapper">
+      {% if block.settings.show_labels %}
+        <label class="variant-select-label">{{ option.name }}</label>
+      {% endif %}
+      <div class="select-container">
+        <select 
+          class="variant-select" 
+          data-option-name="{{ option.name }}"
+          data-option-position="{{ option.position }}"
+        >
+          {% for value in option.values %}
+            <option 
+              value="{{ value | escape }}"
+              {% if current_variant.options[forloop.index0] == value %}selected{% endif %}
+            >
+              {{ value }}
+            </option>
+          {% endfor %}
+        </select>
+        <svg class="select-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none">
+          <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </div>
+    </div>
+  {% endfor %}
+  
+  <!-- Hidden select for variants -->
+  <select class="variant-id-select" style="display: none;">
+    {% for variant in product.variants %}
+      <option 
+        value="{{ variant.id }}"
+        data-variant-options="{{ variant.options | join: '||' }}"
+        {% if variant.id == current_variant.id %}selected{% endif %}
+        {% unless variant.available %}disabled{% endunless %}
+      >
+        {{ variant.title }}
+      </option>
+    {% endfor %}
+  </select>
+</div>
+
+<style>
+  .product-variant-selects {
+    padding: 10px 0;
+  }
+
+  .variant-select-wrapper {
+    margin-bottom: 12px;
+  }
+
+  .variant-select-wrapper:last-child {
+    margin-bottom: 0;
+  }
+
+  .variant-select-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .select-container {
+    position: relative;
+    width: 100%;
+  }
+
+  .variant-select {
+    width: 100%;
+    padding: 10px 32px 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .variant-select:hover {
+    border-color: #999;
+  }
+
+  .variant-select:focus {
+    border-color: #333;
+  }
+
+  .select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #666;
+  }
+
+  /* Mobile styles */
+  @media (max-width: 749px) {
+    .variant-select {
+      font-size: 16px; /* Prevents zoom on iOS */
+      padding: 12px 32px 12px 12px;
+    }
+  }
+</style>
+
+<script>
+  class ProductVariantSelects {
+    constructor(container) {
+      this.container = container;
+      this.productId = container.dataset.productId;
+      this.selects = container.querySelectorAll('.variant-select');
+      this.variantIdSelect = container.querySelector('.variant-id-select');
+      
+      this.init();
+    }
+    
+    init() {
+      this.selects.forEach(select => {
+        select.addEventListener('change', () => this.onOptionChange());
+      });
+    }
+    
+    onOptionChange() {
+      const selectedOptions = Array.from(this.selects).map(select => select.value);
+      const selectedVariant = this.findVariantByOptions(selectedOptions);
+      
+      if (selectedVariant) {
+        this.variantIdSelect.value = selectedVariant.value;
+        this.updateProductCard(selectedVariant.value);
+      }
+    }
+    
+    findVariantByOptions(options) {
+      const optionsString = options.join('||');
+      
+      return Array.from(this.variantIdSelect.options).find(option => {
+        return option.dataset.variantOptions === optionsString;
+      });
+    }
+    
+    updateProductCard(variantId) {
+      // Update product card link
+      const productCard = this.container.closest('product-card');
+      const productLink = productCard?.querySelector('.product-card__link');
+      
+      if (productLink && variantId) {
+        const url = new URL(productLink.href, window.location.origin);
+        url.searchParams.set('variant', variantId);
+        productLink.href = url.toString();
+      }
+      
+      // Dispatch event for other components
+      this.container.dispatchEvent(new CustomEvent('variant:change', {
+        detail: { variantId: variantId },
+        bubbles: true
+      }));
+    }
+  }
+  
+  // Initialize all variant selects
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.product-variant-selects').forEach(container => {
+      new ProductVariantSelects(container);
+    });
+  });
+</script>
+
+{% endif %}
+
+{% schema %}
+{
+  "name": "Variant Select",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_labels",
+      "label": "Show option labels",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
