@@ -10,7 +10,7 @@
 {% if product != blank %}
   <div class="product-card-add-to-cart" data-product-id="{{ product.id }}">
     <!-- Add to cart form (works with variant selector) -->
-    <form method="post" action="/cart/add" class="product-card-atc-form" data-product-id="{{ product.id }}">
+    <form method="post" action="/cart/add" class="product-card-atc-form" data-product-id="{{ product.id }}" data-default-label="{{ block.settings.button_text | default: 'Add to Cart' | escape }}" data-sold-out-label="{{ block.settings.sold_out_text | default: 'Sold Out' | escape }}" data-adding-label="{{ block.settings.adding_text | default: 'Adding...' | escape }}" data-added-label="{{ block.settings.added_text | default: 'Added!' | escape }}">
       <input type="hidden" name="id" class="variant-id-input" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
       <input type="hidden" name="quantity" value="1">
       <button
@@ -26,9 +26,9 @@
         </span>
         <span class="atc-button-text">
           {% if can_add_to_cart %}
-            {{ block.settings.button_text }}
+            {{ block.settings.button_text | default: 'Add to Cart' }}
           {% else %}
-            {{ block.settings.sold_out_text }}
+            {{ block.settings.sold_out_text | default: 'Sold Out' }}
           {% endif %}
         </span>
       </button>
@@ -135,6 +135,19 @@
 
     window[INIT_FLAG] = true;
 
+    function getDatasetValue(element, attribute, fallback) {
+      if (!element) {
+        return fallback;
+      }
+
+      const value = element.getAttribute(attribute);
+      if (value === null || value === undefined || value === '') {
+        return fallback;
+      }
+
+      return value;
+    }
+
     class ProductCardAddToCart {
       constructor(form) {
         this.form = form;
@@ -142,6 +155,12 @@
         this.variantInput = form.querySelector('.variant-id-input');
         this.buttonText = this.button ? this.button.querySelector('.atc-button-text') : null;
         this.productId = form.dataset.productId;
+
+        this.defaultText = getDatasetValue(form, 'data-default-label', 'Add to Cart');
+        this.soldOutText = getDatasetValue(form, 'data-sold-out-label', 'Sold Out');
+        this.addingText = getDatasetValue(form, 'data-adding-label', 'Adding...');
+        this.addedText = getDatasetValue(form, 'data-added-label', 'Added!');
+        this.errorText = 'Error - Try Again';
 
         this.init();
       }
@@ -154,7 +173,6 @@
         this.form.addEventListener('submit', (event) => this.handleSubmit(event));
 
         this.button.addEventListener('click', (event) => {
-          event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation();
         });
@@ -184,9 +202,9 @@
 
         if (typeof available === 'boolean') {
           this.button.disabled = !available;
-          if (this.buttonText) { this.buttonText.textContent = available
-            ? '{{ block.settings.button_text | default: "Add to Cart" }}'
-            : '{{ block.settings.sold_out_text | default: "Sold Out" }}'; }
+          if (this.buttonText) {
+            this.buttonText.textContent = available ? this.defaultText : this.soldOutText;
+          }
         }
       }
 
@@ -198,10 +216,12 @@
           return;
         }
 
-        const originalText = this.buttonText ? this.buttonText.textContent : '';
+        const originalText = this.buttonText ? this.buttonText.textContent : this.defaultText;
         this.button.classList.add('adding');
         this.button.disabled = true;
-        if (this.buttonText) { this.buttonText.textContent = '{{ block.settings.adding_text | default: "Adding..." }}'; }
+        if (this.buttonText) {
+          this.buttonText.textContent = this.addingText;
+        }
 
         try {
           const formData = {
@@ -227,23 +247,31 @@
 
           this.button.classList.remove('adding');
           this.button.classList.add('added');
-          if (this.buttonText) { this.buttonText.textContent = '{{ block.settings.added_text | default: "Added!" }}'; }
+          if (this.buttonText) {
+            this.buttonText.textContent = this.addedText;
+          }
 
           await this.updateCartCount();
 
           setTimeout(() => {
             this.button.classList.remove('added');
             this.button.disabled = false;
-            if (this.buttonText) { this.buttonText.textContent = originalText; }
+            if (this.buttonText) {
+              this.buttonText.textContent = originalText || this.defaultText;
+            }
           }, 2000);
         } catch (error) {
           console.error('Error adding to cart:', error);
           this.button.classList.remove('adding');
           this.button.disabled = false;
-          if (this.buttonText) { this.buttonText.textContent = 'Error - Try Again'; }
+          if (this.buttonText) {
+            this.buttonText.textContent = this.errorText;
+          }
 
           setTimeout(() => {
-            if (this.buttonText) { this.buttonText.textContent = originalText; }
+            if (this.buttonText) {
+              this.buttonText.textContent = originalText || this.defaultText;
+            }
           }, 2000);
         }
       }
