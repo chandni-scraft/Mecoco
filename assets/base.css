@@ -2103,8 +2103,14 @@ deferred-media[class] :is(.deferred-media__poster-button img, .deferred-media__p
 }
 
 @media screen and (min-width: 750px) {
-  product-card:focus-within .quick-add__button,
-  .card-gallery:hover .quick-add__button {
+  /* Hide quick-add button on product cards with variant dropdowns or custom add-to-cart */
+  product-card:has(.product-variant-selects) .quick-add__button,
+  product-card:has(.product-card-add-to-cart) .quick-add__button {
+    display: none !important;
+  }
+
+  product-card:not(:has(.product-variant-selects)):not(:has(.product-card-add-to-cart)):focus-within .quick-add__button,
+  product-card:not(:has(.product-variant-selects)):not(:has(.product-card-add-to-cart)) .card-gallery:hover .quick-add__button {
     display: grid;
     will-change: margin, opacity;
     animation: elementSlideInTop var(--animation-speed) var(--animation-easing);
@@ -2115,6 +2121,12 @@ deferred-media[class] :is(.deferred-media__poster-button img, .deferred-media__p
   .card-gallery:hover .quick-add__button {
     display: none;
   }
+}
+
+/* Hide quick-add on mobile for cards with variant dropdowns or custom add-to-cart */
+product-card:has(.product-variant-selects) .quick-add__button,
+product-card:has(.product-card-add-to-cart) .quick-add__button {
+  display: none !important;
 }
 
 /* Drawer */

@@ -8,36 +8,38 @@
 %}
 
 {% if product != blank %}
-  <div class="product-card-add-to-cart">
-    {% if can_add_to_cart %}
-      {% if product.variants.size == 1 %}
-        <!-- Single variant - direct add to cart -->
-        <form method="post" action="/cart/add" class="product-card-atc-form">
-          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-          <input type="hidden" name="quantity" value="1">
-          <button type="submit" class="product-card-atc-button">
+  <div class="product-card-add-to-cart" data-product-id="{{ product.id }}">
+    <!-- Add to cart form (works with variant selector) -->
+    <form method="post" action="/cart/add" class="product-card-atc-form" data-product-id="{{ product.id }}">
+      <input type="hidden" name="id" class="variant-id-input" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+      <input type="hidden" name="quantity" value="1">
+      <button
+        type="submit"
+        class="product-card-atc-button"
+        {% unless can_add_to_cart %}disabled{% endunless %}
+      >
+        <span class="atc-button-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3.5 4.5L2 14.5H14L12.5 4.5H3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M5 7V4.5C5 2.84315 6.34315 1.5 8 1.5C9.65685 1.5 11 2.84315 11 4.5V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="atc-button-text">
+          {% if can_add_to_cart %}
             {{ block.settings.button_text }}
-          </button>
-        </form>
-      {% else %}
-        <!-- Multiple variants - link to product page -->
-        <a href="{{ product.url }}" class="product-card-atc-button product-card-atc-button--link">
-          {{ block.settings.select_options_text }}
-        </a>
-      {% endif %}
-    {% else %}
-      <!-- Out of stock -->
-      <button type="button" class="product-card-atc-button product-card-atc-button--disabled" disabled>
-        {{ block.settings.sold_out_text }}
+          {% else %}
+            {{ block.settings.sold_out_text }}
+          {% endif %}
+        </span>
       </button>
-    {% endif %}
+    </form>
   </div>
 {% endif %}
 
 <style>
   .product-card-add-to-cart {
     width: 100%;
-    margin-top: 0.5rem;
+    margin-top: 12px;
   }
 
   .product-card-atc-form {
@@ -46,95 +48,235 @@
 
   .product-card-atc-button {
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 12px 20px;
     border: none;
-    border-radius: var(--border-radius-base, 4px);
-    background-color: var(--color-button-primary, #000);
-    color: var(--color-button-primary-text, #fff);
-    font-size: 0.875rem;
-    font-weight: 500;
+    border-radius: 4px;
+    background: #000;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     text-decoration: none;
-    display: block;
-    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    z-index: 100;
   }
 
   .product-card-atc-button:hover:not(:disabled) {
-    opacity: 0.9;
+    background: #333;
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  .product-card-atc-button--link {
-    background-color: var(--color-button-secondary, #f0f0f0);
-    color: var(--color-button-secondary-text, #000);
+  .product-card-atc-button:active:not(:disabled) {
+    transform: translateY(0);
   }
 
-  .product-card-atc-button--disabled {
-    background-color: var(--color-button-disabled, #ccc);
-    color: var(--color-button-disabled-text, #666);
+  .product-card-atc-button:disabled {
+    background: #ccc;
+    color: #666;
     cursor: not-allowed;
     opacity: 0.6;
   }
 
+  .product-card-atc-button.adding {
+    pointer-events: none;
+  }
+
+  .product-card-atc-button.added {
+    background: #4caf50;
+  }
+
+  .atc-button-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .atc-button-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .atc-button-text {
+    line-height: 1;
+  }
+
+  /* Prevent carousel from interfering with button */
+  .product-card-atc-button {
+    pointer-events: auto !important;
+  }
+
   @media screen and (max-width: 749px) {
     .product-card-atc-button {
-      font-size: 1rem;
-      padding: 1rem;
+      font-size: 15px;
+      padding: 14px 20px;
     }
   }
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const forms = document.querySelectorAll('.product-card-atc-form');
-    
-    forms.forEach(form => {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const button = form.querySelector('.product-card-atc-button');
-        const originalText = button.textContent;
-        button.textContent = '{{ block.settings.adding_text }}';
-        button.disabled = true;
-        
-        fetch('/cart/add.js', {
+  class ProductCardAddToCart {
+    constructor(form) {
+      this.form = form;
+      this.button = form.querySelector('.product-card-atc-button');
+      this.variantInput = form.querySelector('.variant-id-input');
+      this.buttonText = this.button.querySelector('.atc-button-text');
+      this.productId = form.dataset.productId;
+
+      this.init();
+    }
+
+    init() {
+      // Listen for form submission
+      this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+
+      // Prevent carousel from intercepting clicks
+      this.button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+      });
+
+      this.button.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+      });
+
+      // Listen for variant changes from the dropdown
+      document.addEventListener('variant:changed', (e) => {
+        if (e.detail && e.detail.productId === this.productId) {
+          this.updateVariant(e.detail.variantId, e.detail.available);
+        }
+      });
+    }
+
+    updateVariant(variantId, available) {
+      this.variantInput.value = variantId;
+      this.variantInput.dataset.variantId = variantId;
+      this.button.disabled = !available;
+
+      if (available) {
+        this.buttonText.textContent = '{{ block.settings.button_text | default: "Add to Cart" }}';
+      } else {
+        this.buttonText.textContent = '{{ block.settings.sold_out_text | default: "Sold Out" }}';
+      }
+    }
+
+    async handleSubmit(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (this.button.disabled) return;
+
+      const originalText = this.buttonText.textContent;
+      this.button.classList.add('adding');
+      this.button.disabled = true;
+      this.buttonText.textContent = '{{ block.settings.adding_text | default: "Adding..." }}';
+
+      try {
+        const formData = {
+          items: [{
+            id: this.variantInput.value,
+            quantity: 1
+          }]
+        };
+
+        const response = await fetch('/cart/add.js', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-Requested-With': 'XMLHttpRequest'
+            'Content-Type': 'application/json',
           },
-          body: new URLSearchParams(new FormData(form))
-        })
-        .then(response => response.json())
-        .then(data => {
-          button.textContent = '{{ block.settings.added_text }}';
-          
-          // Update cart count if element exists
-          const cartCount = document.querySelector('.cart-count');
-          if (cartCount && data.item_count) {
-            cartCount.textContent = data.item_count;
-          }
-          
-          setTimeout(() => {
-            button.textContent = originalText;
-            button.disabled = false;
-          }, 2000);
-          
-          // Trigger cart drawer if it exists
-          if (window.Shopify && window.Shopify.theme && window.Shopify.theme.openCartDrawer) {
-            window.Shopify.theme.openCartDrawer();
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          button.textContent = originalText;
-          button.disabled = false;
+          body: JSON.stringify(formData)
         });
-      });
+
+        if (!response.ok) {
+          throw new Error('Failed to add to cart');
+        }
+
+        const data = await response.json();
+        console.log('Added to cart:', data);
+
+        // Update button to show success
+        this.button.classList.remove('adding');
+        this.button.classList.add('added');
+        this.buttonText.textContent = '{{ block.settings.added_text | default: "Added!" }}';
+
+        // Update cart count
+        await this.updateCartCount();
+
+        // Reset button after 2 seconds
+        setTimeout(() => {
+          this.button.classList.remove('added');
+          this.button.disabled = false;
+          this.buttonText.textContent = originalText;
+        }, 2000);
+
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        this.button.classList.remove('adding');
+        this.button.disabled = false;
+        this.buttonText.textContent = 'Error - Try Again';
+
+        setTimeout(() => {
+          this.buttonText.textContent = originalText;
+        }, 2000);
+      }
+    }
+
+    async updateCartCount() {
+      try {
+        const response = await fetch('/cart.js');
+        const cart = await response.json();
+
+        // Update cart count in header
+        const cartCountElements = document.querySelectorAll('.cart-count-bubble span, [data-cart-count]');
+        cartCountElements.forEach(el => {
+          el.textContent = cart.item_count;
+        });
+
+        // Dispatch custom event for cart update
+        document.dispatchEvent(new CustomEvent('cart:updated', {
+          detail: { cart }
+        }));
+
+      } catch (error) {
+        console.error('Error updating cart count:', error);
+      }
+    }
+  }
+
+  // Initialize all forms
+  function initProductCardAddToCart() {
+    const forms = document.querySelectorAll('.product-card-atc-form:not([data-atc-initialized])');
+    forms.forEach(form => {
+      form.setAttribute('data-atc-initialized', 'true');
+      new ProductCardAddToCart(form);
     });
+  }
+
+  // Initialize on DOMContentLoaded
+  document.addEventListener('DOMContentLoaded', initProductCardAddToCart);
+
+  // Also initialize on window load (for dynamic content)
+  window.addEventListener('load', initProductCardAddToCart);
+
+  // Watch for DOM changes (when carousel reinitializes)
+  const observer = new MutationObserver(() => {
+    initProductCardAddToCart();
   });
+
+  if (document.body) {
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
 </script>
 
 {% schema %}

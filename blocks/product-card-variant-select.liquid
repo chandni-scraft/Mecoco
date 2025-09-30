@@ -41,9 +41,10 @@
   <!-- Hidden select for variants -->
   <select class="variant-id-select" style="display: none;">
     {% for variant in product.variants %}
-      <option 
+      <option
         value="{{ variant.id }}"
         data-variant-options="{{ variant.options | join: '||' }}"
+        data-available="{{ variant.available }}"
         {% if variant.id == current_variant.id %}selected{% endif %}
         {% unless variant.available %}disabled{% endunless %}
       >
@@ -51,6 +52,22 @@
       </option>
     {% endfor %}
   </select>
+
+  <!-- Add to Cart Button -->
+  <button
+    class="variant-atc-button"
+    data-product-id="{{ product.id }}"
+    data-variant-id="{{ current_variant.id }}"
+    {% unless current_variant.available %}disabled{% endunless %}
+  >
+    <span class="atc-button-icon">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3.5 4.5L2 14.5H14L12.5 4.5H3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M5 7V4.5C5 2.84315 6.34315 1.5 8 1.5C9.65685 1.5 11 2.84315 11 4.5V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <span class="atc-button-text">Add to Cart</span>
+  </button>
 </div>
 
 <style>
@@ -152,6 +169,80 @@
       -webkit-appearance: none;
     }
   }
+
+  /* Add to Cart Button Styles */
+  .variant-atc-button {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px 20px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 100;
+  }
+
+  .variant-atc-button:hover:not(:disabled) {
+    background: #333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .variant-atc-button:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .variant-atc-button:disabled {
+    background: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .variant-atc-button.adding {
+    pointer-events: none;
+  }
+
+  .variant-atc-button.added {
+    background: #4caf50;
+  }
+
+  .atc-button-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .atc-button-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .atc-button-text {
+    line-height: 1;
+  }
+
+  /* Prevent carousel from interfering with ATC button */
+  .variant-atc-button {
+    pointer-events: auto !important;
+  }
+
+  @media (max-width: 749px) {
+    .variant-atc-button {
+      font-size: 15px;
+      padding: 14px 20px;
+    }
+  }
 </style>
 
 <script>
@@ -161,34 +252,54 @@
       this.productId = container.dataset.productId;
       this.selects = container.querySelectorAll('.variant-select');
       this.variantIdSelect = container.querySelector('.variant-id-select');
-      
+      this.atcButton = container.querySelector('.variant-atc-button');
+
       this.init();
     }
     
     init() {
       this.selects.forEach(select => {
         select.addEventListener('change', () => this.onOptionChange());
-        
+
         // Prevent carousel from intercepting clicks
         select.addEventListener('click', (e) => {
           e.stopPropagation();
           e.stopImmediatePropagation();
           console.log('Dropdown clicked, propagation stopped');
         });
-        
+
         select.addEventListener('mousedown', (e) => {
           e.stopPropagation();
           e.stopImmediatePropagation();
         });
-        
+
         select.addEventListener('touchstart', (e) => {
           e.stopPropagation();
         }, { passive: false });
       });
-      
+
+      // Add to Cart button event listeners
+      if (this.atcButton) {
+        this.atcButton.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          this.handleAddToCart();
+        });
+
+        // Prevent carousel from intercepting button clicks
+        this.atcButton.addEventListener('mousedown', (e) => {
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        });
+      }
+
       // Also stop propagation on the container
       this.container.addEventListener('click', (e) => {
-        if (e.target.classList.contains('variant-select') || e.target.tagName === 'OPTION') {
+        if (e.target.classList.contains('variant-select') ||
+            e.target.tagName === 'OPTION' ||
+            e.target.classList.contains('variant-atc-button') ||
+            e.target.closest('.variant-atc-button')) {
           e.stopPropagation();
           e.stopImmediatePropagation();
         }
@@ -198,10 +309,125 @@
     onOptionChange() {
       const selectedOptions = Array.from(this.selects).map(select => select.value);
       const selectedVariant = this.findVariantByOptions(selectedOptions);
-      
+
       if (selectedVariant) {
         this.variantIdSelect.value = selectedVariant.value;
         this.updateProductCard(selectedVariant.value);
+        this.updateAtcButton(selectedVariant);
+      }
+    }
+
+    updateAtcButton(selectedVariant) {
+      const variantId = selectedVariant.value;
+      const isAvailable = selectedVariant.dataset.available === 'true';
+
+      // Dispatch event for external add-to-cart buttons
+      document.dispatchEvent(new CustomEvent('variant:changed', {
+        detail: {
+          productId: this.productId,
+          variantId: variantId,
+          available: isAvailable
+        }
+      }));
+
+      // Update internal button if it exists
+      if (!this.atcButton) return;
+
+      this.atcButton.dataset.variantId = variantId;
+      this.atcButton.disabled = !isAvailable;
+
+      if (isAvailable) {
+        this.atcButton.querySelector('.atc-button-text').textContent = 'Add to Cart';
+      } else {
+        this.atcButton.querySelector('.atc-button-text').textContent = 'Sold Out';
+      }
+    }
+
+    async handleAddToCart() {
+      if (!this.atcButton || this.atcButton.disabled) return;
+
+      const variantId = this.atcButton.dataset.variantId;
+      if (!variantId) return;
+
+      // Update button state
+      this.atcButton.classList.add('adding');
+      this.atcButton.disabled = true;
+      const originalText = this.atcButton.querySelector('.atc-button-text').textContent;
+      this.atcButton.querySelector('.atc-button-text').textContent = 'Adding...';
+
+      try {
+        const formData = {
+          items: [{
+            id: variantId,
+            quantity: 1
+          }]
+        };
+
+        const response = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add to cart');
+        }
+
+        const data = await response.json();
+        console.log('Added to cart:', data);
+
+        // Update button to show success
+        this.atcButton.classList.remove('adding');
+        this.atcButton.classList.add('added');
+        this.atcButton.querySelector('.atc-button-text').textContent = 'Added!';
+
+        // Update cart count if cart icon exists
+        this.updateCartCount();
+
+        // Reset button after 2 seconds
+        setTimeout(() => {
+          this.atcButton.classList.remove('added');
+          this.atcButton.disabled = false;
+          this.atcButton.querySelector('.atc-button-text').textContent = originalText;
+        }, 2000);
+
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        this.atcButton.classList.remove('adding');
+        this.atcButton.disabled = false;
+        this.atcButton.querySelector('.atc-button-text').textContent = 'Error - Try Again';
+
+        setTimeout(() => {
+          this.atcButton.querySelector('.atc-button-text').textContent = originalText;
+        }, 2000);
+      }
+    }
+
+    async updateCartCount() {
+      try {
+        const response = await fetch('/cart.js');
+        const cart = await response.json();
+
+        // Update cart count in header
+        const cartCountElements = document.querySelectorAll('.cart-count-bubble span, [data-cart-count]');
+        cartCountElements.forEach(el => {
+          el.textContent = cart.item_count;
+        });
+
+        // Trigger cart drawer update if it exists
+        if (typeof window.theme !== 'undefined' && window.theme.cartDrawer) {
+          window.theme.cartDrawer.renderContents(cart);
+        }
+
+        // Dispatch custom event for cart update
+        document.dispatchEvent(new CustomEvent('cart:updated', {
+          detail: { cart }
+        }));
+
+      } catch (error) {
+        console.error('Error updating cart count:', error);
       }
     }
     
