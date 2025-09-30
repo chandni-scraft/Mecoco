@@ -184,14 +184,45 @@
       event.stopImmediatePropagation();
     }
 
-    onOptionChange() {
-      const selectedOptions = Array.from(this.selects).map(select => select.value);
-      let selectedVariant = this.findVariantByOptions(selectedOptions);
+    syncLocalAddToCart(variantId, available) {
+      var productCard = this.container.closest('product-card');
+      if (!productCard) {
+        return;
+      }
 
-      if (!selectedVariant) {
-        selectedVariant = Array.from(this.variantIdSelect?.options || []).find((option) => option.dataset.available === 'true')
-          || this.variantIdSelect?.options?.[0]
-          || null;
+      var form = productCard.querySelector('.product-card-atc-form');
+      if (form) {
+        var variantInput = form.querySelector('.variant-id-input');
+        if (variantInput) {
+          variantInput.value = variantId;
+          variantInput.setAttribute('data-variant-id', variantId);
+        }
+
+        var button = form.querySelector('.product-card-atc-button');
+        if (button) {
+          if (typeof available === 'boolean') {
+            button.disabled = !available;
+          }
+
+          var buttonText = button.querySelector('.atc-button-text');
+          if (buttonText) {
+            buttonText.textContent = available ? 'Add to Cart' : 'Sold Out';
+          }
+        }
+      }
+    }
+
+    onOptionChange() {
+      var selectedOptions = Array.from(this.selects).map(function(select) {
+        return select.value;
+      });
+      var selectedVariant = this.findVariantByOptions(selectedOptions);
+
+      if (!selectedVariant && this.variantIdSelect) {
+        var fallbackOptions = Array.from(this.variantIdSelect.options);
+        selectedVariant = fallbackOptions.find(function(option) {
+          return option.dataset.available === 'true';
+        }) || fallbackOptions[0] || null;
       }
 
       if (!selectedVariant) {
@@ -202,7 +233,8 @@
       this.setSelectedOption(selectedVariant.value);
       this.updateProductCard(selectedVariant.value);
 
-      const isAvailable = selectedVariant.dataset.available === 'true';
+      var isAvailable = selectedVariant.dataset.available === 'true';
+      this.syncLocalAddToCart(selectedVariant.value, isAvailable);
 
       document.dispatchEvent(new CustomEvent('variant:changed', {
         detail: {
@@ -218,16 +250,19 @@
         return;
       }
 
-      const selectedOption = this.variantIdSelect.selectedOptions[0];
+      var selectedOption = this.variantIdSelect.selectedOptions[0];
       if (!selectedOption) {
         return;
       }
+
+      var isAvailable = selectedOption.dataset.available === 'true';
+      this.syncLocalAddToCart(selectedOption.value, isAvailable);
 
       document.dispatchEvent(new CustomEvent('variant:changed', {
         detail: {
           productId: this.productId,
           variantId: selectedOption.value,
-          available: selectedOption.dataset.available === 'true'
+          available: isAvailable
         }
       }));
     }
@@ -247,31 +282,46 @@
         return null;
       }
 
-      const normalizedOptions = options.map((value) => (value ?? '').trim().toLowerCase());
+      var normalizedOptions = options.map(function(value) {
+        return (value || '').toString().trim().toLowerCase();
+      });
 
       return (
-        Array.from(this.variantIdSelect.options).find((option) => {
-          const optionData = option.dataset.variantOptions;
+        Array.from(this.variantIdSelect.options).find(function(option) {
+          var optionData = option.dataset.variantOptions;
           if (!optionData) {
             return false;
           }
 
-          const candidate = optionData.split('||').map((value) => value.trim().toLowerCase());
+          var candidate = optionData.split('||').map(function(value) {
+            return value.trim().toLowerCase();
+          });
+
           if (candidate.length !== normalizedOptions.length) {
             return false;
           }
 
-          return candidate.every((value, index) => value === normalizedOptions[index]);
+          for (var index = 0; index < candidate.length; index += 1) {
+            if (candidate[index] !== normalizedOptions[index]) {
+              return false;
+            }
+          }
+
+          return true;
         }) || null
       );
     }
 
     updateProductCard(variantId) {
-      const productCard = this.container.closest('product-card');
-      const productLink = productCard?.querySelector('.product-card__link');
+      var productCard = this.container.closest('product-card');
+      if (!productCard) {
+        return;
+      }
+
+      var productLink = productCard.querySelector('.product-card__link');
 
       if (productLink && variantId) {
-        const url = new URL(productLink.href, window.location.origin);
+        var url = new URL(productLink.href, window.location.origin);
         url.searchParams.set('variant', variantId);
         productLink.href = url.toString();
       }

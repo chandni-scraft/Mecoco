@@ -140,20 +140,21 @@
         this.form = form;
         this.button = form.querySelector('.product-card-atc-button');
         this.variantInput = form.querySelector('.variant-id-input');
-        this.buttonText = this.button?.querySelector('.atc-button-text');
+        this.buttonText = this.button ? this.button.querySelector('.atc-button-text') : null;
         this.productId = form.dataset.productId;
 
         this.init();
       }
 
       init() {
-        if (!this.form || !this.button || !this.variantInput || !this.buttonText) {
+        if (!this.form || !this.button || !this.variantInput) {
           return;
         }
 
         this.form.addEventListener('submit', (event) => this.handleSubmit(event));
 
         this.button.addEventListener('click', (event) => {
+          event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation();
         });
@@ -183,9 +184,9 @@
 
         if (typeof available === 'boolean') {
           this.button.disabled = !available;
-          this.buttonText.textContent = available
+          if (this.buttonText) { this.buttonText.textContent = available
             ? '{{ block.settings.button_text | default: "Add to Cart" }}'
-            : '{{ block.settings.sold_out_text | default: "Sold Out" }}';
+            : '{{ block.settings.sold_out_text | default: "Sold Out" }}'; }
         }
       }
 
@@ -197,10 +198,10 @@
           return;
         }
 
-        const originalText = this.buttonText.textContent;
+        const originalText = this.buttonText ? this.buttonText.textContent : '';
         this.button.classList.add('adding');
         this.button.disabled = true;
-        this.buttonText.textContent = '{{ block.settings.adding_text | default: "Adding..." }}';
+        if (this.buttonText) { this.buttonText.textContent = '{{ block.settings.adding_text | default: "Adding..." }}'; }
 
         try {
           const formData = {
@@ -226,23 +227,23 @@
 
           this.button.classList.remove('adding');
           this.button.classList.add('added');
-          this.buttonText.textContent = '{{ block.settings.added_text | default: "Added!" }}';
+          if (this.buttonText) { this.buttonText.textContent = '{{ block.settings.added_text | default: "Added!" }}'; }
 
           await this.updateCartCount();
 
           setTimeout(() => {
             this.button.classList.remove('added');
             this.button.disabled = false;
-            this.buttonText.textContent = originalText;
+            if (this.buttonText) { this.buttonText.textContent = originalText; }
           }, 2000);
         } catch (error) {
           console.error('Error adding to cart:', error);
           this.button.classList.remove('adding');
           this.button.disabled = false;
-          this.buttonText.textContent = 'Error - Try Again';
+          if (this.buttonText) { this.buttonText.textContent = 'Error - Try Again'; }
 
           setTimeout(() => {
-            this.buttonText.textContent = originalText;
+            if (this.buttonText) { this.buttonText.textContent = originalText; }
           }, 2000);
         }
       }
