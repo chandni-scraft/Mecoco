@@ -92,6 +92,32 @@
               },
               "blocks": {}
             },
+            "text_features_points": {
+              "type": "text",
+              "name": "Features points",
+              "settings": {
+                "text": "{{ closest.product.metafields.custom.features_points }}",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
             "reviews": {
               "type": "review",
               "settings": {
@@ -416,6 +442,7 @@
           },
           "block_order": [
             "heading_m7KmQQ",
+            "text_features_points",
             "reviews",
             "price_a7krng",
             "text_gXMUag",
