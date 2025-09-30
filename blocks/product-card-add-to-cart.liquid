@@ -228,9 +228,13 @@
         }
 
         try {
-          const formData = {
-            id: this.variantInput.value,
-            quantity: 1
+          const payload = {
+            items: [
+              {
+                id: Number(this.variantInput.value) || this.variantInput.value,
+                quantity: 1
+              }
+            ]
           };
 
           const response = await fetch('/cart/add.js', {
@@ -241,7 +245,7 @@
             },
             credentials: 'same-origin',
             cache: 'no-store',
-            body: JSON.stringify(formData)
+            body: JSON.stringify(payload)
           });
 
           if (!response.ok) {
@@ -411,6 +415,7 @@
   ]
 }
 {% endschema %}
+
 
 
 
