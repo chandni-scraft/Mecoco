@@ -21,6 +21,8 @@
           class="variant-select" 
           data-option-name="{{ option.name }}"
           data-option-position="{{ option.position }}"
+          onclick="console.log('Select clicked directly')"
+          onmousedown="console.log('Select mousedown')"
         >
           {% for value in option.values %}
             <option 
@@ -95,6 +97,8 @@
     appearance: none;
     outline: none;
     transition: border-color 0.2s;
+    position: relative;
+    z-index: 1;
   }
 
   .variant-select:hover {
@@ -114,11 +118,28 @@
     color: #666;
   }
 
+  /* Style the dropdown options */
+  .variant-select option {
+    padding: 8px;
+    background: white;
+    color: #333;
+  }
+
+  .variant-select option:hover {
+    background: #f5f5f5;
+  }
+
+  /* Fix for Safari/iOS */
+  .variant-select::-webkit-select {
+    background: white;
+  }
+
   /* Mobile styles */
   @media (max-width: 749px) {
     .variant-select {
       font-size: 16px; /* Prevents zoom on iOS */
       padding: 12px 32px 12px 12px;
+      -webkit-appearance: none;
     }
   }
 </style>
@@ -137,6 +158,16 @@
     init() {
       this.selects.forEach(select => {
         select.addEventListener('change', () => this.onOptionChange());
+        
+        // Add click event listener for debugging
+        select.addEventListener('click', (e) => {
+          console.log('Dropdown clicked:', select.name, e);
+        });
+        
+        // Add focus event listener
+        select.addEventListener('focus', (e) => {
+          console.log('Dropdown focused:', select.name);
+        });
       });
     }
     
@@ -179,7 +210,21 @@
   
   // Initialize all variant selects
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.product-variant-selects').forEach(container => {
+    console.log('Initializing variant selects...');
+    const containers = document.querySelectorAll('.product-variant-selects');
+    console.log('Found containers:', containers.length);
+    
+    containers.forEach((container, index) => {
+      console.log('Initializing container', index, container);
+      new ProductVariantSelects(container);
+    });
+  });
+  
+  // Also try initializing on window load
+  window.addEventListener('load', () => {
+    console.log('Window loaded - checking for uninitialized selects');
+    document.querySelectorAll('.product-variant-selects:not([data-initialized])').forEach(container => {
+      container.setAttribute('data-initialized', 'true');
       new ProductVariantSelects(container);
     });
   });
