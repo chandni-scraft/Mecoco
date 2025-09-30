@@ -14,7 +14,7 @@
       <input type="hidden" name="id" class="variant-id-input" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
       <input type="hidden" name="quantity" value="1">
       <button
-        type="submit"
+        type="button"
         class="product-card-atc-button"
         {% unless can_add_to_cart %}disabled{% endunless %}
       >
@@ -175,8 +175,10 @@
         this.inFlight = false;
 
         this.button.addEventListener('click', (event) => {
+          event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation();
+          this.handleSubmit(event);
         });
 
         this.button.addEventListener('mousedown', (event) => {
@@ -409,3 +411,6 @@
   ]
 }
 {% endschema %}
+
+
+
