@@ -14,6 +14,11 @@
   >
     {% render 'text', fallback_text: product_title, block: block %}
   </a>
+  {% if closest.product.metafields.custom.features_points != blank %}
+    <div class="product-card__features">
+      {{ closest.product.metafields.custom.features_points }}
+    </div>
+  {% endif %}
 {% endif %}
 
 {% schema %}
