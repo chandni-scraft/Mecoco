@@ -10,11 +10,11 @@
 {% if product != blank %}
   <div class="product-card-add-to-cart" data-product-id="{{ product.id }}">
     <!-- Add to cart form (works with variant selector) -->
-    <form method="post" action="/cart/add" class="product-card-atc-form" data-product-id="{{ product.id }}" data-default-label="{{ block.settings.button_text | default: 'Add to Cart' | escape }}" data-sold-out-label="{{ block.settings.sold_out_text | default: 'Sold Out' | escape }}" data-adding-label="{{ block.settings.adding_text | default: 'Adding...' | escape }}" data-added-label="{{ block.settings.added_text | default: 'Added!' | escape }}">
+    <form method="post" action="{{ routes.cart_add_url }}" class="product-card-atc-form" data-product-id="{{ product.id }}" data-default-label="{{ block.settings.button_text | default: 'Add to Cart' | escape }}" data-sold-out-label="{{ block.settings.sold_out_text | default: 'Sold Out' | escape }}" data-adding-label="{{ block.settings.adding_text | default: 'Adding...' | escape }}" data-added-label="{{ block.settings.added_text | default: 'Added!' | escape }}">
       <input type="hidden" name="id" class="variant-id-input" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
       <input type="hidden" name="quantity" value="1">
       <button
-        type="submit"
+        type="button"
         class="product-card-atc-button"
         {% unless can_add_to_cart %}disabled{% endunless %}
       >
@@ -175,6 +175,7 @@
         this.button.addEventListener('click', (event) => {
           event.stopPropagation();
           event.stopImmediatePropagation();
+          this.handleSubmit(event);
         });
 
         this.button.addEventListener('mousedown', (event) => {
