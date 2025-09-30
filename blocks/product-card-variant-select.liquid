@@ -232,16 +232,25 @@
     }
   }
   
-  // Initialize all variant selects
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log('Initializing variant selects...');
-    const containers = document.querySelectorAll('.product-variant-selects');
-    console.log('Found containers:', containers.length);
-    
-    containers.forEach((container, index) => {
-      console.log('Initializing container', index, container);
-      new ProductVariantSelects(container);
+  // Function to initialize a single container
+  function initializeVariantSelect(container) {
+    if (container.hasAttribute('data-variant-initialized')) return;
+    container.setAttribute('data-variant-initialized', 'true');
+    new ProductVariantSelects(container);
+  }
+  
+  // Function to initialize all variant selects
+  function initializeAllVariantSelects() {
+    const containers = document.querySelectorAll('.product-variant-selects:not([data-variant-initialized])');
+    containers.forEach(container => {
+      initializeVariantSelect(container);
     });
+  }
+  
+  // Initialize on DOMContentLoaded
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOMContentLoaded - initializing variant selects...');
+    initializeAllVariantSelects();
     
     // Global handler to prevent carousel interference
     document.addEventListener('click', function(e) {
@@ -251,15 +260,67 @@
         console.log('Global: Prevented carousel interference for variant select');
       }
     }, true); // Use capture phase
+    
+    // Watch for DOM changes (when carousel reinitializes)
+    const observer = new MutationObserver((mutations) => {
+      let shouldReinitialize = false;
+      
+      mutations.forEach((mutation) => {
+        // Check if variant selects were added or modified
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1) { // Element node
+              if (node.classList?.contains('product-variant-selects') || 
+                  node.querySelector?.('.product-variant-selects')) {
+                shouldReinitialize = true;
+              }
+            }
+          });
+        }
+      });
+      
+      if (shouldReinitialize) {
+        console.log('DOM changed - reinitializing variant selects...');
+        setTimeout(() => {
+          initializeAllVariantSelects();
+        }, 100); // Small delay to ensure DOM is settled
+      }
+    });
+    
+    // Start observing the entire document for changes
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+    
+    // Also use IntersectionObserver to handle visibility changes
+    const visibilityObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Element is now visible, reinitialize if needed
+          const variantSelects = entry.target.querySelectorAll('.product-variant-selects:not([data-variant-initialized])');
+          if (variantSelects.length > 0) {
+            console.log('Element became visible - reinitializing variant selects...');
+            variantSelects.forEach(container => {
+              initializeVariantSelect(container);
+            });
+          }
+        }
+      });
+    }, {
+      rootMargin: '50px' // Start initializing slightly before element comes into view
+    });
+    
+    // Observe all product list sections
+    document.querySelectorAll('.section-resource-list, .product-list, .resource-list').forEach(section => {
+      visibilityObserver.observe(section);
+    });
   });
   
-  // Also try initializing on window load
+  // Also initialize on window load
   window.addEventListener('load', () => {
     console.log('Window loaded - checking for uninitialized selects');
-    document.querySelectorAll('.product-variant-selects:not([data-initialized])').forEach(container => {
-      container.setAttribute('data-initialized', 'true');
-      new ProductVariantSelects(container);
-    });
+    initializeAllVariantSelects();
   });
 </script>
 
