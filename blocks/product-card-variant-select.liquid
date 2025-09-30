@@ -21,8 +21,6 @@
           class="variant-select" 
           data-option-name="{{ option.name }}"
           data-option-position="{{ option.position }}"
-          onclick="console.log('Select clicked directly')"
-          onmousedown="console.log('Select mousedown')"
         >
           {% for value in option.values %}
             <option 
@@ -58,6 +56,8 @@
 <style>
   .product-variant-selects {
     padding: 10px 0;
+    position: relative;
+    z-index: 10;
   }
 
   .variant-select-wrapper {
@@ -159,15 +159,29 @@
       this.selects.forEach(select => {
         select.addEventListener('change', () => this.onOptionChange());
         
-        // Add click event listener for debugging
+        // Prevent carousel from intercepting clicks
         select.addEventListener('click', (e) => {
-          console.log('Dropdown clicked:', select.name, e);
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          console.log('Dropdown clicked, propagation stopped');
         });
         
-        // Add focus event listener
-        select.addEventListener('focus', (e) => {
-          console.log('Dropdown focused:', select.name);
+        select.addEventListener('mousedown', (e) => {
+          e.stopPropagation();
+          e.stopImmediatePropagation();
         });
+        
+        select.addEventListener('touchstart', (e) => {
+          e.stopPropagation();
+        }, { passive: false });
+      });
+      
+      // Also stop propagation on the container
+      this.container.addEventListener('click', (e) => {
+        if (e.target.classList.contains('variant-select') || e.target.tagName === 'OPTION') {
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+        }
       });
     }
     
