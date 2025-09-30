@@ -57,7 +57,17 @@
   .product-variant-selects {
     padding: 10px 0;
     position: relative;
-    z-index: 10;
+    z-index: 100;
+  }
+  
+  /* Prevent carousel from interfering with dropdowns */
+  .product-variant-selects:hover ~ * {
+    pointer-events: none !important;
+  }
+  
+  /* Ensure the selects remain interactive */
+  .product-variant-selects * {
+    pointer-events: auto !important;
   }
 
   .variant-select-wrapper {
@@ -232,6 +242,15 @@
       console.log('Initializing container', index, container);
       new ProductVariantSelects(container);
     });
+    
+    // Global handler to prevent carousel interference
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.product-variant-selects')) {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        console.log('Global: Prevented carousel interference for variant select');
+      }
+    }, true); // Use capture phase
   });
   
   // Also try initializing on window load

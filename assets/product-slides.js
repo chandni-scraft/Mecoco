@@ -148,12 +148,39 @@
           // do nothing — allow native touch/swipe
           return;
         }
+        // Check if the event target is a variant select or its child
+        if (e && e.target) {
+          var target = e.target;
+          if (target.classList && (target.classList.contains('variant-select') || 
+              target.classList.contains('product-variant-selects') ||
+              target.classList.contains('variant-select-wrapper') ||
+              target.classList.contains('select-container'))) {
+            return; // Don't start hover for variant selects
+          }
+          // Check parent elements
+          var variantParent = target.closest && target.closest('.product-variant-selects');
+          if (variantParent) {
+            return; // Don't start hover if inside variant selects
+          }
+        }
         startHover();
       }
       function onPointerLeave(e){
         // If this device is touch-capable and event is a touch pointer, ignore.
         if (slideshow.__pcIsTouch && e && e.pointerType === 'touch') {
           return;
+        }
+        // Check if leaving from a variant select
+        if (e && e.target) {
+          var target = e.target;
+          if (target.classList && (target.classList.contains('variant-select') || 
+              target.classList.contains('product-variant-selects'))) {
+            return; // Don't reset for variant selects
+          }
+          var variantParent = target.closest && target.closest('.product-variant-selects');
+          if (variantParent) {
+            return;
+          }
         }
         stopHoverAndReset();
       }
