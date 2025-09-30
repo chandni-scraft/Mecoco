@@ -186,7 +186,13 @@
 
     onOptionChange() {
       const selectedOptions = Array.from(this.selects).map(select => select.value);
-      const selectedVariant = this.findVariantByOptions(selectedOptions);
+      let selectedVariant = this.findVariantByOptions(selectedOptions);
+
+      if (!selectedVariant) {
+        selectedVariant = Array.from(this.variantIdSelect?.options || []).find((option) => option.dataset.available === 'true')
+          || this.variantIdSelect?.options?.[0]
+          || null;
+      }
 
       if (!selectedVariant) {
         return;
@@ -241,10 +247,23 @@
         return null;
       }
 
-      const match = options.join('||');
-      return Array.from(this.variantIdSelect.options).find(option => {
-        return option.dataset.variantOptions === match;
-      }) || null;
+      const normalizedOptions = options.map((value) => (value ?? '').trim().toLowerCase());
+
+      return (
+        Array.from(this.variantIdSelect.options).find((option) => {
+          const optionData = option.dataset.variantOptions;
+          if (!optionData) {
+            return false;
+          }
+
+          const candidate = optionData.split('||').map((value) => value.trim().toLowerCase());
+          if (candidate.length !== normalizedOptions.length) {
+            return false;
+          }
+
+          return candidate.every((value, index) => value === normalizedOptions[index]);
+        }) || null
+      );
     }
 
     updateProductCard(variantId) {
