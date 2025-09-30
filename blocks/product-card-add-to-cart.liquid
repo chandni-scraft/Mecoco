@@ -172,15 +172,15 @@
 
         this.form.addEventListener('submit', (event) => this.handleSubmit(event));
 
+        this.inFlight = false;
+
         this.button.addEventListener('click', (event) => {
           event.stopPropagation();
-          event.stopImmediatePropagation();
           this.handleSubmit(event);
         });
 
         this.button.addEventListener('mousedown', (event) => {
           event.stopPropagation();
-          event.stopImmediatePropagation();
         });
 
         document.addEventListener('variant:changed', (event) => {
@@ -213,10 +213,11 @@
         event.preventDefault();
         event.stopPropagation();
 
-        if (this.button.disabled) {
+        if (this.button.disabled || this.inFlight) {
           return;
         }
 
+        this.inFlight = true;
         const originalText = this.buttonText ? this.buttonText.textContent : this.defaultText;
         this.button.classList.add('adding');
         this.button.disabled = true;
@@ -237,6 +238,8 @@
             headers: {
               'Content-Type': 'application/json'
             },
+            credentials: 'same-origin',
+            cache: 'no-store',
             body: JSON.stringify(formData)
           });
 
@@ -274,6 +277,8 @@
               this.buttonText.textContent = originalText || this.defaultText;
             }
           }, 2000);
+        } finally {
+          this.inFlight = false;
         }
       }
 
