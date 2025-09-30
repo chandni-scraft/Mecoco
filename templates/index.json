@@ -1281,6 +1281,11 @@
               },
               "blocks": {}
             },
+            "variant_dropdown_emecnA": {
+              "type": "product-card-variant-select",
+              "settings": {},
+              "blocks": {}
+            },
             "add_to_cart_button": {
               "type": "product-card-add-to-cart",
               "settings": {
@@ -1297,6 +1302,7 @@
             "product_card_gallery_pfTwke",
             "product_title_r3GVkt",
             "price_b9bGDC",
+            "variant_dropdown_emecnA",
             "add_to_cart_button"
           ]
         }
@@ -2038,6 +2044,11 @@
               },
               "blocks": {}
             },
+            "variant_dropdown_9efECi": {
+              "type": "product-card-variant-select",
+              "settings": {},
+              "blocks": {}
+            },
             "add_to_cart_button_9efECi": {
               "type": "product-card-add-to-cart",
               "settings": {
@@ -2054,6 +2065,7 @@
             "product_card_gallery_bcNVQL",
             "product_title_3K7DBP",
             "price_jBqq9x",
+            "variant_dropdown_9efECi",
             "add_to_cart_button_9efECi"
           ]
         }
