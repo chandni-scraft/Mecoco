@@ -1,7 +1,7 @@
-{% liquid
+﻿{% liquid
   assign product = closest.product
   assign show_selects = false
-  
+
   if product != blank and product.variants.size > 1
     assign show_selects = true
     assign current_variant = product.selected_or_first_available_variant
@@ -17,13 +17,13 @@
         <label class="variant-select-label">{{ option.name }}</label>
       {% endif %}
       <div class="select-container">
-        <select 
-          class="variant-select" 
+        <select
+          class="variant-select"
           data-option-name="{{ option.name }}"
           data-option-position="{{ option.position }}"
         >
           {% for value in option.values %}
-            <option 
+            <option
               value="{{ value | escape }}"
               {% if current_variant.options[forloop.index0] == value %}selected{% endif %}
             >
@@ -37,8 +37,7 @@
       </div>
     </div>
   {% endfor %}
-  
-  <!-- Hidden select for variants -->
+
   <select class="variant-id-select" style="display: none;">
     {% for variant in product.variants %}
       <option
@@ -46,28 +45,11 @@
         data-variant-options="{{ variant.options | join: '||' }}"
         data-available="{{ variant.available }}"
         {% if variant.id == current_variant.id %}selected{% endif %}
-        {% unless variant.available %}disabled{% endunless %}
       >
         {{ variant.title }}
       </option>
     {% endfor %}
   </select>
-
-  <!-- Add to Cart Button -->
-  <button
-    class="variant-atc-button"
-    data-product-id="{{ product.id }}"
-    data-variant-id="{{ current_variant.id }}"
-    {% unless current_variant.available %}disabled{% endunless %}
-  >
-    <span class="atc-button-icon">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M3.5 4.5L2 14.5H14L12.5 4.5H3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-        <path d="M5 7V4.5C5 2.84315 6.34315 1.5 8 1.5C9.65685 1.5 11 2.84315 11 4.5V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </span>
-    <span class="atc-button-text">Add to Cart</span>
-  </button>
 </div>
 
 <style>
@@ -76,13 +58,11 @@
     position: relative;
     z-index: 100;
   }
-  
-  /* Prevent carousel from interfering with dropdowns */
+
   .product-variant-selects:hover ~ * {
     pointer-events: none !important;
   }
-  
-  /* Ensure the selects remain interactive */
+
   .product-variant-selects * {
     pointer-events: auto !important;
   }
@@ -145,7 +125,6 @@
     color: #666;
   }
 
-  /* Style the dropdown options */
   .variant-select option {
     padding: 8px;
     background: white;
@@ -156,91 +135,15 @@
     background: #f5f5f5;
   }
 
-  /* Fix for Safari/iOS */
   .variant-select::-webkit-select {
     background: white;
   }
 
-  /* Mobile styles */
   @media (max-width: 749px) {
     .variant-select {
-      font-size: 16px; /* Prevents zoom on iOS */
+      font-size: 16px;
       padding: 12px 32px 12px 12px;
       -webkit-appearance: none;
-    }
-  }
-
-  /* Add to Cart Button Styles */
-  .variant-atc-button {
-    width: 100%;
-    margin-top: 12px;
-    padding: 12px 20px;
-    background: #000;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 100;
-  }
-
-  .variant-atc-button:hover:not(:disabled) {
-    background: #333;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-
-  .variant-atc-button:active:not(:disabled) {
-    transform: translateY(0);
-  }
-
-  .variant-atc-button:disabled {
-    background: #ccc;
-    color: #666;
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
-  .variant-atc-button.adding {
-    pointer-events: none;
-  }
-
-  .variant-atc-button.added {
-    background: #4caf50;
-  }
-
-  .atc-button-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-  }
-
-  .atc-button-icon svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .atc-button-text {
-    line-height: 1;
-  }
-
-  /* Prevent carousel from interfering with ATC button */
-  .variant-atc-button {
-    pointer-events: auto !important;
-  }
-
-  @media (max-width: 749px) {
-    .variant-atc-button {
-      font-size: 15px;
-      padding: 14px 20px;
     }
   }
 </style>
@@ -252,302 +155,163 @@
       this.productId = container.dataset.productId;
       this.selects = container.querySelectorAll('.variant-select');
       this.variantIdSelect = container.querySelector('.variant-id-select');
-      this.atcButton = container.querySelector('.variant-atc-button');
 
       this.init();
     }
-    
+
     init() {
       this.selects.forEach(select => {
         select.addEventListener('change', () => this.onOptionChange());
 
-        // Prevent carousel from intercepting clicks
-        select.addEventListener('click', (e) => {
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-          console.log('Dropdown clicked, propagation stopped');
-        });
-
-        select.addEventListener('mousedown', (e) => {
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-        });
-
-        select.addEventListener('touchstart', (e) => {
-          e.stopPropagation();
-        }, { passive: false });
+        select.addEventListener('click', this.stopPropagation, true);
+        select.addEventListener('mousedown', this.stopPropagation, true);
+        select.addEventListener('touchstart', this.stopPropagation, { passive: false, capture: true });
       });
 
-      // Add to Cart button event listeners
-      if (this.atcButton) {
-        this.atcButton.addEventListener('click', (e) => {
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-          e.preventDefault();
-          this.handleAddToCart();
-        });
-
-        // Prevent carousel from intercepting button clicks
-        this.atcButton.addEventListener('mousedown', (e) => {
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-        });
-      }
-
-      // Also stop propagation on the container
       this.container.addEventListener('click', (e) => {
         if (e.target.classList.contains('variant-select') ||
-            e.target.tagName === 'OPTION' ||
-            e.target.classList.contains('variant-atc-button') ||
-            e.target.closest('.variant-atc-button')) {
+            e.target.tagName === 'OPTION') {
           e.stopPropagation();
           e.stopImmediatePropagation();
         }
       });
+
+      this.syncInitialState();
     }
-    
+
+    stopPropagation(event) {
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+    }
+
     onOptionChange() {
       const selectedOptions = Array.from(this.selects).map(select => select.value);
       const selectedVariant = this.findVariantByOptions(selectedOptions);
 
-      if (selectedVariant) {
-        this.variantIdSelect.value = selectedVariant.value;
-        this.updateProductCard(selectedVariant.value);
-        this.updateAtcButton(selectedVariant);
+      if (!selectedVariant) {
+        return;
       }
-    }
 
-    updateAtcButton(selectedVariant) {
-      const variantId = selectedVariant.value;
+      this.variantIdSelect.value = selectedVariant.value;
+      this.setSelectedOption(selectedVariant.value);
+      this.updateProductCard(selectedVariant.value);
+
       const isAvailable = selectedVariant.dataset.available === 'true';
 
-      // Dispatch event for external add-to-cart buttons
       document.dispatchEvent(new CustomEvent('variant:changed', {
         detail: {
           productId: this.productId,
-          variantId: variantId,
+          variantId: selectedVariant.value,
           available: isAvailable
         }
       }));
-
-      // Update internal button if it exists
-      if (!this.atcButton) return;
-
-      this.atcButton.dataset.variantId = variantId;
-      this.atcButton.disabled = !isAvailable;
-
-      if (isAvailable) {
-        this.atcButton.querySelector('.atc-button-text').textContent = 'Add to Cart';
-      } else {
-        this.atcButton.querySelector('.atc-button-text').textContent = 'Sold Out';
-      }
     }
 
-    async handleAddToCart() {
-      if (!this.atcButton || this.atcButton.disabled) return;
+    syncInitialState() {
+      if (!this.variantIdSelect) {
+        return;
+      }
 
-      const variantId = this.atcButton.dataset.variantId;
-      if (!variantId) return;
+      const selectedOption = this.variantIdSelect.selectedOptions[0];
+      if (!selectedOption) {
+        return;
+      }
 
-      // Update button state
-      this.atcButton.classList.add('adding');
-      this.atcButton.disabled = true;
-      const originalText = this.atcButton.querySelector('.atc-button-text').textContent;
-      this.atcButton.querySelector('.atc-button-text').textContent = 'Adding...';
-
-      try {
-        const formData = {
-          items: [{
-            id: variantId,
-            quantity: 1
-          }]
-        };
-
-        const response = await fetch('/cart/add.js', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData)
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to add to cart');
+      document.dispatchEvent(new CustomEvent('variant:changed', {
+        detail: {
+          productId: this.productId,
+          variantId: selectedOption.value,
+          available: selectedOption.dataset.available === 'true'
         }
-
-        const data = await response.json();
-        console.log('Added to cart:', data);
-
-        // Update button to show success
-        this.atcButton.classList.remove('adding');
-        this.atcButton.classList.add('added');
-        this.atcButton.querySelector('.atc-button-text').textContent = 'Added!';
-
-        // Update cart count if cart icon exists
-        this.updateCartCount();
-
-        // Reset button after 2 seconds
-        setTimeout(() => {
-          this.atcButton.classList.remove('added');
-          this.atcButton.disabled = false;
-          this.atcButton.querySelector('.atc-button-text').textContent = originalText;
-        }, 2000);
-
-      } catch (error) {
-        console.error('Error adding to cart:', error);
-        this.atcButton.classList.remove('adding');
-        this.atcButton.disabled = false;
-        this.atcButton.querySelector('.atc-button-text').textContent = 'Error - Try Again';
-
-        setTimeout(() => {
-          this.atcButton.querySelector('.atc-button-text').textContent = originalText;
-        }, 2000);
-      }
+      }));
     }
 
-    async updateCartCount() {
-      try {
-        const response = await fetch('/cart.js');
-        const cart = await response.json();
-
-        // Update cart count in header
-        const cartCountElements = document.querySelectorAll('.cart-count-bubble span, [data-cart-count]');
-        cartCountElements.forEach(el => {
-          el.textContent = cart.item_count;
-        });
-
-        // Trigger cart drawer update if it exists
-        if (typeof window.theme !== 'undefined' && window.theme.cartDrawer) {
-          window.theme.cartDrawer.renderContents(cart);
-        }
-
-        // Dispatch custom event for cart update
-        document.dispatchEvent(new CustomEvent('cart:updated', {
-          detail: { cart }
-        }));
-
-      } catch (error) {
-        console.error('Error updating cart count:', error);
+    setSelectedOption(variantId) {
+      if (!this.variantIdSelect) {
+        return;
       }
-    }
-    
-    findVariantByOptions(options) {
-      const optionsString = options.join('||');
-      
-      return Array.from(this.variantIdSelect.options).find(option => {
-        return option.dataset.variantOptions === optionsString;
+
+      Array.from(this.variantIdSelect.options).forEach(option => {
+        option.selected = option.value === variantId;
       });
     }
-    
+
+    findVariantByOptions(options) {
+      if (!this.variantIdSelect) {
+        return null;
+      }
+
+      const match = options.join('||');
+      return Array.from(this.variantIdSelect.options).find(option => {
+        return option.dataset.variantOptions === match;
+      }) || null;
+    }
+
     updateProductCard(variantId) {
-      // Update product card link
       const productCard = this.container.closest('product-card');
       const productLink = productCard?.querySelector('.product-card__link');
-      
+
       if (productLink && variantId) {
         const url = new URL(productLink.href, window.location.origin);
         url.searchParams.set('variant', variantId);
         productLink.href = url.toString();
       }
-      
-      // Dispatch event for other components
+
       this.container.dispatchEvent(new CustomEvent('variant:change', {
         detail: { variantId: variantId },
         bubbles: true
       }));
     }
   }
-  
-  // Function to initialize a single container
+
   function initializeVariantSelect(container) {
     if (container.hasAttribute('data-variant-initialized')) return;
     container.setAttribute('data-variant-initialized', 'true');
     new ProductVariantSelects(container);
   }
-  
-  // Function to initialize all variant selects
+
   function initializeAllVariantSelects() {
     const containers = document.querySelectorAll('.product-variant-selects:not([data-variant-initialized])');
-    containers.forEach(container => {
-      initializeVariantSelect(container);
-    });
+    containers.forEach(initializeVariantSelect);
   }
-  
-  // Initialize on DOMContentLoaded
+
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOMContentLoaded - initializing variant selects...');
     initializeAllVariantSelects();
-    
-    // Global handler to prevent carousel interference
+
     document.addEventListener('click', function(e) {
       if (e.target.closest('.product-variant-selects')) {
         e.stopPropagation();
         e.stopImmediatePropagation();
-        console.log('Global: Prevented carousel interference for variant select');
       }
-    }, true); // Use capture phase
-    
-    // Watch for DOM changes (when carousel reinitializes)
-    const observer = new MutationObserver((mutations) => {
-      let shouldReinitialize = false;
-      
-      mutations.forEach((mutation) => {
-        // Check if variant selects were added or modified
-        if (mutation.type === 'childList') {
-          mutation.addedNodes.forEach((node) => {
-            if (node.nodeType === 1) { // Element node
-              if (node.classList?.contains('product-variant-selects') || 
-                  node.querySelector?.('.product-variant-selects')) {
-                shouldReinitialize = true;
-              }
-            }
-          });
-        }
-      });
-      
-      if (shouldReinitialize) {
-        console.log('DOM changed - reinitializing variant selects...');
-        setTimeout(() => {
-          initializeAllVariantSelects();
-        }, 100); // Small delay to ensure DOM is settled
-      }
+    }, true);
+
+    const observer = new MutationObserver(() => {
+      setTimeout(initializeAllVariantSelects, 100);
     });
-    
-    // Start observing the entire document for changes
+
     observer.observe(document.body, {
       childList: true,
       subtree: true
     });
-    
-    // Also use IntersectionObserver to handle visibility changes
+
     const visibilityObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          // Element is now visible, reinitialize if needed
-          const variantSelects = entry.target.querySelectorAll('.product-variant-selects:not([data-variant-initialized])');
-          if (variantSelects.length > 0) {
-            console.log('Element became visible - reinitializing variant selects...');
-            variantSelects.forEach(container => {
-              initializeVariantSelect(container);
-            });
-          }
+          entry.target
+            .querySelectorAll('.product-variant-selects:not([data-variant-initialized])')
+            .forEach(initializeVariantSelect);
         }
       });
     }, {
-      rootMargin: '50px' // Start initializing slightly before element comes into view
+      rootMargin: '50px'
     });
-    
-    // Observe all product list sections
+
     document.querySelectorAll('.section-resource-list, .product-list, .resource-list').forEach(section => {
       visibilityObserver.observe(section);
     });
   });
-  
-  // Also initialize on window load
-  window.addEventListener('load', () => {
-    console.log('Window loaded - checking for uninitialized selects');
-    initializeAllVariantSelects();
-  });
+
+  window.addEventListener('load', initializeAllVariantSelects);
 </script>
 
 {% endif %}
@@ -565,3 +329,4 @@
   ]
 }
 {% endschema %}
+
