@@ -123,55 +123,17 @@
 
 <script>
   (function() {
-    const GLOBAL_KEY = '__productCardAtc';
+    const INIT_FLAG = '__productCardAtcInitialized';
+    const INIT_RUNNER = '__productCardAtcInitForms';
 
-    if (window[GLOBAL_KEY] && typeof window[GLOBAL_KEY].initAll === 'function') {
-      window[GLOBAL_KEY].initAll();
+    if (window[INIT_FLAG]) {
+      if (typeof window[INIT_RUNNER] === 'function') {
+        window[INIT_RUNNER]();
+      }
       return;
     }
 
-    const manager = {
-      instances: new WeakMap(),
-      observer: null,
-      initAll(root) {
-        const scope = root instanceof Element ? root : document;
-        scope.querySelectorAll('.product-card-atc-form').forEach((form) => manager.initForm(form));
-      },
-      initForm(form) {
-        if (!form) return;
-
-        const existing = manager.instances.get(form);
-        if (existing) {
-          existing.teardown();
-        }
-
-        const instance = new ProductCardAddToCart(form);
-        if (instance.isActive) {
-          manager.instances.set(form, instance);
-        }
-      },
-      startObservers() {
-        if (manager.observer || !document.body) {
-          return;
-        }
-
-        manager.observer = new MutationObserver((mutations) => {
-          for (const mutation of mutations) {
-            if (mutation.addedNodes && mutation.addedNodes.length) {
-              manager.initAll();
-              break;
-            }
-          }
-        });
-
-        manager.observer.observe(document.body, {
-          childList: true,
-          subtree: true
-        });
-      }
-    };
-
-    window[GLOBAL_KEY] = manager;
+    window[INIT_FLAG] = true;
 
     function getDatasetValue(element, attribute, fallback) {
       if (!element) {
@@ -179,7 +141,11 @@
       }
 
       const value = element.getAttribute(attribute);
-      return value === undefined || value === null || value === '' ? fallback : value;
+      if (value === null || value === undefined || value === '') {
+        return fallback;
+      }
+
+      return value;
     }
 
     class ProductCardAddToCart {
@@ -196,14 +162,6 @@
         this.addedText = getDatasetValue(form, 'data-added-label', 'Added!');
         this.errorText = 'Error - Try Again';
 
-        this.resetTimer = null;
-        this.isActive = false;
-
-        this.boundHandleSubmit = this.handleSubmit.bind(this);
-        this.boundHandleClick = this.handleButtonClick.bind(this);
-        this.boundHandleMouseDown = this.handleButtonMouseDown.bind(this);
-        this.boundVariantChanged = this.handleVariantChanged.bind(this);
-
         this.init();
       }
 
@@ -212,61 +170,24 @@
           return;
         }
 
-        this.form.addEventListener('submit', this.boundHandleSubmit);
-        this.button.addEventListener('click', this.boundHandleClick);
-        this.button.addEventListener('mousedown', this.boundHandleMouseDown);
-        document.addEventListener('variant:changed', this.boundVariantChanged);
+        this.form.addEventListener('submit', (event) => this.handleSubmit(event));
 
-        this.updateVariant(this.variantInput.value, !this.button.disabled);
-        this.isActive = true;
-      }
+        this.inFlight = false;
 
-      teardown() {
-        if (!this.isActive) {
-          return;
-        }
+        this.button.addEventListener('click', (event) => {
+          this.handleSubmit(event);
+        });
 
-        this.clearTimers();
-        this.form.removeEventListener('submit', this.boundHandleSubmit);
-        if (this.button) {
-          this.button.removeEventListener('click', this.boundHandleClick);
-          this.button.removeEventListener('mousedown', this.boundHandleMouseDown);
-        }
-        document.removeEventListener('variant:changed', this.boundVariantChanged);
-        this.isActive = false;
-      }
+        this.button.addEventListener('mousedown', () => {});
 
-      clearTimers() {
-        if (this.resetTimer) {
-          clearTimeout(this.resetTimer);
-          this.resetTimer = null;
-        }
-      }
+        document.addEventListener('variant:changed', (event) => {
+          const detail = event.detail || {};
+          if (detail.productId !== this.productId) {
+            return;
+          }
 
-      handleButtonClick(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-
-        if (typeof this.form.requestSubmit === 'function') {
-          this.form.requestSubmit();
-        } else {
-          this.form.dispatchEvent(new Event('submit', { cancelable: true }));
-        }
-      }
-
-      handleButtonMouseDown(event) {
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-      }
-
-      handleVariantChanged(event) {
-        const detail = event.detail || {};
-        if (detail.productId !== this.productId) {
-          return;
-        }
-
-        this.updateVariant(detail.variantId, detail.available);
+          this.updateVariant(detail.variantId, detail.available);
+        });
       }
 
       updateVariant(variantId, available) {
@@ -275,7 +196,7 @@
         }
 
         this.variantInput.value = variantId;
-        this.variantInput.setAttribute('data-variant-id', variantId);
+        this.variantInput.dataset.variantId = variantId;
 
         if (typeof available === 'boolean') {
           this.button.disabled = !available;
@@ -287,15 +208,13 @@
 
       async handleSubmit(event) {
         event.preventDefault();
-        event.stopPropagation();
 
-        if (this.button.disabled) {
+        if (this.button.disabled || this.inFlight) {
           return;
         }
 
+        this.inFlight = true;
         const originalText = this.buttonText ? this.buttonText.textContent : this.defaultText;
-
-        this.clearTimers();
         this.button.classList.add('adding');
         this.button.disabled = true;
         if (this.buttonText) {
@@ -304,17 +223,18 @@
 
         try {
           const formData = {
-            items: [{
-              id: this.variantInput.value,
-              quantity: 1
-            }]
+            id: this.variantInput.value,
+            quantity: 1
           };
 
           const response = await fetch('/cart/add.js', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
             },
+            credentials: 'same-origin',
+            cache: 'no-store',
             body: JSON.stringify(formData)
           });
 
@@ -324,117 +244,127 @@
 
           await response.json();
 
+          this.button.classList.remove('adding');
+          this.button.classList.add('added');
+          if (this.buttonText) {
+            this.buttonText.textContent = this.addedText;
+          }
+
           await this.updateCartCount();
-          this.finishSuccess(originalText);
+
+          setTimeout(() => {
+            this.button.classList.remove('added');
+            this.button.disabled = false;
+            if (this.buttonText) {
+              this.buttonText.textContent = originalText || this.defaultText;
+            }
+          }, 1000);
         } catch (error) {
           console.error('Error adding to cart:', error);
-          this.finishError(originalText);
-        }
-      }
-
-      finishSuccess(originalText) {
-        this.button.classList.remove('adding');
-        this.button.classList.add('added');
-        this.button.disabled = false;
-        if (this.buttonText) {
-          this.buttonText.textContent = this.addedText;
-        }
-
-        this.resetTimer = setTimeout(() => {
-          this.button.classList.remove('added');
+          this.button.classList.remove('adding');
+          this.button.disabled = false;
           if (this.buttonText) {
-            this.buttonText.textContent = originalText || this.defaultText;
+            this.buttonText.textContent = this.errorText;
           }
-        }, 1600);
-      }
 
-      finishError(originalText) {
-        this.button.classList.remove('adding');
-        this.button.disabled = false;
-        if (this.buttonText) {
-          this.buttonText.textContent = this.errorText;
+          setTimeout(() => {
+            if (this.buttonText) {
+              this.buttonText.textContent = originalText || this.defaultText;
+            }
+          }, 1000);
+        } finally {
+          this.inFlight = false;
         }
-
-        this.resetTimer = setTimeout(() => {
-          if (this.buttonText) {
-            this.buttonText.textContent = originalText || this.defaultText;
-          }
-        }, 2000);
       }
 
       async updateCartCount() {
-        const response = await fetch('/cart.js', {
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch cart');
-        }
-
-        const cart = await response.json();
-        const itemCount = cart.item_count;
-
-        const cartCountElements = document.querySelectorAll('[data-cart-count], .cart-count, .cart-count-bubble__count, .cart-count-bubble span');
-        cartCountElements.forEach((element) => {
-          if (element.hasAttribute && element.hasAttribute('data-cart-count')) {
-            element.setAttribute('data-cart-count', itemCount);
-          }
-
-          if (element.dataset && 'cartCount' in element.dataset) {
-            element.dataset.cartCount = itemCount;
-          }
-
-          if (element.classList && element.classList.contains('hidden') && itemCount > 0) {
-            element.classList.remove('hidden');
-          }
-
-          element.textContent = itemCount;
-        });
-
         try {
-          sessionStorage.setItem('cart-count', JSON.stringify({
-            value: String(itemCount),
-            timestamp: Date.now()
-          }));
-        } catch (_) {
-          // no-op
-        }
+          const response = await fetch('/cart.js', {
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
 
-        const eventDetail = {
-          cart,
-          resource: cart,
-          sourceId: this.productId,
-          data: {
-            itemCount,
-            source: 'product-card-component',
-            productId: this.productId,
-            variantId: this.variantInput.value
+          if (!response.ok) {
+            throw new Error('Failed to fetch cart');
           }
-        };
 
-        document.dispatchEvent(new CustomEvent('cart:update', { detail: eventDetail }));
-        document.dispatchEvent(new CustomEvent('cart:updated', { detail: eventDetail }));
+          const cart = await response.json();
+          const itemCount = cart.item_count;
+
+          const cartCountElements = document.querySelectorAll('[data-cart-count], .cart-count, .cart-count-bubble__count, .cart-count-bubble span');
+          cartCountElements.forEach((element) => {
+            if (element.hasAttribute && element.hasAttribute('data-cart-count')) {
+              element.setAttribute('data-cart-count', itemCount);
+            }
+
+            if (element.dataset && 'cartCount' in element.dataset) {
+              element.dataset.cartCount = itemCount;
+            }
+
+            if (element.classList && element.classList.contains('hidden') && itemCount > 0) {
+              element.classList.remove('hidden');
+            }
+
+            element.textContent = itemCount;
+          });
+
+          try {
+            sessionStorage.setItem('cart-count', JSON.stringify({
+              value: String(itemCount),
+              timestamp: Date.now()
+            }));
+          } catch (_) {
+            // no-op
+          }
+
+          const eventDetail = {
+            cart,
+            resource: cart,
+            sourceId: this.productId,
+            data: {
+              itemCount,
+              source: 'product-card-component',
+              productId: this.productId,
+              variantId: this.variantInput.value
+            }
+          };
+
+          document.dispatchEvent(new CustomEvent('cart:update', { detail: eventDetail }));
+          document.dispatchEvent(new CustomEvent('cart:updated', { detail: eventDetail }));
+        } catch (error) {
+          console.error('Error updating cart count:', error);
+        }
       }
     }
 
-    manager.initAll();
-    manager.startObservers();
+    function initProductCardAddToCart() {
+      const forms = document.querySelectorAll('.product-card-atc-form:not([data-atc-initialized])');
 
-    document.addEventListener('DOMContentLoaded', () => manager.initAll());
-    window.addEventListener('load', () => manager.initAll());
-
-    const shopifyEvents = ['shopify:section:load', 'shopify:section:select', 'shopify:section:reorder', 'shopify:block:select', 'shopify:block:deselect'];
-    shopifyEvents.forEach((eventName) => {
-      document.addEventListener(eventName, (event) => {
-        if (event && event.target) {
-          manager.initAll(event.target);
-        }
+      forms.forEach((form) => {
+        form.setAttribute('data-atc-initialized', 'true');
+        new ProductCardAddToCart(form);
       });
-    });
+    }
 
     window.ProductCardAddToCart = ProductCardAddToCart;
+    window[INIT_RUNNER] = initProductCardAddToCart;
+
+    document.addEventListener('DOMContentLoaded', initProductCardAddToCart);
+    window.addEventListener('load', initProductCardAddToCart);
+
+    const observer = new MutationObserver(() => {
+      initProductCardAddToCart();
+    });
+
+    if (document.body) {
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    }
+
+    initProductCardAddToCart();
   })();
 </script>
 
