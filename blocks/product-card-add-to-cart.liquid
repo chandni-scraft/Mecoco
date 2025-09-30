@@ -123,187 +123,84 @@
 
 <script>
   (function() {
-    const INIT_FLAG = '__productCardAtcInitialized';
-    const INIT_RUNNER = '__productCardAtcInitForms';
-
-    if (window[INIT_FLAG]) {
-      if (typeof window[INIT_RUNNER] === 'function') {
-        window[INIT_RUNNER]();
-      }
+    if (window.__productCardAtcDelegated) {
       return;
     }
 
-    window[INIT_FLAG] = true;
+    window.__productCardAtcDelegated = true;
 
-    function getDatasetValue(element, attribute, fallback) {
-      if (!element) {
-        return fallback;
-      }
+    const FORM_SELECTOR = '.product-card-atc-form';
+    const BUTTON_SELECTOR = '.product-card-atc-button';
+    const BUTTON_TEXT_SELECTOR = '.atc-button-text';
+    const INPUT_SELECTOR = '.variant-id-input';
+    const SUBMITTING_FLAG = 'atcSubmitting';
+    const RESET_KEY = '__productCardAtcResetTimer';
 
-      const value = element.getAttribute(attribute);
-      if (value === null || value === undefined || value === '') {
-        return fallback;
-      }
-
-      return value;
+    function getLabel(form, attribute, fallback) {
+      const value = form.getAttribute(attribute);
+      return value === null || value === undefined || value === '' ? fallback : value;
     }
 
-    class ProductCardAddToCart {
-      constructor(form) {
-        this.form = form;
-        this.button = form.querySelector('.product-card-atc-button');
-        this.variantInput = form.querySelector('.variant-id-input');
-        this.buttonText = this.button ? this.button.querySelector('.atc-button-text') : null;
-        this.productId = form.dataset.productId;
+    function getLabels(form) {
+      return {
+        default: getLabel(form, 'data-default-label', 'Add to Cart'),
+        soldOut: getLabel(form, 'data-sold-out-label', 'Sold Out'),
+        adding: getLabel(form, 'data-adding-label', 'Adding...'),
+        added: getLabel(form, 'data-added-label', 'Added!'),
+        error: 'Error - Try Again'
+      };
+    }
 
-        this.defaultText = getDatasetValue(form, 'data-default-label', 'Add to Cart');
-        this.soldOutText = getDatasetValue(form, 'data-sold-out-label', 'Sold Out');
-        this.addingText = getDatasetValue(form, 'data-adding-label', 'Adding...');
-        this.addedText = getDatasetValue(form, 'data-added-label', 'Added!');
-        this.errorText = 'Error - Try Again';
+    function clearResetTimer(form) {
+      if (form && form[RESET_KEY]) {
+        clearTimeout(form[RESET_KEY]);
+        form[RESET_KEY] = null;
+      }
+    }
 
-        this.init();
+    function updateFormVariant(form, variantId, available) {
+      const input = form.querySelector(INPUT_SELECTOR);
+      if (input) {
+        input.value = variantId;
+        input.setAttribute('data-variant-id', variantId);
       }
 
-      init() {
-        if (!this.form || !this.button || !this.variantInput) {
-          return;
+      if (typeof available === 'boolean') {
+        const button = form.querySelector(BUTTON_SELECTOR);
+        const buttonText = button ? button.querySelector(BUTTON_TEXT_SELECTOR) : null;
+        const labels = getLabels(form);
+
+        if (button) {
+          button.disabled = !available;
+          button.classList.remove('adding', 'added');
         }
 
-        this.form.addEventListener('submit', (event) => this.handleSubmit(event));
+        if (buttonText) {
+          buttonText.textContent = available ? labels.default : labels.soldOut;
+        }
 
-        this.inFlight = false;
+        clearResetTimer(form);
+      }
+    }
 
-        this.button.addEventListener('click', (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          event.stopImmediatePropagation();
-          this.handleSubmit(event);
+    async function updateCartCount(form, variantId) {
+      try {
+        const response = await fetch('/cart.js', {
+          headers: {
+            'Accept': 'application/json'
+          }
         });
 
-        this.button.addEventListener('mousedown', (event) => {
-          event.stopPropagation();
-          event.stopImmediatePropagation();
-        });
-
-        document.addEventListener('variant:changed', (event) => {
-          const detail = event.detail || {};
-          if (detail.productId !== this.productId) {
-            return;
-          }
-
-          this.updateVariant(detail.variantId, detail.available);
-        });
-      }
-
-      updateVariant(variantId, available) {
-        if (!variantId) {
-          return;
+        if (!response.ok) {
+          throw new Error('Failed to fetch cart');
         }
 
-        this.variantInput.value = variantId;
-        this.variantInput.dataset.variantId = variantId;
+        const cart = await response.json();
+        const itemCount = cart.item_count;
 
-        if (typeof available === 'boolean') {
-          this.button.disabled = !available;
-          if (this.buttonText) {
-            this.buttonText.textContent = available ? this.defaultText : this.soldOutText;
-          }
-        }
-      }
-
-      async handleSubmit(event) {
-        event.preventDefault();
-
-        if (this.button.disabled || this.inFlight) {
-          return;
-        }
-
-        this.inFlight = true;
-        const originalText = this.buttonText ? this.buttonText.textContent : this.defaultText;
-        this.button.classList.add('adding');
-        this.button.disabled = true;
-        if (this.buttonText) {
-          this.buttonText.textContent = this.addingText;
-        }
-
-        try {
-          const payload = {
-            items: [
-              {
-                id: Number(this.variantInput.value) || this.variantInput.value,
-                quantity: 1
-              }
-            ]
-          };
-
-          const response = await fetch('/cart/add.js', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Requested-With': 'XMLHttpRequest'
-            },
-            credentials: 'same-origin',
-            cache: 'no-store',
-            body: JSON.stringify(payload)
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to add to cart');
-          }
-
-          await response.json();
-
-          this.button.classList.remove('adding');
-          this.button.classList.add('added');
-          if (this.buttonText) {
-            this.buttonText.textContent = this.addedText;
-          }
-
-          await this.updateCartCount();
-
-          setTimeout(() => {
-            this.button.classList.remove('added');
-            this.button.disabled = false;
-            if (this.buttonText) {
-              this.buttonText.textContent = originalText || this.defaultText;
-            }
-          }, 1000);
-        } catch (error) {
-          console.error('Error adding to cart:', error);
-          this.button.classList.remove('adding');
-          this.button.disabled = false;
-          if (this.buttonText) {
-            this.buttonText.textContent = this.errorText;
-          }
-
-          setTimeout(() => {
-            if (this.buttonText) {
-              this.buttonText.textContent = originalText || this.defaultText;
-            }
-          }, 1000);
-        } finally {
-          this.inFlight = false;
-        }
-      }
-
-      async updateCartCount() {
-        try {
-          const response = await fetch('/cart.js', {
-            headers: {
-              'Accept': 'application/json'
-            }
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to fetch cart');
-          }
-
-          const cart = await response.json();
-          const itemCount = cart.item_count;
-
-          const cartCountElements = document.querySelectorAll('[data-cart-count], .cart-count, .cart-count-bubble__count, .cart-count-bubble span');
-          cartCountElements.forEach((element) => {
+        document
+          .querySelectorAll('[data-cart-count], .cart-count, .cart-count-bubble__count, .cart-count-bubble span')
+          .forEach((element) => {
             if (element.hasAttribute && element.hasAttribute('data-cart-count')) {
               element.setAttribute('data-cart-count', itemCount);
             }
@@ -319,62 +216,152 @@
             element.textContent = itemCount;
           });
 
-          try {
-            sessionStorage.setItem('cart-count', JSON.stringify({
+        try {
+          sessionStorage.setItem(
+            'cart-count',
+            JSON.stringify({
               value: String(itemCount),
               timestamp: Date.now()
-            }));
-          } catch (_) {
-            // no-op
-          }
-
-          const eventDetail = {
-            cart,
-            resource: cart,
-            sourceId: this.productId,
-            data: {
-              itemCount,
-              source: 'product-card-component',
-              productId: this.productId,
-              variantId: this.variantInput.value
-            }
-          };
-
-          document.dispatchEvent(new CustomEvent('cart:update', { detail: eventDetail }));
-          document.dispatchEvent(new CustomEvent('cart:updated', { detail: eventDetail }));
+            })
+          );
         } catch (error) {
-          console.error('Error updating cart count:', error);
+          // no-op
         }
+
+        const eventDetail = {
+          cart,
+          resource: cart,
+          sourceId: form.dataset.productId,
+          data: {
+            itemCount,
+            source: 'product-card-component',
+            productId: form.dataset.productId,
+            variantId
+          }
+        };
+
+        document.dispatchEvent(new CustomEvent('cart:update', { detail: eventDetail }));
+        document.dispatchEvent(new CustomEvent('cart:updated', { detail: eventDetail }));
+      } catch (error) {
+        console.error('Error updating cart count', error);
       }
     }
 
-    function initProductCardAddToCart() {
-      const forms = document.querySelectorAll('.product-card-atc-form:not([data-atc-initialized])');
+    async function handleAddToCart(form) {
+      if (!form || form.dataset[SUBMITTING_FLAG] === 'true') {
+        return;
+      }
 
-      forms.forEach((form) => {
-        form.setAttribute('data-atc-initialized', 'true');
-        new ProductCardAddToCart(form);
-      });
+      const button = form.querySelector(BUTTON_SELECTOR);
+      const buttonText = button ? button.querySelector(BUTTON_TEXT_SELECTOR) : null;
+      const input = form.querySelector(INPUT_SELECTOR);
+      const labels = getLabels(form);
+
+      if (!button || !buttonText || !input || button.disabled || !input.value) {
+        return;
+      }
+
+      clearResetTimer(form);
+
+      form.dataset[SUBMITTING_FLAG] = 'true';
+      button.disabled = true;
+      button.classList.remove('added');
+      button.classList.add('adding');
+      buttonText.textContent = labels.adding;
+
+      try {
+        const payload = {
+          items: [
+            {
+              id: Number(input.value) || input.value,
+              quantity: 1
+            }
+          ]
+        };
+
+        const response = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          credentials: 'same-origin',
+          cache: 'no-store',
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add to cart');
+        }
+
+        await response.json();
+
+        button.classList.remove('adding');
+        button.classList.add('added');
+        buttonText.textContent = labels.added;
+
+        form[RESET_KEY] = setTimeout(() => {
+          button.classList.remove('added');
+          button.disabled = false;
+          buttonText.textContent = labels.default;
+          form[RESET_KEY] = null;
+        }, 1200);
+
+        await updateCartCount(form, input.value);
+      } catch (error) {
+        console.error('Error adding to cart', error);
+
+        button.classList.remove('adding');
+        button.disabled = false;
+        buttonText.textContent = labels.error;
+
+        form[RESET_KEY] = setTimeout(() => {
+          buttonText.textContent = labels.default;
+          form[RESET_KEY] = null;
+        }, 1600);
+      } finally {
+        form.dataset[SUBMITTING_FLAG] = 'false';
+      }
     }
 
-    window.ProductCardAddToCart = ProductCardAddToCart;
-    window[INIT_RUNNER] = initProductCardAddToCart;
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest(BUTTON_SELECTOR);
+      if (!button) {
+        return;
+      }
 
-    document.addEventListener('DOMContentLoaded', initProductCardAddToCart);
-    window.addEventListener('load', initProductCardAddToCart);
+      const form = button.closest(FORM_SELECTOR);
+      if (!form) {
+        return;
+      }
 
-    const observer = new MutationObserver(() => {
-      initProductCardAddToCart();
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      handleAddToCart(form);
+    }, true);
+
+    document.addEventListener('submit', (event) => {
+      const form = event.target;
+      if (!(form instanceof HTMLFormElement) || !form.matches(FORM_SELECTOR)) {
+        return;
+      }
+
+      event.preventDefault();
+      handleAddToCart(form);
+    }, true);
+
+    document.addEventListener('variant:changed', (event) => {
+      const detail = event.detail || {};
+      if (!detail.productId || !detail.variantId) {
+        return;
+      }
+
+      document
+        .querySelectorAll(FORM_SELECTOR + "[data-product-id=\"" + detail.productId + "\"]")
+        .forEach((form) => updateFormVariant(form, String(detail.variantId), detail.available));
     });
-
-    if (document.body) {
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true
-      });
-    }
-
-    initProductCardAddToCart();
   })();
 </script>
 
@@ -415,6 +402,7 @@
   ]
 }
 {% endschema %}
+
 
 
 
