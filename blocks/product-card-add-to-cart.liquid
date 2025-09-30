@@ -139,6 +139,7 @@
 
       // Prevent carousel from intercepting clicks
       this.button.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
       });
@@ -231,20 +232,50 @@
 
     async updateCartCount() {
       try {
-        const response = await fetch('/cart.js');
-        const cart = await response.json();
-
-        // Update cart count in header
-        const cartCountElements = document.querySelectorAll('.cart-count-bubble span, [data-cart-count]');
-        cartCountElements.forEach(el => {
-          el.textContent = cart.item_count;
+        const response = await fetch('/cart.js', {
+          headers: {
+            'Accept': 'application/json'
+          }
         });
 
-        // Dispatch custom event for cart update
-        document.dispatchEvent(new CustomEvent('cart:updated', {
-          detail: { cart }
-        }));
+        if (!response.ok) {
+          throw new Error('Failed to fetch cart');
+        }
 
+        const cart = await response.json();
+        const itemCount = cart.item_count;
+
+        const cartCountElements = document.querySelectorAll('[data-cart-count], .cart-count, .cart-count-bubble__count, .cart-count-bubble span');
+        cartCountElements.forEach(el => {
+          if (el.hasAttribute && el.hasAttribute('data-cart-count')) {
+            el.setAttribute('data-cart-count', itemCount);
+          }
+
+          if (el.dataset && 'cartCount' in el.dataset) {
+            el.dataset.cartCount = itemCount;
+          }
+
+          if (el.classList && el.classList.contains('hidden') && itemCount > 0) {
+            el.classList.remove('hidden');
+          }
+
+          el.textContent = itemCount;
+        });
+
+        const eventDetail = {
+          cart,
+          resource: cart,
+          sourceId: this.productId,
+          data: {
+            itemCount,
+            source: 'product-card-component',
+            productId: this.productId,
+            variantId: this.variantInput.value
+          }
+        };
+
+        document.dispatchEvent(new CustomEvent('cart:update', { detail: eventDetail }));
+        document.dispatchEvent(new CustomEvent('cart:updated', { detail: eventDetail }));
       } catch (error) {
         console.error('Error updating cart count:', error);
       }
