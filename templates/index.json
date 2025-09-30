@@ -1090,7 +1090,7 @@
         "group_qeMyUq"
       ],
       "custom_css": [
-        ".collection-card.collection-card--image-bg .collection-card__content {padding:0px;}"
+        ".collection-card.collection-card--image-bg .collection-card__content {padding: 0px;}"
       ],
       "name": "t:names.collections_grid",
       "settings": {
@@ -1292,7 +1292,6 @@
             },
             "add_to_cart_button": {
               "type": "product-card-add-to-cart",
-              "disabled": true,
               "settings": {
                 "button_text": "Add to Cart",
                 "select_options_text": "Add To Cart",
