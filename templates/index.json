@@ -1089,7 +1089,9 @@
       "block_order": [
         "group_qeMyUq"
       ],
-      "custom_css": [],
+      "custom_css": [
+        ".collection-card.collection-card--image-bg .collection-card__content {padding:0px;}"
+      ],
       "name": "t:names.collections_grid",
       "settings": {
         "collection_list": [
