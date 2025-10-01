@@ -1371,7 +1371,7 @@
             "tab_hover_bg_color": "",
             "tab_hover_border_color": "",
             "tab_active_text_color": "",
-            "tab_active_bg_color": "",
+            "tab_active_bg_color": "#ae5245",
             "tab_active_border_color": "",
             "card_radius": 8,
             "card_shadow": true,
