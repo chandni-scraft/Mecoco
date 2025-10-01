@@ -1332,6 +1332,49 @@
         "padding-block-end": 48
       }
     },
+    "shop_by_concern_advanced_9yajV3": {
+      "type": "shop-by-concern-advanced",
+      "blocks": {
+        "product-card": {
+          "type": "_product-card",
+          "static": true,
+          "settings": {
+            "product_card_gap": 16,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "name": "Shop by Concern Pro",
+      "settings": {
+        "heading": "Shop by concern",
+        "container": "lg",
+        "products_per_tab": 8,
+        "products_per_row_mobile": 2,
+        "products_per_row_desktop": 4,
+        "collection_1": "dates",
+        "label_1": "",
+        "collection_2": "dry-fruits-nuts",
+        "label_2": "",
+        "collection_3": "dry-fruits-mixes",
+        "label_3": "",
+        "collection_4": "minimally-processed-dry-fruits",
+        "label_4": "",
+        "collection_5": "cold-pressed-editable-oil",
+        "label_5": "",
+        "collection_6": "",
+        "label_6": ""
+      }
+    },
     "shop_by_concern_aVgGgn": {
       "type": "shop-by-concern",
       "blocks": {
@@ -2655,6 +2698,7 @@
     "featured_product_YXhcLC",
     "collection_list_GPqXfK",
     "product_list_emecnA",
+    "shop_by_concern_advanced_9yajV3",
     "shop_by_concern_aVgGgn",
     "1758374251a2430199",
     "product_list_X8Q7bi",
