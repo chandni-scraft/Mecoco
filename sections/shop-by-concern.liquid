@@ -200,24 +200,38 @@
           return;
         }
 
-        grid.addEventListener('wheel', function(event) {
+                grid.addEventListener('wheel', function(event) {
           if (event.defaultPrevented) {
             return;
           }
 
-          var absDeltaY = Math.abs(event.deltaY);
-          var absDeltaX = Math.abs(event.deltaX);
-
-          if (absDeltaY <= absDeltaX) {
+          var canScrollHorizontally = (grid.scrollWidth - grid.clientWidth) > 1;
+          if (!canScrollHorizontally) {
             return;
           }
 
-          var delta = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
+          var deltaY = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
+          var deltaX = event.deltaMode === 1 ? event.deltaX * 16 : event.deltaX;
+          var absDeltaY = Math.abs(deltaY);
+          var absDeltaX = Math.abs(deltaX);
+
+          var useVertical = absDeltaY >= absDeltaX;
+          var appliedDelta = deltaY;
+
+          if (!useVertical && absDeltaX > 0) {
+            // Browsers sometimes emit horizontal deltas when the user scrolls vertically inside a horizontal scroller.
+            useVertical = true;
+            appliedDelta = deltaX;
+          }
+
+          if (!useVertical) {
+            return;
+          }
 
           if (typeof window.scrollBy === 'function') {
-            window.scrollBy({ top: delta, left: 0, behavior: 'auto' });
+            window.scrollBy({ top: appliedDelta, left: 0, behavior: 'auto' });
           } else {
-            window.scrollTo(0, window.pageYOffset + delta);
+            window.scrollTo(0, window.pageYOffset + appliedDelta);
           }
 
           event.preventDefault();
