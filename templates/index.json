@@ -2584,6 +2584,62 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "shop_by_concern_hHdNmC": {
+      "type": "shop-by-concern",
+      "blocks": {
+        "collection_GqRm9Q": {
+          "type": "collection",
+          "settings": {
+            "collection": "dates",
+            "custom_label": ""
+          }
+        },
+        "collection_AeXrbK": {
+          "type": "collection",
+          "settings": {
+            "collection": "dry-fruits-nuts",
+            "custom_label": ""
+          }
+        },
+        "collection_UBk6dW": {
+          "type": "collection",
+          "settings": {
+            "collection": "dry-fruits-mixes",
+            "custom_label": ""
+          }
+        },
+        "collection_yKLpEq": {
+          "type": "collection",
+          "settings": {
+            "collection": "minimally-processed-dry-fruits",
+            "custom_label": ""
+          }
+        },
+        "collection_VUcVeN": {
+          "type": "collection",
+          "settings": {
+            "collection": "cold-pressed-editable-oil",
+            "custom_label": ""
+          }
+        }
+      },
+      "block_order": [
+        "collection_GqRm9Q",
+        "collection_AeXrbK",
+        "collection_UBk6dW",
+        "collection_yKLpEq",
+        "collection_VUcVeN"
+      ],
+      "name": "Shop by concern",
+      "settings": {
+        "heading": "Shop by concern",
+        "container": "lg",
+        "products_per_tab": 8,
+        "products_per_row_mobile": 2,
+        "products_per_row_desktop": 4,
+        "color_scheme": "default"
+      }
     }
   },
   "order": [
@@ -2599,6 +2655,7 @@
     "product_list_X8Q7bi",
     "section_RhpYRt",
     "product_list_9efECi",
-    "section_KBPrmB"
+    "section_KBPrmB",
+    "shop_by_concern_hHdNmC"
   ]
 }
