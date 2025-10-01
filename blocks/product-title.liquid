@@ -18,7 +18,7 @@
     {% assign current_section_type = section.type | default: '' %}
     {% unless current_section_type == 'product-recommendations' or current_section_type == 'featured-product' %}
       <div class="product-card__features">
-        {{ closest.product.metafields.custom.features_points | metafield_tag | strip_html | truncate: 50 }}
+        {{ closest.product.metafields.custom.features_points | metafield_tag | strip_html | truncate: 40 }}
       </div>
     {% endunless %}
   {% endif %}
