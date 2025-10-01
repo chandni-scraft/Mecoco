@@ -194,7 +194,7 @@
                 "padding-block-end": 24,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
-                "show_offers": true,
+                "show_offers": false,
                 "offers_heading": "Special Offers",
                 "offers_background_color": "#ffffff",
                 "offers_text_color": "#a42325",
