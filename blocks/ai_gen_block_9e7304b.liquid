@@ -406,7 +406,6 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding: 0 16px 10px; /* add side padding so cards never exceed viewport */
-    overscroll-behavior-x: contain; /* prevent page from scrolling horizontally */
     max-width: 100%;
     width: 100%;
     box-sizing: border-box;
@@ -934,6 +933,8 @@
       this.isLoading = false;
       this.productsPerPage = parseInt(this.dataset.productsPerPage) || 8;
       this.showLoadMore = this.dataset.showLoadMore === 'true';
+      this.handleTrackWheel = this.handleTrackWheel.bind(this);
+      this.carouselWheelListenerAttached = false;
     }
 
     connectedCallback() {
@@ -997,6 +998,11 @@
       const nextBtn = this.querySelector('.shop-by-concern-carousel-next-{{ ai_gen_id }}');
       const track = this.querySelector('.shop-by-concern-carousel-track-{{ ai_gen_id }}');
 
+      if (track && !this.carouselWheelListenerAttached) {
+        track.addEventListener('wheel', this.handleTrackWheel, { passive: false });
+        this.carouselWheelListenerAttached = true;
+      }
+
       if (prevBtn && nextBtn && track) {
         prevBtn.addEventListener('click', () => {
           track.scrollBy({ left: -300, behavior: 'smooth' });
@@ -1006,6 +1012,29 @@
           track.scrollBy({ left: 300, behavior: 'smooth' });
         });
       }
+    }
+
+    handleTrackWheel(event) {
+      if (event.defaultPrevented) {
+        return;
+      }
+
+      const absDeltaY = Math.abs(event.deltaY);
+      const absDeltaX = Math.abs(event.deltaX);
+
+      if (event.shiftKey || absDeltaY <= absDeltaX) {
+        return;
+      }
+
+      const delta = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
+
+      if (typeof window.scrollBy === 'function') {
+        window.scrollBy({ top: delta, left: 0, behavior: 'auto' });
+      } else {
+        window.scrollTo(0, window.pageYOffset + delta);
+      }
+
+      event.preventDefault();
     }
 
     handleTabClick(e) {
@@ -1939,3 +1968,4 @@
   ]
 }
 {% endschema %}
+
