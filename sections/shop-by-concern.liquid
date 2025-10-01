@@ -194,6 +194,37 @@
       }
 
       panels.forEach(setupArrows);
+      panels.forEach(function(panel){
+        var grid = panel.querySelector('[data-grid]');
+        if (!grid || grid.__wheelHandlerAttached) {
+          return;
+        }
+
+        grid.addEventListener('wheel', function(event) {
+          if (event.defaultPrevented) {
+            return;
+          }
+
+          var absDeltaY = Math.abs(event.deltaY);
+          var absDeltaX = Math.abs(event.deltaX);
+
+          if (absDeltaY <= absDeltaX) {
+            return;
+          }
+
+          var delta = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
+
+          if (typeof window.scrollBy === 'function') {
+            window.scrollBy({ top: delta, left: 0, behavior: 'auto' });
+          } else {
+            window.scrollTo(0, window.pageYOffset + delta);
+          }
+
+          event.preventDefault();
+        }, { passive: false });
+
+        grid.__wheelHandlerAttached = true;
+      });
 
       // AJAX Add to Cart handling (progressive enhancement)
       root.addEventListener('submit', function(e){
