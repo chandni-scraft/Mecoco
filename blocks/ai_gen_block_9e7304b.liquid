@@ -994,19 +994,61 @@
     }
 
     disableScrollSnapping() {
-      const blockWrapper = this.closest('[data-block-id]');
-      if (blockWrapper) {
-        blockWrapper.style.scrollSnapAlign = 'none';
-        blockWrapper.style.scrollSnapStop = 'normal';
-      }
+      // Force-disable scroll snapping on this block and its ancestors to avoid unintended jumps
+      try {
+        // 1) Disable on this element and key children
+        const elementsToDisable = [
+          this,
+          this.querySelector('.shop-by-concern-carousel-{{ ai_gen_id }}'),
+          this.querySelector('.shop-by-concern-carousel-track-{{ ai_gen_id }}'),
+          this.querySelector('.shop-by-concern-products-{{ ai_gen_id }}')
+        ].filter(Boolean);
 
-      const sectionWrapper = this.closest('.section');
-      if (sectionWrapper) {
-        const computedSnapType = getComputedStyle(sectionWrapper).scrollSnapType;
-        if (computedSnapType && computedSnapType !== 'none') {
-          sectionWrapper.style.scrollSnapType = 'none';
+        elementsToDisable.forEach((el) => {
+          el.style.setProperty('scroll-snap-type', 'none', 'important');
+          el.style.setProperty('scroll-snap-align', 'none', 'important');
+          el.style.setProperty('scroll-snap-stop', 'normal', 'important');
+          el.style.setProperty('overscroll-behavior', 'contain');
+        });
+
+        // 2) Walk up ancestors and remove any snap behavior
+        let ancestor = this.parentElement;
+        let safety = 0;
+        while (ancestor && safety < 20) {
+          const styles = getComputedStyle(ancestor);
+          if ((styles.scrollSnapType && styles.scrollSnapType !== 'none') || styles.scrollSnapAlign !== 'none') {
+            ancestor.style.setProperty('scroll-snap-type', 'none', 'important');
+            ancestor.style.setProperty('scroll-snap-align', 'none', 'important');
+            ancestor.style.setProperty('scroll-snap-stop', 'normal', 'important');
+          }
+          // Also prevent parent containers from forcing scroll chaining behavior
+          if (styles.overscrollBehavior && styles.overscrollBehavior !== 'auto') {
+            ancestor.style.setProperty('overscroll-behavior', 'auto', 'important');
+          }
+          ancestor = ancestor.parentElement;
+          safety++;
         }
-      }
+
+        // 3) As a last resort, inject a tiny style override scoped to this block
+        const styleId = 'no-snap-style-{{ ai_gen_id }}';
+        if (!document.getElementById(styleId)) {
+          const styleEl = document.createElement('style');
+          styleEl.id = styleId;
+          styleEl.textContent = `
+            .shop-by-concern-{{ ai_gen_id }},
+            .shop-by-concern-{{ ai_gen_id }} * {
+              scroll-snap-align: none !important;
+              scroll-snap-stop: normal !important;
+            }
+            .shop-by-concern-{{ ai_gen_id }} .shop-by-concern-carousel-{{ ai_gen_id }},
+            .shop-by-concern-{{ ai_gen_id }} .shop-by-concern-carousel-track-{{ ai_gen_id }},
+            .shop-by-concern-{{ ai_gen_id }} .shop-by-concern-products-{{ ai_gen_id }} {
+              scroll-snap-type: none !important;
+            }
+          `;
+          document.head.appendChild(styleEl);
+        }
+      } catch (_) {}
     }
 
     setupCarousel() {
