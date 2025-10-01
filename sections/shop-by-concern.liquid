@@ -199,7 +199,7 @@
           return;
         }
 
-                grid.addEventListener('wheel', function(event) {
+        grid.addEventListener('wheel', function(event) {
           if (event.defaultPrevented) {
             return;
           }
@@ -218,7 +218,6 @@
           var appliedDelta = deltaY;
 
           if (!useVertical && absDeltaX > 0) {
-            // Browsers sometimes emit horizontal deltas when the user scrolls vertically inside a horizontal scroller.
             useVertical = true;
             appliedDelta = deltaX;
           }
@@ -234,6 +233,44 @@
           }
 
           event.preventDefault();
+        }, { passive: false });
+
+        var touchState = { x: 0, y: 0 };
+
+        grid.addEventListener('touchstart', function(event) {
+          if (event.touches.length !== 1) {
+            return;
+          }
+
+          touchState.x = event.touches[0].clientX;
+          touchState.y = event.touches[0].clientY;
+        }, { passive: true });
+
+        grid.addEventListener('touchmove', function(event) {
+          if (event.touches.length !== 1) {
+            return;
+          }
+
+          var currentX = event.touches[0].clientX;
+          var currentY = event.touches[0].clientY;
+          var deltaX = currentX - touchState.x;
+          var deltaY = currentY - touchState.y;
+
+          if (Math.abs(deltaY) > Math.abs(deltaX)) {
+            if (typeof window.scrollBy === 'function') {
+              window.scrollBy({ top: -deltaY, left: 0, behavior: 'auto' });
+            } else {
+              window.scrollTo(0, window.pageYOffset - deltaY);
+            }
+
+            touchState.x = currentX;
+            touchState.y = currentY;
+            event.preventDefault();
+            return;
+          }
+
+          touchState.x = currentX;
+          touchState.y = currentY;
         }, { passive: false });
 
         grid.__wheelHandlerAttached = true;
