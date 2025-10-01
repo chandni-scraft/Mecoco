@@ -58,10 +58,10 @@
             >
               {%- if col -%}
                 <button class="shop-by-concern__nav shop-by-concern__nav--prev" type="button" aria-label="Previous products" data-prev>
-                  ◀
+                  &lsaquo;
                 </button>
                 <button class="shop-by-concern__nav shop-by-concern__nav--next" type="button" aria-label="Next products" data-next>
-                  ▶
+                  &rsaquo;
                 </button>
                 <div class="shop-by-concern__grid" data-grid>
                   {%- for product in col.products limit: products_per_tab -%}
@@ -209,7 +209,7 @@
         var qty = parseInt(formData.get('quantity') || '1', 10) || 1;
         if (!id) return;
 
-        if (button) { button.disabled = true; button.textContent = 'Adding…'; }
+        if (button) { button.disabled = true; button.textContent = 'Adding...'; }
 
         fetch('{{ routes.cart_add_url | append: '.js' }}', {
           method: 'POST',
@@ -226,6 +226,17 @@
             return res.json();
           }).then(function(cart){
             var count = cart && typeof cart.item_count === 'number' ? cart.item_count : 0;
+            var eventDetail = {
+              resource: cart,
+              sourceId: 'shop-by-concern-{{ section_id }}',
+              data: {
+                itemCount: count,
+                source: 'shop-by-concern',
+              },
+            };
+
+            document.dispatchEvent(new CustomEvent('cart:update', { detail: eventDetail, bubbles: true }));
+
             document
               .querySelectorAll('[data-cart-count], .cart-count, .cart-count-bubble__count, .cart-count-bubble span')
               .forEach(function(el){
