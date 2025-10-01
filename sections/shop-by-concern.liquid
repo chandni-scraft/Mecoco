@@ -13,7 +13,6 @@
   assign products_per_row_desktop = section.settings.products_per_row_desktop
   assign products_per_row_mobile = section.settings.products_per_row_mobile
   assign cards_per_view_desktop = section.settings.cards_per_view_desktop | default: products_per_row_desktop
-  assign cards_per_view_mobile = section.settings.cards_per_view_mobile | default: products_per_row_mobile
 %}
 
 {% capture children %}
@@ -345,6 +344,15 @@
       border: 1px solid rgba(0,0,0,.06);
       border-radius: 12px;
       overflow: hidden;
+    }
+    #shop-by-concern-{{ section_id }} .shop-by-concern__image-link {
+      display: block;
+    }
+    #shop-by-concern-{{ section_id }} .shop-by-concern__image {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: 100%;
     }
     #shop-by-concern-{{ section_id }} .shop-by-concern__details {
       padding: .75rem;
