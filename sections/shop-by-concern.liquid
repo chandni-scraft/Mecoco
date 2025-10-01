@@ -357,21 +357,44 @@
       }
     }
     @media (max-width: 749px) {
+      #shop-by-concern-{{ section_id }} .shop-by-concern__container {
+        padding-inline: 1rem;
+      }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__heading {
+        font-size: clamp(1.3rem, 5vw, 1.75rem);
+        line-height: 1.2;
+        margin-bottom: 0.75rem;
+      }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__tabs {
+        margin-bottom: 0.75rem;
+      }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__tabs-scroll {
+        padding-inline: 0.5rem;
+      }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__tab {
+        font-size: clamp(0.8rem, 3.5vw, 0.95rem);
+        padding: 0.45rem 0.9rem;
+      }
       #shop-by-concern-{{ section_id }} .shop-by-concern__grid {
+        display: flex;
         gap: 12px;
-        overflow: visible;
-        grid-template-columns: repeat({{ products_per_row_mobile }}, minmax(0, 1fr));
-        padding-bottom: 0;
+        overflow-x: auto;
+        padding: 0 0.5rem 0.75rem;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: thin;
+      }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__grid::-webkit-scrollbar {
+        height: 6px;
       }
       #shop-by-concern-{{ section_id }} .shop-by-concern__card {
+        flex: 0 0 clamp(210px, 75vw, 280px);
         min-width: 0;
-        width: 100%;
+        scroll-snap-align: start;
       }
       #shop-by-concern-{{ section_id }} .shop-by-concern__nav {
         display: none;
       }
-    }
-  </style>
+    }\r\n  </style>
 
 {% schema %}
 {
