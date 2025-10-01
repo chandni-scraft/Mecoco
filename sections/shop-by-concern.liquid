@@ -377,7 +377,7 @@
         -webkit-overflow-scrolling: touch;
         padding-bottom: .25rem;
       }
-      #shop-by-concern-{{ section_id }} .shop-by-concern__panel { position: relative; }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__panel { position: relative; overflow: hidden; }
       #shop-by-concern-{{ section_id }} .shop-by-concern__nav {
         position: absolute;
         top: 50%;
@@ -392,8 +392,8 @@
         cursor: pointer;
         z-index: 2;
       }
-      #shop-by-concern-{{ section_id }} .shop-by-concern__nav--prev { left: -12px; }
-      #shop-by-concern-{{ section_id }} .shop-by-concern__nav--next { right: -12px; }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__nav--prev { left: 0.75rem; }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__nav--next { right: 0.75rem; }
       #shop-by-concern-{{ section_id }} .shop-by-concern__nav:hover { background: #fff; }
       #shop-by-concern-{{ section_id }} .shop-by-concern__card {
         /* Show roughly N cards per viewport width, but allow scrolling */
