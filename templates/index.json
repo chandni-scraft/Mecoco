@@ -1430,7 +1430,7 @@
         "products_per_row_mobile": 2,
         "products_per_row_desktop": 5,
         "cards_per_view_mobile": 2,
-        "cards_per_view_desktop": 4,
+        "cards_per_view_desktop": 5,
         "color_scheme": "default"
       }
     },
