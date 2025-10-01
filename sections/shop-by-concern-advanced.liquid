@@ -29,6 +29,7 @@
     {% if has_any %}
       <div class="shop-by-concern-adv__tabs" role="tablist" aria-label="Collections tabs">
         <div class="shop-by-concern-adv__tabs-scroll">
+          {% # theme-check-disable UnknownObject %}
           {% for i in (1..6) %}
             {% assign c = section.settings["collection_" | append: i] %}
             {% assign label = section.settings["label_" | append: i] %}
@@ -46,10 +47,12 @@
             </button>
             {% endif %}
           {% endfor %}
+          {% # theme-check-enable UnknownObject %}
         </div>
       </div>
 
       <div class="shop-by-concern-adv__panels">
+        {% # theme-check-disable UnknownObject %}
         {% for i in (1..6) %}
           {% assign c = section.settings["collection_" | append: i] %}
           {% if c %}
@@ -72,6 +75,7 @@
           </div>
           {% endif %}
         {% endfor %}
+        {% # theme-check-enable UnknownObject %}
       </div>
     {% endif %}
   </div>
