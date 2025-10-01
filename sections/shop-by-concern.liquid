@@ -263,8 +263,18 @@
       cursor: pointer;
     }
     @media (min-width: 768px) {
+      /* Make desktop a horizontally scrollable strip */
       #shop-by-concern-{{ section_id }} .shop-by-concern__grid {
-        grid-template-columns: repeat({{ products_per_row_desktop }}, minmax(0, 1fr));
+        display: flex;
+        overflow-x: auto;
+        gap: var(--grid-gap, 16px);
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: .25rem;
+      }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__card {
+        /* Show roughly N cards per viewport width, but allow scrolling */
+        flex: 0 0 calc(100% / {{ products_per_row_desktop }} - var(--grid-gap, 16px));
+        min-width: 280px;
       }
     }
     @media (max-width: 749px) {
