@@ -211,7 +211,7 @@
           return;
         }
 
-        grid.addEventListener('wheel', function(event) {
+        {% comment %} grid.addEventListener('wheel', function(event) {
           if (event.defaultPrevented) {
             return;
           }
@@ -229,14 +229,14 @@
             return;
           }
 
-          {% comment %} if (typeof window.scrollBy === 'function') {
+          if (typeof window.scrollBy === 'function') {
             window.scrollBy({ top: deltaY, left: 0, behavior: 'auto' });
           } else {
             window.scrollTo(0, window.pageYOffset + deltaY);
-          } {% endcomment %}
+          }
 
           event.preventDefault();
-        }, { passive: false });
+        }, { passive: false }); {% endcomment %}
 
         grid.__wheelHandlerAttached = true;
       });
