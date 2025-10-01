@@ -229,11 +229,11 @@
             return;
           }
 
-          if (typeof window.scrollBy === 'function') {
+          {% comment %} if (typeof window.scrollBy === 'function') {
             window.scrollBy({ top: deltaY, left: 0, behavior: 'auto' });
           } else {
             window.scrollTo(0, window.pageYOffset + deltaY);
-          }
+          } {% endcomment %}
 
           event.preventDefault();
         }, { passive: false });
