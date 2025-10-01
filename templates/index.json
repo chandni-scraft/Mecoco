@@ -1285,7 +1285,6 @@
             },
             "variant_dropdown_emecnA": {
               "type": "product-card-variant-select",
-              "disabled": true,
               "settings": {
                 "show_labels": true
               },
@@ -1293,7 +1292,6 @@
             },
             "add_to_cart_button": {
               "type": "product-card-add-to-cart",
-              "disabled": true,
               "settings": {
                 "button_text": "Add to Cart",
                 "select_options_text": "Add To Cart",
