@@ -57,8 +57,11 @@
               {%- if col -%}
                 <div class="shop-by-concern__grid" data-grid>
                   {%- for product in col.products limit: products_per_tab -%}
-                    {%- capture card_children -%}{%- endcapture -%}
-                    {%- render 'product-card', product: product, children: card_children, block: block -%}
+                    <div class="shop-by-concern__grid-item">
+                      {% # theme-check-disable %}
+                      {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product, collection: col %}
+                      {% # theme-check-enable %}
+                    </div>
                   {%- endfor -%}
                 </div>
               {%- else -%}
