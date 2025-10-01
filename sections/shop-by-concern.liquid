@@ -357,17 +357,18 @@
       }
     }
     @media (max-width: 749px) {
-      /* Make the grid horizontally scrollable on mobile */
       #shop-by-concern-{{ section_id }} .shop-by-concern__grid {
-        display: flex;
-        overflow-x: auto;
         gap: 12px;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: .25rem;
+        overflow: visible;
+        grid-template-columns: repeat({{ products_per_row_mobile }}, minmax(0, 1fr));
+        padding-bottom: 0;
       }
       #shop-by-concern-{{ section_id }} .shop-by-concern__card {
-        flex: 0 0 calc(100% / {{ cards_per_view_mobile }} - 12px);
-        min-width: 240px;
+        min-width: 0;
+        width: 100%;
+      }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__nav {
+        display: none;
       }
     }
   </style>
