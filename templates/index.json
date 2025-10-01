@@ -1285,6 +1285,7 @@
             },
             "variant_dropdown_emecnA": {
               "type": "product-card-variant-select",
+              "disabled": true,
               "settings": {
                 "show_labels": true
               },
@@ -1292,6 +1293,7 @@
             },
             "add_to_cart_button": {
               "type": "product-card-add-to-cart",
+              "disabled": true,
               "settings": {
                 "button_text": "Add to Cart",
                 "select_options_text": "Add To Cart",
@@ -1311,7 +1313,6 @@
           ]
         }
       },
-      "disabled": true,
       "name": "t:names.products_carousel",
       "settings": {
         "collection": "dry-fruits-nuts",
@@ -2051,6 +2052,7 @@
             },
             "variant_dropdown_9efECi": {
               "type": "product-card-variant-select",
+              "disabled": true,
               "settings": {
                 "show_labels": true
               },
@@ -2058,6 +2060,7 @@
             },
             "add_to_cart_button_9efECi": {
               "type": "product-card-add-to-cart",
+              "disabled": true,
               "settings": {
                 "button_text": "Add to Cart",
                 "select_options_text": "Select Options",
@@ -2077,7 +2080,6 @@
           ]
         }
       },
-      "disabled": true,
       "name": "t:names.products_grid",
       "settings": {
         "collection": "dates",
