@@ -14,6 +14,7 @@
     video: block_settings.video,
     video_class: 'spacing-style size-style border-style',
     video_loop: block_settings.video_loop,
+    disable_controls: block_settings.show_controls == false,
     video_style: video_style,
     video_preview_image: block_settings.video.preview_image,
     additional_attributes: block.shopify_attributes,
@@ -25,6 +26,7 @@
     video: block_settings.video_url.id,
     video_class: 'spacing-style size-style border-style',
     video_type: block_settings.video_url.type,
+    disable_controls: block_settings.show_controls == false,
     video_style: video_style,
     video_alt: block_settings.alt,
     video_preview_image: block_settings.cover_image,
@@ -85,6 +87,12 @@
       "type": "checkbox",
       "id": "video_loop",
       "label": "t:settings.video_loop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_controls",
+      "label": "t:settings.video_show_controls",
       "default": true
     },
     {
