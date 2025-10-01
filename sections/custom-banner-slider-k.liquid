@@ -1,0 +1,380 @@
+{% schema %}
+{
+ "name": "Custom Banner Slider",
+ "settings": [
+   {
+     "type": "header",
+     "content": "Slider Settings"
+   },
+   {
+     "type": "checkbox",
+     "id": "show_dots",
+     "label": "Show Navigation Dots",
+     "default": true
+   },
+   {
+     "type": "checkbox",
+     "id": "autoplay",
+     "label": "Autoplay Slider",
+     "default": true
+   },
+   {
+     "type": "range",
+     "id": "autoplay_speed",
+     "min": 3,
+     "max": 10,
+     "step": 1,
+     "unit": "s",
+     "label": "Change slides every",
+     "default": 5
+   },
+   {
+     "type": "header",
+     "content": "Display Settings"
+   },
+   {
+     "type": "checkbox",
+     "id": "hide_on_desktop",
+     "label": "Hide on Desktop",
+     "default": false
+   },
+   {
+     "type": "checkbox",
+     "id": "hide_on_mobile",
+     "label": "Hide on Mobile",
+     "default": false
+   },
+   {
+     "type": "select",
+     "id": "desktop_size",
+     "label": "Desktop Dimensions",
+     "options": [
+       {
+         "value": "small",
+         "label": "Small (600px height)"
+       },
+       {
+         "value": "medium",
+         "label": "Medium (800px height)"
+       },
+       {
+         "value": "large",
+         "label": "Large (1000px height)"
+       },
+       {
+         "value": "fit_image",
+         "label": "Fit to Image"
+       }
+     ],
+     "default": "medium"
+   },
+   {
+     "type": "select",
+     "id": "mobile_size",
+     "label": "Mobile Dimensions",
+     "options": [
+       {
+         "value": "small",
+         "label": "Small (300px height)"
+       },
+       {
+         "value": "medium",
+         "label": "Medium (450px height)"
+       },
+       {
+         "value": "large",
+         "label": "Large (600px height)"
+       },
+       {
+         "value": "fit_image",
+         "label": "Fit to Image"
+       }
+     ],
+     "default": "medium"
+   }
+ ],
+ "blocks": [
+   {
+     "type": "slide",
+     "name": "Slide",
+     "settings": [
+       {
+         "type": "image_picker",
+         "id": "desktop_image",
+         "label": "Desktop Image"
+       },
+       {
+         "type": "image_picker",
+         "id": "mobile_image",
+         "label": "Mobile Image"
+       },
+       {
+         "type": "url",
+         "id": "slide_link",
+         "label": "Slide Link"
+       }
+     ]
+   }
+ ],
+ "presets": [
+   {
+     "name": "Custom Banner Slider",
+     "category": "Image",
+     "blocks": [
+       {
+         "type": "slide"
+       },
+       {
+         "type": "slide"
+       }
+     ]
+   }
+ ]
+}
+{% endschema %}
+
+
+<div class="banner-slider-wrapper"
+ {% if section.settings.hide_on_desktop %}
+   style="display: none;"
+ {% endif %}>
+  <div class="banner-slider
+   {% if section.settings.desktop_size == 'small' %}banner-slider--small-desktop{% endif %}
+   {% if section.settings.desktop_size == 'medium' %}banner-slider--medium-desktop{% endif %}
+   {% if section.settings.desktop_size == 'large' %}banner-slider--large-desktop{% endif %}
+   {% if section.settings.desktop_size == 'fit_image' %}banner-slider--fit-desktop{% endif %}
+   {% if section.settings.mobile_size == 'small' %}banner-slider--small-mobile{% endif %}
+   {% if section.settings.mobile_size == 'medium' %}banner-slider--medium-mobile{% endif %}
+   {% if section.settings.mobile_size == 'large' %}banner-slider--large-mobile{% endif %}
+   {% if section.settings.mobile_size == 'fit_image' %}banner-slider--fit-mobile{% endif %}"
+   id="BannerSlider-{{ section.id }}">
+  
+   {% for block in section.blocks %}
+     {% if block.type == 'slide' %}
+       <div class="banner-slide" {{ block.shopify_attributes }}>
+         {% if block.settings.slide_link != blank %}
+           <a href="{{ block.settings.slide_link }}" class="banner-slide__link">
+         {% endif %}
+        
+         {% if block.settings.desktop_image != blank %}
+           <img
+             src="{{ block.settings.desktop_image | img_url: 'master' }}"
+             alt="{{ block.settings.desktop_image.alt | escape }}"
+             class="banner-slide__image hide-on-mobile {% if section.settings.hide_on_mobile %}hide-on-mobile-force{% endif %}"
+           >
+         {% endif %}
+        
+         {% if block.settings.mobile_image != blank %}
+           <img
+             src="{{ block.settings.mobile_image | img_url: 'master' }}"
+             alt="{{ block.settings.mobile_image.alt | escape }}"
+             class="banner-slide__image hide-on-desktop {% if section.settings.hide_on_desktop %}hide-on-desktop-force{% endif %}"
+           >
+         {% endif %}
+        
+         {% if block.settings.slide_link != blank %}
+           </a>
+         {% endif %}
+       </div>
+     {% endif %}
+   {% endfor %}
+ </div>
+</div>
+
+
+<style>
+ .banner-slider {
+   width: 100%;
+   position: relative;
+   overflow: hidden;
+ }
+  .banner-slide {
+   position: relative;
+ }
+  .banner-slide__link {
+   display: block;
+   width: 100%;
+   height: 100%;
+ }
+  .banner-slide__image {
+   width: 100%;
+   display: block;
+   object-fit: cover;
+ }
+  /* Desktop sizes */
+ .banner-slider--small-desktop .banner-slide {
+   height: 600px;
+ }
+  .banner-slider--medium-desktop .banner-slide {
+   height: 800px;
+ }
+  .banner-slider--large-desktop .banner-slide {
+   height: 1000px;
+ }
+  .banner-slider--fit-desktop .banner-slide {
+   height: auto;
+ }
+  .banner-slider--fit-desktop .banner-slide__image {
+   object-fit: contain;
+ }
+  /* Mobile sizes */
+ @media screen and (max-width: 768px) {
+   .banner-slider--small-mobile .banner-slide {
+     height: 300px;
+   }
+  
+   .banner-slider--medium-mobile .banner-slide {
+     height: 450px;
+   }
+  
+   .banner-slider--large-mobile .banner-slide {
+     height: 600px;
+   }
+  
+   .banner-slider--fit-mobile .banner-slide {
+     height: auto;
+   }
+  
+   .banner-slider--fit-mobile .banner-slide__image {
+     object-fit: contain;
+   }
+ }
+  /* Hide/show on different devices */
+ @media screen and (min-width: 769px) {
+   .hide-on-desktop {
+     display: none !important;
+   }
+ }
+  @media screen and (max-width: 768px) {
+   .hide-on-mobile {
+     display: none !important;
+   }
+ }
+  /* Slick customization */
+ .slick-dots {
+   bottom: 20px;
+   position: absolute;
+   display: block;
+   width: 100%;
+   padding: 0;
+   margin: 0;
+   list-style: none;
+   text-align: center;
+ }
+  .slick-dots li {
+   position: relative;
+   display: inline-block;
+   width: 20px;
+   height: 20px;
+   margin: 0 5px;
+   padding: 0;
+   cursor: pointer;
+ }
+  .slick-dots li button {
+   font-size: 0;
+   line-height: 0;
+   display: block;
+   width: 20px;
+   height: 20px;
+   padding: 5px;
+   cursor: pointer;
+   color: transparent;
+   border: 0;
+   outline: none;
+   background: transparent;
+ }
+  .slick-dots li button:before {
+   font-family: 'slick';
+   font-size: 12px;
+   line-height: 20px;
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 20px;
+   height: 20px;
+   content: '•';
+   text-align: center;
+   opacity: .5;
+   color: white;
+ }
+  .slick-dots li.slick-active button:before {
+   opacity: 1;
+   color: white;
+ }
+  /* Fix for initial load - hide all slides except first until Slick initializes */
+ .banner-slider:not(.slick-initialized) .banner-slide:not(:first-child) {
+   display: none;
+ }
+</style>
+
+
+<script>
+ // Load Slick CSS and JS dynamically if not already loaded
+ function loadScript(url, callback) {
+   var script = document.createElement('script');
+   script.type = 'text/javascript';
+   script.src = url;
+   script.onload = callback;
+   document.head.appendChild(script);
+ }
+
+
+ function loadCSS(url) {
+   var link = document.createElement('link');
+   link.rel = 'stylesheet';
+   link.type = 'text/css';
+   link.href = url;
+   document.head.appendChild(link);
+ }
+
+
+ document.addEventListener('DOMContentLoaded', function() {
+   // Check if jQuery is already loaded
+   if (typeof jQuery === 'undefined') {
+     loadScript('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js', function() {
+       // Check if Slick is already loaded
+       if (typeof jQuery.fn.slick === 'undefined') {
+         loadCSS('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css');
+         loadCSS('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css');
+         loadScript('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js', initSlider);
+       } else {
+         initSlider();
+       }
+     });
+   } else {
+     // jQuery is loaded, check for Slick
+     if (typeof jQuery.fn.slick === 'undefined') {
+       loadCSS('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css');
+       loadCSS('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css');
+       loadScript('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js', initSlider);
+     } else {
+       initSlider();
+     }
+   }
+ });
+
+
+ function initSlider() {
+   // Use a small timeout to ensure DOM is fully ready
+   setTimeout(function() {
+     try {
+       jQuery('#BannerSlider-{{ section.id }}').slick({
+         dots: {{ section.settings.show_dots | json }},
+         arrows: false,
+         infinite: true,
+         speed: 500,
+         slidesToShow: 1,
+         slidesToScroll: 1,
+         fade: true,
+         cssEase: 'linear',
+         autoplay: {{ section.settings.autoplay | json }},
+         autoplaySpeed: {{ section.settings.autoplay_speed | times: 1000 }}
+       });
+       console.log('Slider initialized successfully');
+     } catch (e) {
+       console.error('Error initializing slider:', e);
+     }
+   }, 100);
+ }
+</script>
+
