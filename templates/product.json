@@ -472,6 +472,9 @@
           ]
         }
       },
+      "custom_css": [
+        ".media-gallery.height-fit {margin-left: 23%;}"
+      ],
       "settings": {
         "content_width": "content-center-aligned",
         "desktop_media_position": "left",
