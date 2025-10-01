@@ -6,6 +6,7 @@
 
 {% style %}
   .shop-by-concern-{{ ai_gen_id }} {
+    display: block;
     padding: 40px 0;
     background-color: rgb(var(--color-background));
     color: rgb(var(--color-foreground));
@@ -52,7 +53,6 @@
     overflow-x: auto;
     -ms-overflow-style: none; /* IE/Edge */
     scrollbar-width: none; /* Firefox */
-    scroll-behavior: smooth;
   }
 
   .shop-by-concern-tabs-{{ ai_gen_id }}::-webkit-scrollbar { display: none; }
@@ -402,7 +402,7 @@
     display: flex;
     gap: 16px;
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: none;
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding: 0 16px 10px; /* add side padding so cards never exceed viewport */
@@ -420,7 +420,6 @@
     flex: 0 0 280px;
     max-width: 280px;
     width: 280px;
-    scroll-snap-align: start;
   }
 
   .shop-by-concern-carousel-nav-{{ ai_gen_id }} {
