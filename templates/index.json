@@ -1334,6 +1334,62 @@
         "padding-block-end": 48
       }
     },
+    "shop_by_concern_aVgGgn": {
+      "type": "shop-by-concern",
+      "blocks": {
+        "collection_KYM3Ex": {
+          "type": "collection",
+          "settings": {
+            "collection": "dates",
+            "custom_label": ""
+          }
+        },
+        "collection_thNeUH": {
+          "type": "collection",
+          "settings": {
+            "collection": "dry-fruits-nuts",
+            "custom_label": ""
+          }
+        },
+        "collection_VW4aQm": {
+          "type": "collection",
+          "settings": {
+            "collection": "dry-fruits-mixes",
+            "custom_label": ""
+          }
+        },
+        "collection_PiN3XM": {
+          "type": "collection",
+          "settings": {
+            "collection": "minimally-processed-dry-fruits",
+            "custom_label": ""
+          }
+        },
+        "collection_4FtFQj": {
+          "type": "collection",
+          "settings": {
+            "collection": "cold-pressed-editable-oil",
+            "custom_label": ""
+          }
+        }
+      },
+      "block_order": [
+        "collection_KYM3Ex",
+        "collection_thNeUH",
+        "collection_VW4aQm",
+        "collection_PiN3XM",
+        "collection_4FtFQj"
+      ],
+      "name": "Shop by Concern Tabs",
+      "settings": {
+        "heading": "Shop by concern",
+        "container": "lg",
+        "products_per_tab": 8,
+        "products_per_row_mobile": 2,
+        "products_per_row_desktop": 4,
+        "color_scheme": "default"
+      }
+    },
     "1758374251a2430199": {
       "type": "_blocks",
       "blocks": {
@@ -1390,6 +1446,7 @@
       "block_order": [
         "ai_gen_block_9e7304b_6UxGQ6"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -2599,6 +2656,7 @@
     "featured_product_YXhcLC",
     "collection_list_GPqXfK",
     "product_list_emecnA",
+    "shop_by_concern_aVgGgn",
     "1758374251a2430199",
     "product_list_X8Q7bi",
     "section_RhpYRt",

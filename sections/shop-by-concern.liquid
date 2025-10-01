@@ -57,30 +57,10 @@
               {%- if col -%}
                 <div class="shop-by-concern__grid" data-grid>
                   {%- for product in col.products limit: products_per_tab -%}
-                    <article class="shop-by-concern__card" data-product-id="{{ product.id }}">
-                      <a class="shop-by-concern__image-link" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
-                        {%- if product.featured_media -%}
-                          <img
-                            class="shop-by-concern__image"
-                            src="{{ product.featured_media | image_url: width: 600 }}"
-                            srcset="{{ product.featured_media | image_url: width: 300 }} 300w, {{ product.featured_media | image_url: width: 450 }} 450w, {{ product.featured_media | image_url: width: 600 }} 600w, {{ product.featured_media | image_url: width: 900 }} 900w"
-                            sizes="(max-width: 749px) 50vw, 25vw"
-                            alt="{{ product.featured_media.alt | escape }}"
-                            loading="lazy"
-                            width="{{ product.featured_media.width }}"
-                            height="{{ product.featured_media.height }}"
-                          />
-                        {%- else -%}
-                          <div class="shop-by-concern__placeholder">{{ 'product-1' | placeholder_svg_tag }}</div>
-                        {%- endif -%}
-                      </a>
-                      <div class="shop-by-concern__details">
-                        <a class="shop-by-concern__title" href="{{ product.url }}">{{ product.title }}</a>
-                        <div class="shop-by-concern__price">
-                          {% render 'price', product_resource: product %}
-                        </div>
-                      </div>
-                    </article>
+                    <div class="shop-by-concern__grid-item">
+                      {%- capture card_children -%}{%- endcapture -%}
+                      {%- render 'product-card', product: product, children: card_children -%}
+                    </div>
                   {%- endfor -%}
                 </div>
               {%- else -%}
