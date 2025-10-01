@@ -1426,7 +1426,7 @@
       "settings": {
         "heading": "Shop by concern",
         "container": "lg",
-        "products_per_tab": 8,
+        "products_per_tab": 50,
         "products_per_row_mobile": 2,
         "products_per_row_desktop": 4,
         "color_scheme": "default"
