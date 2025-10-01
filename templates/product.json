@@ -234,9 +234,9 @@
                 "section_title": "Limited Time Offers",
                 "show_status_dot": true,
                 "hide_if_empty": true,
-                "coupon_codes": "FREEGIFT20, SAVE20, FREESHIP, WELCOME10, FLASH25",
-                "offer_labels": "Free Gift, 20% Off, Free Shipping, Welcome Offer, Flash Sale",
-                "coupon_notes": "On orders over $50, First time buyers, No minimum order, New customers, Limited time",
+                "coupon_codes": "CODE - PURE10",
+                "offer_labels": "FLAT 10% OFF",
+                "coupon_notes": "",
                 "card_border_radius": 4
               },
               "blocks": {}
@@ -473,7 +473,7 @@
         }
       },
       "custom_css": [
-        "@media (min-width: 1024px) {.media-gallery.height-fit {margin-left: 13%; } .product-details>.group-block {height: min-content; margin: 15%; }}"
+        "@media (min-width: 1024px) {.media-gallery.height-fit {margin-left: 13%; } .product-details > .group-block {height: min-content; margin: 15%; }}"
       ],
       "settings": {
         "content_width": "content-center-aligned",
