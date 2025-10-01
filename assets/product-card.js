@@ -405,21 +405,7 @@ export class ProductCard extends Component {
     if (!link.href) return;
     const linkURL = new URL(link.href);
 
-    const productCardAnchor = link.getAttribute('id');
-    if (!productCardAnchor) return;
-
-    const url = new URL(window.location.href);
-    const parent = this.closest('li');
-    url.hash = productCardAnchor;
-    if (parent && parent.dataset.page) {
-      url.searchParams.set('page', parent.dataset.page);
-    }
-
-    if (!window.Shopify.designMode) {
-      requestYieldCallback(() => {
-        history.replaceState({}, '', url.toString());
-      });
-    }
+    // Prevent adding URL hashes/state to avoid unintended scroll jumps when returning/scrolling
 
     const targetLink = event.target.closest('a');
     // Let the native navigation handle the click if it was on a link.
