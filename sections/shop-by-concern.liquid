@@ -55,14 +55,12 @@
               {{ block.shopify_attributes }}
             >
               {%- if col -%}
-                {%- paginate col.products by products_per_tab -%}
-                  <div class="shop-by-concern__grid" data-grid>
-                    {%- for product in col.products -%}
-                      {%- capture card_children -%}{%- endcapture -%}
-                      {%- render 'product-card', product: product, children: card_children -%}
-                    {%- endfor -%}
-                  </div>
-                {%- endpaginate -%}
+                <div class="shop-by-concern__grid" data-grid>
+                  {%- for product in col.products limit: products_per_tab -%}
+                    {%- capture card_children -%}{%- endcapture -%}
+                    {%- render 'product-card', product: product, children: card_children, block: block -%}
+                  {%- endfor -%}
+                </div>
               {%- else -%}
                 <div class="shop-by-concern__empty">{{ 'content.no_products_found' | t }}</div>
               {%- endif -%}
