@@ -44,7 +44,7 @@
           "type": "_product-details",
           "static": true,
           "settings": {
-            "width": "fill",
+            "width": "fit-content",
             "custom_width": 100,
             "width_mobile": "fill",
             "custom_width_mobile": 100,
@@ -194,7 +194,7 @@
                 "padding-block-end": 24,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
-                "show_offers": true,
+                "show_offers": false,
                 "offers_heading": "Special Offers",
                 "offers_background_color": "#ffffff",
                 "offers_text_color": "#a42325",
@@ -219,6 +219,20 @@
                 "offer_9_code": "WKND30",
                 "offer_10_label": "CLEARANCE",
                 "offer_10_code": "CLEAR50"
+              },
+              "blocks": {}
+            },
+            "discountcode_PBn9kY": {
+              "type": "discountcode",
+              "name": "Coupon codes strip",
+              "settings": {
+                "section_title": "Limited Time Offers",
+                "show_status_dot": true,
+                "hide_if_empty": true,
+                "coupon_codes": "FREEGIFT20, SAVE20, FREESHIP, WELCOME10, FLASH25",
+                "offer_labels": "Free Gift, 20% Off, Free Shipping, Welcome Offer, Flash Sale",
+                "coupon_notes": "On orders over $50, First time buyers, No minimum order, New customers, Limited time",
+                "card_border_radius": 4
               },
               "blocks": {}
             },
@@ -447,6 +461,7 @@
             "price_a7krng",
             "text_gXMUag",
             "variant_picker_R3rGDr",
+            "discountcode_PBn9kY",
             "buy_buttons_eYQEYi",
             "accordion_qxKemj"
           ]
