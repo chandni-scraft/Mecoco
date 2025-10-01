@@ -210,7 +210,7 @@
           grid.__wheelHandlerAttached = true;
           return;
         }
-{% comment %} 
+
         grid.addEventListener('wheel', function(event) {
           if (event.defaultPrevented) {
             return;
@@ -236,7 +236,7 @@
           }
 
           event.preventDefault();
-        }, { passive: false }); {% endcomment %}
+        }, { passive: false });
 
         grid.__wheelHandlerAttached = true;
       });
