@@ -473,7 +473,7 @@
         }
       },
       "custom_css": [
-        "@media (min-width: 1024px) {.media-gallery.height-fit {margin-left: 23%; }}"
+        "@media (min-width: 1024px) {.media-gallery.height-fit {margin-left: 13%; }}"
       ],
       "settings": {
         "content_width": "content-center-aligned",
