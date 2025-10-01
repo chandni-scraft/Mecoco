@@ -1422,6 +1422,7 @@
         "collection_PiN3XM",
         "collection_4FtFQj"
       ],
+      "disabled": true,
       "name": "Shop by Concern Tabs",
       "settings": {
         "heading": "Shop by concern",
@@ -1839,6 +1840,7 @@
             "video_url": "",
             "video_autoplay": true,
             "video_loop": true,
+            "show_controls": true,
             "alt": "",
             "custom_width": 67,
             "custom_width_mobile": 100,
