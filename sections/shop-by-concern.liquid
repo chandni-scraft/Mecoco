@@ -12,6 +12,8 @@
   assign products_per_tab = section.settings.products_per_tab
   assign products_per_row_desktop = section.settings.products_per_row_desktop
   assign products_per_row_mobile = section.settings.products_per_row_mobile
+  assign cards_per_view_desktop = section.settings.cards_per_view_desktop | default: products_per_row_desktop
+  assign cards_per_view_mobile = section.settings.cards_per_view_mobile | default: products_per_row_mobile
 %}
 
 {% capture children %}
@@ -55,6 +57,12 @@
               {{ block.shopify_attributes }}
             >
               {%- if col -%}
+                <button class="shop-by-concern__nav shop-by-concern__nav--prev" type="button" aria-label="Previous products" data-prev>
+                  ◀
+                </button>
+                <button class="shop-by-concern__nav shop-by-concern__nav--next" type="button" aria-label="Next products" data-next>
+                  ▶
+                </button>
                 <div class="shop-by-concern__grid" data-grid>
                   {%- for product in col.products limit: products_per_tab -%}
                     <article class="shop-by-concern__card" data-product-id="{{ product.id }}">
@@ -163,6 +171,30 @@
         });
       });
 
+      // Desktop carousel arrows: scroll by one viewport of cards
+      function setupArrows(panel){
+        var grid = panel.querySelector('[data-grid]');
+        var prev = panel.querySelector('[data-prev]');
+        var next = panel.querySelector('[data-next]');
+        if (!grid || !prev || !next) return;
+
+        function getScrollAmount(){
+          var card = grid.querySelector('.shop-by-concern__card');
+          var cardWidth = card ? card.getBoundingClientRect().width : (grid.clientWidth / 4);
+          var gap = 16; // aligned with --grid-gap default
+          return Math.max(cardWidth * {{ cards_per_view_desktop | default: 4 }} + gap, 200);
+        }
+
+        prev.addEventListener('click', function(){
+          grid.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+        });
+        next.addEventListener('click', function(){
+          grid.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+        });
+      }
+
+      panels.forEach(setupArrows);
+
       // AJAX Add to Cart handling (progressive enhancement)
       root.addEventListener('submit', function(e){
         var form = e.target.closest('.shop-by-concern__form');
@@ -188,7 +220,25 @@
           return res.json();
         }).then(function(){
           if (button) { button.textContent = 'Added'; }
-          document.dispatchEvent(new CustomEvent('cart:updated'));
+          // Update cart bubble immediately
+          return fetch('/cart.js').then(function(res){
+            if (!res.ok) throw new Error('Failed to fetch cart');
+            return res.json();
+          }).then(function(cart){
+            var count = cart && typeof cart.item_count === 'number' ? cart.item_count : 0;
+            document
+              .querySelectorAll('[data-cart-count], .cart-count, .cart-count-bubble__count, .cart-count-bubble span')
+              .forEach(function(el){
+                if (el.hasAttribute && el.hasAttribute('data-cart-count')) {
+                  el.setAttribute('data-cart-count', String(count));
+                }
+                if ('textContent' in el) {
+                  el.textContent = String(count);
+                }
+              });
+            document.dispatchEvent(new CustomEvent('cart:updated', { detail: cart }));
+          }).catch(function(){ /* ignore bubble update errors */ });
+        }).finally(function(){
           setTimeout(function(){ if (button) { button.textContent = 'Add to cart'; button.disabled = false; } }, 1500);
         }).catch(function(){
           if (button) { button.textContent = 'Error'; setTimeout(function(){ button.textContent = 'Add to cart'; button.disabled = false; }, 1500); }
@@ -271,9 +321,27 @@
         -webkit-overflow-scrolling: touch;
         padding-bottom: .25rem;
       }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__panel { position: relative; }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        background: rgba(255,255,255,.9);
+        border: 1px solid rgba(0,0,0,.08);
+        cursor: pointer;
+        z-index: 2;
+      }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__nav--prev { left: -12px; }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__nav--next { right: -12px; }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__nav:hover { background: #fff; }
       #shop-by-concern-{{ section_id }} .shop-by-concern__card {
         /* Show roughly N cards per viewport width, but allow scrolling */
-        flex: 0 0 calc(100% / {{ products_per_row_desktop }} - var(--grid-gap, 16px));
+        flex: 0 0 calc(100% / {{ cards_per_view_desktop }} - var(--grid-gap, 16px));
         min-width: 280px;
       }
     }
@@ -287,8 +355,8 @@
         padding-bottom: .25rem;
       }
       #shop-by-concern-{{ section_id }} .shop-by-concern__card {
-        flex: 0 0 75vw;
-        min-width: 75vw;
+        flex: 0 0 calc(100% / {{ cards_per_view_mobile }} - 12px);
+        min-width: 240px;
       }
     }
   </style>
@@ -337,6 +405,24 @@
       "max": 6,
       "step": 1,
       "label": "Columns on desktop",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "cards_per_view_mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Cards per view (mobile carousel)",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "cards_per_view_desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Cards per view (desktop carousel)",
       "default": 4
     },
     {
