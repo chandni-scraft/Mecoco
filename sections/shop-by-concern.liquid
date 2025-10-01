@@ -403,7 +403,8 @@
     }
     @media (max-width: 749px) {
       #shop-by-concern-{{ section_id }} {
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: visible;
       }
       #shop-by-concern-{{ section_id }} .shop-by-concern__container {
         padding-inline: 1rem;
@@ -441,8 +442,8 @@
         padding: 0 0.75rem 1rem;
         margin: 0 -0.75rem;
         overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scroll-snap-stop: always;
+        scroll-snap-type: x proximity;
+        scroll-snap-stop: normal;
         scrollbar-width: none;
         overscroll-behavior-x: contain;
       }
