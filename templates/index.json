@@ -1381,6 +1381,7 @@
       "blocks": {
         "collection_KYM3Ex": {
           "type": "collection",
+          "disabled": true,
           "settings": {
             "collection": "dates",
             "custom_label": ""
@@ -1388,6 +1389,7 @@
         },
         "collection_thNeUH": {
           "type": "collection",
+          "disabled": true,
           "settings": {
             "collection": "dry-fruits-nuts",
             "custom_label": ""
@@ -1395,6 +1397,7 @@
         },
         "collection_VW4aQm": {
           "type": "collection",
+          "disabled": true,
           "settings": {
             "collection": "dry-fruits-mixes",
             "custom_label": ""
@@ -1402,6 +1405,7 @@
         },
         "collection_PiN3XM": {
           "type": "collection",
+          "disabled": true,
           "settings": {
             "collection": "minimally-processed-dry-fruits",
             "custom_label": ""
@@ -1409,6 +1413,7 @@
         },
         "collection_4FtFQj": {
           "type": "collection",
+          "disabled": true,
           "settings": {
             "collection": "cold-pressed-editable-oil",
             "custom_label": ""
@@ -1422,6 +1427,7 @@
         "collection_PiN3XM",
         "collection_4FtFQj"
       ],
+      "disabled": true,
       "name": "Shop by Concern Tabs",
       "settings": {
         "heading": "Shop by concern",
