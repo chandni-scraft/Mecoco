@@ -156,6 +156,41 @@
         "padding-block-end": 0
       }
     },
+    "custom_banner_slider_k_dJXapc": {
+      "type": "custom-banner-slider-k",
+      "blocks": {
+        "slide_fUiwkH": {
+          "type": "slide",
+          "settings": {
+            "desktop_image": "shopify://shop_images/2-_Web_Banner.png",
+            "mobile_image": "shopify://shop_images/2-_Mobile_Banner.png",
+            "slide_link": ""
+          }
+        },
+        "slide_TJ7jga": {
+          "type": "slide",
+          "settings": {
+            "desktop_image": "shopify://shop_images/1-_Web_Banner.png",
+            "mobile_image": "shopify://shop_images/1-_Mobile_Banner.png",
+            "slide_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_fUiwkH",
+        "slide_TJ7jga"
+      ],
+      "name": "Custom Banner Slider",
+      "settings": {
+        "show_dots": true,
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "hide_on_desktop": false,
+        "hide_on_mobile": false,
+        "desktop_size": "fit_image",
+        "mobile_size": "fit_image"
+      }
+    },
     "17580150398e7bda24": {
       "type": "_blocks",
       "blocks": {
@@ -230,6 +265,7 @@
         "image_HcT8T6",
         "image_RVjtP7"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -2303,6 +2339,7 @@
   "order": [
     "hero1_i4FxfB",
     "hero_RkimKJ",
+    "custom_banner_slider_k_dJXapc",
     "17580150398e7bda24",
     "marquee_jcWr8i",
     "featured_product_YXhcLC",
