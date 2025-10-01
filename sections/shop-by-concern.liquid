@@ -210,7 +210,7 @@
           grid.__wheelHandlerAttached = true;
           return;
         }
-
+{% comment %} 
         grid.addEventListener('wheel', function(event) {
           if (event.defaultPrevented) {
             return;
@@ -236,7 +236,7 @@
           }
 
           event.preventDefault();
-        }, { passive: false });
+        }, { passive: false }); {% endcomment %}
 
         grid.__wheelHandlerAttached = true;
       });
@@ -468,10 +468,6 @@
       #shop-by-concern-{{ section_id }} .shop-by-concern__tab {
         font-size: clamp(0.85rem, 3.5vw, 1rem);
         padding: 0.45rem 0.95rem;
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
-        flex-shrink: 0;
       }
       #shop-by-concern-{{ section_id }} .shop-by-concern__panels {
         overflow: visible;
