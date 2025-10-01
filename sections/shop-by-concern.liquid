@@ -64,7 +64,7 @@
                             class="shop-by-concern__image"
                             src="{{ product.featured_media | image_url: width: 600 }}"
                             srcset="{{ product.featured_media | image_url: width: 300 }} 300w, {{ product.featured_media | image_url: width: 450 }} 450w, {{ product.featured_media | image_url: width: 600 }} 600w, {{ product.featured_media | image_url: width: 900 }} 900w"
-                            sizes="(max-width: 749px) 50vw, 25vw"
+                            sizes="(max-width: 749px) 70vw, 25vw"
                             alt="{{ product.featured_media.alt | escape }}"
                             loading="lazy"
                             width="{{ product.featured_media.width }}"
@@ -79,6 +79,31 @@
                         <div class="shop-by-concern__price">
                           {% render 'price', product_resource: product %}
                         </div>
+                        <form class="shop-by-concern__form" method="post" action="{{ routes.cart_add_url }}">
+                          {%- if product.variants.size > 1 -%}
+                            <label class="visually-hidden" for="variant-{{ section_id }}-{{ forloop.index }}">Select variant</label>
+                            <select class="shop-by-concern__variant"
+                                    id="variant-{{ section_id }}-{{ forloop.index }}"
+                                    name="id"
+                                    aria-label="Select variant for {{ product.title | escape }}">
+                              {%- for variant in product.variants -%}
+                                <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+                                  {{ variant.title }}{% unless variant.available %} - {{ 'products.product.sold_out' | t }}{% endunless %}
+                                </option>
+                              {%- endfor -%}
+                            </select>
+                          {%- else -%}
+                            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" />
+                          {%- endif -%}
+                          <input type="hidden" name="quantity" value="1" />
+                          <button type="submit" class="shop-by-concern__atc" {% unless product.available %}disabled{% endunless %}>
+                            {%- if product.available -%}
+                              {{ 'products.product.add_to_cart' | t | default: 'Add to cart' }}
+                            {%- else -%}
+                              {{ 'products.product.sold_out' | t | default: 'Sold out' }}
+                            {%- endif -%}
+                          </button>
+                        </form>
                       </div>
                     </article>
                   {%- endfor -%}
@@ -137,6 +162,38 @@
           }
         });
       });
+
+      // AJAX Add to Cart handling (progressive enhancement)
+      root.addEventListener('submit', function(e){
+        var form = e.target.closest('.shop-by-concern__form');
+        if (!form) return;
+        e.preventDefault();
+
+        var button = form.querySelector('.shop-by-concern__atc');
+        if (button && button.disabled) return;
+
+        var formData = new FormData(form);
+        var id = formData.get('id');
+        var qty = parseInt(formData.get('quantity') || '1', 10) || 1;
+        if (!id) return;
+
+        if (button) { button.disabled = true; button.textContent = 'Adding…'; }
+
+        fetch('{{ routes.cart_add_url | append: '.js' }}', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: id, quantity: qty })
+        }).then(function(res){
+          if (!res.ok) throw new Error('Add to cart failed');
+          return res.json();
+        }).then(function(){
+          if (button) { button.textContent = 'Added'; }
+          document.dispatchEvent(new CustomEvent('cart:updated'));
+          setTimeout(function(){ if (button) { button.textContent = 'Add to cart'; button.disabled = false; } }, 1500);
+        }).catch(function(){
+          if (button) { button.textContent = 'Error'; setTimeout(function(){ button.textContent = 'Add to cart'; button.disabled = false; }, 1500); }
+        });
+      });
     })();
   </script>
 
@@ -177,9 +234,51 @@
       gap: var(--grid-gap, 16px);
       grid-template-columns: repeat({{ products_per_row_mobile }}, minmax(0, 1fr));
     }
+    #shop-by-concern-{{ section_id }} .shop-by-concern__card {
+      background: var(--color-background, #fff);
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    #shop-by-concern-{{ section_id }} .shop-by-concern__details {
+      padding: .75rem;
+      display: grid;
+      gap: .5rem;
+    }
+    #shop-by-concern-{{ section_id }} .shop-by-concern__variant {
+      width: 100%;
+      padding: .5rem .6rem;
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 6px;
+      background: var(--color-background, #fff);
+    }
+    #shop-by-concern-{{ section_id }} .shop-by-concern__atc {
+      width: 100%;
+      margin-top: .5rem;
+      padding: .6rem .8rem;
+      border-radius: 8px;
+      background: var(--color-foreground, #111);
+      color: var(--color-background, #fff);
+      border: 0;
+      cursor: pointer;
+    }
     @media (min-width: 768px) {
       #shop-by-concern-{{ section_id }} .shop-by-concern__grid {
         grid-template-columns: repeat({{ products_per_row_desktop }}, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 749px) {
+      /* Make the grid horizontally scrollable on mobile */
+      #shop-by-concern-{{ section_id }} .shop-by-concern__grid {
+        display: flex;
+        overflow-x: auto;
+        gap: 12px;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: .25rem;
+      }
+      #shop-by-concern-{{ section_id }} .shop-by-concern__card {
+        flex: 0 0 75vw;
+        min-width: 75vw;
       }
     }
   </style>
