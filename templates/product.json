@@ -222,6 +222,20 @@
               },
               "blocks": {}
             },
+            "discountcode_PBn9kY": {
+              "type": "discountcode",
+              "name": "Coupon codes strip",
+              "settings": {
+                "section_title": "Limited Time Offers",
+                "show_status_dot": true,
+                "hide_if_empty": true,
+                "coupon_codes": "FREEGIFT20, SAVE20, FREESHIP, WELCOME10, FLASH25",
+                "offer_labels": "Free Gift, 20% Off, Free Shipping, Welcome Offer, Flash Sale",
+                "coupon_notes": "On orders over $50, First time buyers, No minimum order, New customers, Limited time",
+                "card_border_radius": 4
+              },
+              "blocks": {}
+            },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
               "settings": {
@@ -447,6 +461,7 @@
             "price_a7krng",
             "text_gXMUag",
             "variant_picker_R3rGDr",
+            "discountcode_PBn9kY",
             "buy_buttons_eYQEYi",
             "accordion_qxKemj"
           ]
