@@ -1014,9 +1014,10 @@
       const nextBtn = this.querySelector('.shop-by-concern-carousel-next-{{ ai_gen_id }}');
       const track = this.querySelector('.shop-by-concern-carousel-track-{{ ai_gen_id }}');
 
-      if (track && !this.carouselWheelListenerAttached) {
-        track.addEventListener('wheel', this.handleTrackWheel, { passive: false });
-        this.carouselWheelListenerAttached = true;
+      // Do not intercept wheel events on the track to avoid page jump/scroll snapping issues
+      if (track && this.carouselWheelListenerAttached) {
+        track.removeEventListener('wheel', this.handleTrackWheel, { passive: false });
+        this.carouselWheelListenerAttached = false;
       }
 
       if (prevBtn && nextBtn && track) {
@@ -1031,26 +1032,8 @@
     }
 
     handleTrackWheel(event) {
-      if (event.defaultPrevented) {
-        return;
-      }
-
-      const absDeltaY = Math.abs(event.deltaY);
-      const absDeltaX = Math.abs(event.deltaX);
-
-      if (event.shiftKey || absDeltaY <= absDeltaX) {
-        return;
-      }
-
-      const delta = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
-
-      if (typeof window.scrollBy === 'function') {
-        window.scrollBy({ top: delta, left: 0, behavior: 'auto' });
-      } else {
-        window.scrollTo(0, window.pageYOffset + delta);
-      }
-
-      event.preventDefault();
+      // No-op: Allow the browser's default scrolling behavior to prevent sudden jumps
+      return;
     }
 
     handleTabClick(e) {
