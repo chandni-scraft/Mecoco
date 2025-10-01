@@ -19,8 +19,10 @@
         "subtitle": "",
         "desktop_media_type": "video",
         "desktop_video": "https://cdn.shopify.com/videos/c/o/v/7705212e22134b68ab338d9485ca1900.mp4",
-        "mobile_media_type": "video",
+        "desktop_poster": "shopify://shop_images/2-_Web_Banner.png",
+        "mobile_media_type": "image",
         "mobile_video": "https://cdn.shopify.com/videos/c/o/v/7705212e22134b68ab338d9485ca1900.mp4",
+        "mobile_poster": "shopify://shop_images/2-_Mobile_Banner.png",
         "button_text": "Shop now",
         "button_link": "",
         "text_color": "#ffffff",
@@ -121,7 +123,6 @@
       "block_order": [
         "group_3cB4GW"
       ],
-      "disabled": true,
       "settings": {
         "media_type_1": "image",
         "image_1": "shopify://shop_images/California_Almonds.png",
