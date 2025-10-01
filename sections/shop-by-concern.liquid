@@ -199,6 +199,18 @@
           return;
         }
 
+        var isCoarsePointer = false;
+        try {
+          isCoarsePointer = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || ('ontouchstart' in window);
+        } catch (error) {
+          isCoarsePointer = false;
+        }
+
+        if (isCoarsePointer) {
+          grid.__wheelHandlerAttached = true;
+          return;
+        }
+
         grid.addEventListener('wheel', function(event) {
           if (event.defaultPrevented) {
             return;
@@ -210,67 +222,20 @@
           }
 
           var deltaY = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
-          var deltaX = event.deltaMode === 1 ? event.deltaX * 16 : event.deltaX;
           var absDeltaY = Math.abs(deltaY);
-          var absDeltaX = Math.abs(deltaX);
+          var absDeltaX = Math.abs(event.deltaMode === 1 ? event.deltaX * 16 : event.deltaX);
 
-          var useVertical = absDeltaY >= absDeltaX;
-          var appliedDelta = deltaY;
-
-          if (!useVertical && absDeltaX > 0) {
-            useVertical = true;
-            appliedDelta = deltaX;
-          }
-
-          if (!useVertical) {
+          if (absDeltaY < absDeltaX) {
             return;
           }
 
           if (typeof window.scrollBy === 'function') {
-            window.scrollBy({ top: appliedDelta, left: 0, behavior: 'auto' });
+            window.scrollBy({ top: deltaY, left: 0, behavior: 'auto' });
           } else {
-            window.scrollTo(0, window.pageYOffset + appliedDelta);
+            window.scrollTo(0, window.pageYOffset + deltaY);
           }
 
           event.preventDefault();
-        }, { passive: false });
-
-        var touchState = { x: 0, y: 0 };
-
-        grid.addEventListener('touchstart', function(event) {
-          if (event.touches.length !== 1) {
-            return;
-          }
-
-          touchState.x = event.touches[0].clientX;
-          touchState.y = event.touches[0].clientY;
-        }, { passive: true });
-
-        grid.addEventListener('touchmove', function(event) {
-          if (event.touches.length !== 1) {
-            return;
-          }
-
-          var currentX = event.touches[0].clientX;
-          var currentY = event.touches[0].clientY;
-          var deltaX = currentX - touchState.x;
-          var deltaY = currentY - touchState.y;
-
-          if (Math.abs(deltaY) > Math.abs(deltaX)) {
-            if (typeof window.scrollBy === 'function') {
-              window.scrollBy({ top: -deltaY, left: 0, behavior: 'auto' });
-            } else {
-              window.scrollTo(0, window.pageYOffset - deltaY);
-            }
-
-            touchState.x = currentX;
-            touchState.y = currentY;
-            event.preventDefault();
-            return;
-          }
-
-          touchState.x = currentX;
-          touchState.y = currentY;
         }, { passive: false });
 
         grid.__wheelHandlerAttached = true;
