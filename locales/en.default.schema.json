@@ -911,6 +911,7 @@
     "video_cover_image": "Cover image",
     "video_external_url": "URL",
     "video_loop": "Loop video",
+    "video_show_controls": "Show controls",
     "video_position": "Video position",
     "video_source": "Source",
     "view_all_as_last_card": "\"View all\" as last card",
