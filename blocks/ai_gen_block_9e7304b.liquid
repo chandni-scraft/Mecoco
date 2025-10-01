@@ -941,7 +941,7 @@
       this.setupEventListeners();
       this.initializeFirstTab();
       this.setupCarousel();
-
+      this.disableScrollSnapping();
     }
 
     setupEventListeners() {
@@ -990,6 +990,22 @@
       const firstTab = this.querySelector('.shop-by-concern-tab-{{ ai_gen_id }}.active');
       if (firstTab) {
         this.currentCollection = firstTab.dataset.collectionHandle;
+      }
+    }
+
+    disableScrollSnapping() {
+      const blockWrapper = this.closest('[data-block-id]');
+      if (blockWrapper) {
+        blockWrapper.style.scrollSnapAlign = 'none';
+        blockWrapper.style.scrollSnapStop = 'normal';
+      }
+
+      const sectionWrapper = this.closest('.section');
+      if (sectionWrapper) {
+        const computedSnapType = getComputedStyle(sectionWrapper).scrollSnapType;
+        if (computedSnapType && computedSnapType !== 'none') {
+          sectionWrapper.style.scrollSnapType = 'none';
+        }
       }
     }
 
