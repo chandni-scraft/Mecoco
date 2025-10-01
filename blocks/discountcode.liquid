@@ -1,0 +1,659 @@
+{% doc %}
+  @prompt
+    Create a Shopify section for a monochrome “Coupon Codes” strip on product pages, using only black, white, and light-grey. Title on the left (e.g. “Limited Time Offers” with optional status dot). Next to it, a horizontally scrollable row of up to 10 coupon cards. Each card shows an offer label (e.g. “FREE GIFT”) and a pill with the coupon code. Clicking/tapping copies the code to clipboard, briefly shows “Copied”, and is keyboard accessible. Cards have thin borders, subtle radius, padding, compact spacing, and system fonts. Mobile-first: cards take ~75% viewport width with snap scroll; on larger screens show 3–5 cards in row. Add smooth horizontal scroll with overflow-x auto, no visible scrollbar, swipe on mobile, and optional arrow buttons on desktop. Section built with Liquid schema: blocks for up to 10 coupons (label + code + optional note). Global settings: section title, dot toggle, card radius, hide if empty. Use semantic HTML (section, ul/li, button), simple JS for copy and scroll. Styles are responsive, AA-contrast, minimal monochrome, self-contained with namespaced classes., make it fit the given width please. right now it became so huge that i cant see the product image gallery that was there anymore. it should fit the given width. and make the border of the coupon box dashed, mkae the border colour of the box a bit more darker so it's visible easily, can you put the section above the coupons line please, make it scrollable, even in mobile. and left align the section title only on desktop, i dont want the arrows that you've put on mobile view. keep that only on desktop view. on mobile it will be finger scrollable, on mobile it's perfect, dont touch it. on desktop i want to show only 2-3 coupon boxes to start with, rest can appear later when scrolled, around two and a half coupon boxes only, i want to show on desktop before scroll, can you make the size of this smaller, especially in width. currently it's affecting the other half of the page by extending into that
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-coupon-strip-{{ ai_gen_id }} {
+    background-color: #ffffff;
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+    padding: 8px 0;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .ai-coupon-strip-container-{{ ai_gen_id }} {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ai-coupon-strip-header-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .ai-coupon-strip-title-{{ ai_gen_id }} {
+    font-family: {{ settings.type_subheading_font.family }}, {{ settings.type_subheading_font.fallback_families }};
+    font-weight: 600;
+    font-size: 12px;
+    color: #000000;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    text-align: center;
+  }
+
+  .ai-coupon-strip-status-dot-{{ ai_gen_id }} {
+    width: 5px;
+    height: 5px;
+    background-color: #a42325;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .ai-coupon-strip-content-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 100%;
+  }
+
+  .ai-coupon-strip-scroll-container-{{ ai_gen_id }} {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .ai-coupon-strip-scroll-wrapper-{{ ai_gen_id }} {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ai-coupon-strip-scroll-wrapper-{{ ai_gen_id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-coupon-strip-list-{{ ai_gen_id }} {
+    display: flex;
+    gap: 6px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    min-width: min-content;
+  }
+
+  .ai-coupon-strip-item-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    width: 65vw;
+    max-width: 160px;
+  }
+
+  .ai-coupon-strip-card-{{ ai_gen_id }} {
+    background-color: #ffffff;
+    border: 1px dashed #999999;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    min-height: 40px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .ai-coupon-strip-card-{{ ai_gen_id }}:hover {
+    border-color: #000000;
+    background-color: #f9f9f9;
+  }
+
+  .ai-coupon-strip-card-{{ ai_gen_id }}:focus {
+    outline: 2px solid #000000;
+    outline-offset: 2px;
+  }
+
+  .ai-coupon-strip-offer-label-{{ ai_gen_id }} {
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    font-size: 8px;
+    font-weight: 600;
+    color: #000000;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+  }
+
+  .ai-coupon-strip-code-pill-{{ ai_gen_id }} {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 2px 4px;
+    border-radius: 8px;
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    align-self: flex-start;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .ai-coupon-strip-code-pill-{{ ai_gen_id }}:hover {
+    background-color: #333333;
+  }
+
+  .ai-coupon-strip-code-pill-{{ ai_gen_id }}:focus {
+    outline: 2px solid #000000;
+    outline-offset: 2px;
+  }
+
+  .ai-coupon-strip-note-{{ ai_gen_id }} {
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    font-size: 7px;
+    color: #666666;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .ai-coupon-strip-copied-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #000000;
+    color: #ffffff;
+    padding: 2px 4px;
+    border-radius: 2px;
+    font-size: 7px;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+  }
+
+  .ai-coupon-strip-copied-{{ ai_gen_id }}.show {
+    opacity: 1;
+  }
+
+  .ai-coupon-strip-nav-{{ ai_gen_id }} {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .ai-coupon-strip-nav-button-{{ ai_gen_id }} {
+    background-color: #ffffff;
+    border: 1px solid #e6e6e6;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #000000;
+  }
+
+  .ai-coupon-strip-nav-button-{{ ai_gen_id }}:hover {
+    border-color: #000000;
+    background-color: #f9f9f9;
+  }
+
+  .ai-coupon-strip-nav-button-{{ ai_gen_id }}:focus {
+    outline: 2px solid #000000;
+    outline-offset: 2px;
+  }
+
+  .ai-coupon-strip-nav-button-{{ ai_gen_id }}:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .ai-coupon-strip-nav-button-{{ ai_gen_id }}:disabled:hover {
+    border-color: #e6e6e6;
+    background-color: #ffffff;
+  }
+
+  .ai-coupon-strip-empty-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 16px;
+    color: #666666;
+    font-style: italic;
+    font-size: 10px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-coupon-strip-container-{{ ai_gen_id }} {
+      padding: 0 16px;
+      gap: 10px;
+    }
+
+    .ai-coupon-strip-content-{{ ai_gen_id }} {
+      gap: 12px;
+    }
+
+    .ai-coupon-strip-header-{{ ai_gen_id }} {
+      justify-content: flex-start;
+    }
+
+    .ai-coupon-strip-title-{{ ai_gen_id }} {
+      font-size: 13px;
+      text-align: left;
+    }
+
+    .ai-coupon-strip-status-dot-{{ ai_gen_id }} {
+      width: 6px;
+      height: 6px;
+    }
+
+    .ai-coupon-strip-scroll-container-{{ ai_gen_id }} {
+      max-width: 280px;
+    }
+
+    .ai-coupon-strip-item-{{ ai_gen_id }} {
+      width: auto;
+      min-width: 110px;
+      max-width: 110px;
+    }
+
+    .ai-coupon-strip-list-{{ ai_gen_id }} {
+      gap: 8px;
+    }
+
+    .ai-coupon-strip-card-{{ ai_gen_id }} {
+      padding: 7px 10px;
+      min-height: 45px;
+    }
+
+    .ai-coupon-strip-offer-label-{{ ai_gen_id }} {
+      font-size: 9px;
+    }
+
+    .ai-coupon-strip-code-pill-{{ ai_gen_id }} {
+      font-size: 8px;
+      padding: 3px 5px;
+    }
+
+    .ai-coupon-strip-note-{{ ai_gen_id }} {
+      font-size: 7px;
+    }
+
+    .ai-coupon-strip-nav-{{ ai_gen_id }} {
+      display: flex;
+    }
+
+    .ai-coupon-strip-nav-button-{{ ai_gen_id }} {
+      width: 26px;
+      height: 26px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .ai-coupon-strip-scroll-container-{{ ai_gen_id }} {
+      max-width: 320px;
+    }
+
+    .ai-coupon-strip-item-{{ ai_gen_id }} {
+      min-width: 120px;
+      max-width: 120px;
+    }
+
+    .ai-coupon-strip-card-{{ ai_gen_id }} {
+      padding: 8px 12px;
+      min-height: 50px;
+    }
+
+    .ai-coupon-strip-offer-label-{{ ai_gen_id }} {
+      font-size: 10px;
+    }
+
+    .ai-coupon-strip-code-pill-{{ ai_gen_id }} {
+      font-size: 9px;
+    }
+
+    .ai-coupon-strip-note-{{ ai_gen_id }} {
+      font-size: 8px;
+    }
+
+    .ai-coupon-strip-nav-button-{{ ai_gen_id }} {
+      width: 28px;
+      height: 28px;
+    }
+  }
+{% endstyle %}
+
+{% liquid
+  assign coupon_codes = block.settings.coupon_codes | split: ','
+  assign offer_labels = block.settings.offer_labels | split: ','
+  assign coupon_notes = block.settings.coupon_notes | split: ','
+  assign has_coupons = false
+  
+  for code in coupon_codes
+    assign trimmed_code = code | strip
+    if trimmed_code != blank
+      assign has_coupons = true
+      break
+    endif
+  endfor
+%}
+
+{% unless block.settings.hide_if_empty and has_coupons == false %}
+  <coupon-strip-{{ ai_gen_id }}
+    class="ai-coupon-strip-{{ ai_gen_id }}"
+    {{ block.shopify_attributes }}
+  >
+    <div class="ai-coupon-strip-container-{{ ai_gen_id }}">
+      {% if block.settings.section_title != blank %}
+        <div class="ai-coupon-strip-header-{{ ai_gen_id }}">
+          <h2 class="ai-coupon-strip-title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+          {% if block.settings.show_status_dot %}
+            <div class="ai-coupon-strip-status-dot-{{ ai_gen_id }}"></div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if has_coupons %}
+        <div class="ai-coupon-strip-content-{{ ai_gen_id }}">
+          <div class="ai-coupon-strip-scroll-container-{{ ai_gen_id }}">
+            <div class="ai-coupon-strip-scroll-wrapper-{{ ai_gen_id }}" id="coupon-scroll-{{ ai_gen_id }}">
+              <ul class="ai-coupon-strip-list-{{ ai_gen_id }}">
+                {% for code in coupon_codes %}
+                  {% assign trimmed_code = code | strip %}
+                  {% if trimmed_code != blank %}
+                    {% assign index = forloop.index0 %}
+                    {% assign offer_label = offer_labels[index] | strip %}
+                    {% assign coupon_note = coupon_notes[index] | strip %}
+                    
+                    <li class="ai-coupon-strip-item-{{ ai_gen_id }}">
+                      <button
+                        class="ai-coupon-strip-card-{{ ai_gen_id }}"
+                        data-coupon-code="{{ trimmed_code }}"
+                        aria-label="Copy coupon code {{ trimmed_code }}"
+                        tabindex="0"
+                      >
+                        {% if offer_label != blank %}
+                          <p class="ai-coupon-strip-offer-label-{{ ai_gen_id }}">{{ offer_label }}</p>
+                        {% endif %}
+                        <span class="ai-coupon-strip-code-pill-{{ ai_gen_id }}">{{ trimmed_code }}</span>
+                        {% if coupon_note != blank %}
+                          <p class="ai-coupon-strip-note-{{ ai_gen_id }}">{{ coupon_note }}</p>
+                        {% endif %}
+                        <div class="ai-coupon-strip-copied-{{ ai_gen_id }}">Copied!</div>
+                      </button>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+
+          <div class="ai-coupon-strip-nav-{{ ai_gen_id }}">
+            <button
+              class="ai-coupon-strip-nav-button-{{ ai_gen_id }}"
+              id="coupon-prev-{{ ai_gen_id }}"
+              aria-label="Previous coupons"
+            >
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15,18 9,12 15,6"></polyline>
+              </svg>
+            </button>
+            <button
+              class="ai-coupon-strip-nav-button-{{ ai_gen_id }}"
+              id="coupon-next-{{ ai_gen_id }}"
+              aria-label="Next coupons"
+            >
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9,18 15,12 9,6"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      {% else %}
+        <div class="ai-coupon-strip-empty-{{ ai_gen_id }}">
+          Add coupon codes to display offers
+        </div>
+      {% endif %}
+    </div>
+  </coupon-strip-{{ ai_gen_id }}>
+{% endunless %}
+
+<script>
+  (function() {
+    class CouponStrip{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.scrollContainer = this.querySelector('#coupon-scroll-{{ ai_gen_id }}');
+        this.prevButton = this.querySelector('#coupon-prev-{{ ai_gen_id }}');
+        this.nextButton = this.querySelector('#coupon-next-{{ ai_gen_id }}');
+        this.couponCards = this.querySelectorAll('.ai-coupon-strip-card-{{ ai_gen_id }}');
+      }
+
+      connectedCallback() {
+        this.setupCopyFunctionality();
+        this.setupScrollNavigation();
+        this.setupTouchScrolling();
+        this.updateNavigationButtons();
+      }
+
+      setupCopyFunctionality() {
+        this.couponCards.forEach(card => {
+          card.addEventListener('click', this.handleCopyCode.bind(this));
+          card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              this.handleCopyCode(e);
+            }
+          });
+        });
+      }
+
+      async handleCopyCode(event) {
+        const card = event.currentTarget;
+        const code = card.dataset.couponCode;
+        const copiedIndicator = card.querySelector('.ai-coupon-strip-copied-{{ ai_gen_id }}');
+
+        try {
+          await navigator.clipboard.writeText(code);
+          this.showCopiedFeedback(copiedIndicator);
+        } catch (err) {
+          this.fallbackCopyTextToClipboard(code, copiedIndicator);
+        }
+      }
+
+      fallbackCopyTextToClipboard(text, indicator) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+          document.execCommand('copy');
+          this.showCopiedFeedback(indicator);
+        } catch (err) {
+          console.error('Fallback: Oops, unable to copy', err);
+        }
+
+        document.body.removeChild(textArea);
+      }
+
+      showCopiedFeedback(indicator) {
+        indicator.classList.add('show');
+        setTimeout(() => {
+          indicator.classList.remove('show');
+        }, 1500);
+      }
+
+      setupScrollNavigation() {
+        if (this.prevButton && this.nextButton) {
+          this.prevButton.addEventListener('click', () => this.scrollPrevious());
+          this.nextButton.addEventListener('click', () => this.scrollNext());
+          this.scrollContainer.addEventListener('scroll', () => this.updateNavigationButtons());
+        }
+      }
+
+      setupTouchScrolling() {
+        if (this.scrollContainer) {
+          let isDown = false;
+          let startX;
+          let scrollLeft;
+
+          this.scrollContainer.addEventListener('mousedown', (e) => {
+            isDown = true;
+            this.scrollContainer.style.cursor = 'grabbing';
+            startX = e.pageX - this.scrollContainer.offsetLeft;
+            scrollLeft = this.scrollContainer.scrollLeft;
+          });
+
+          this.scrollContainer.addEventListener('mouseleave', () => {
+            isDown = false;
+            this.scrollContainer.style.cursor = 'grab';
+          });
+
+          this.scrollContainer.addEventListener('mouseup', () => {
+            isDown = false;
+            this.scrollContainer.style.cursor = 'grab';
+          });
+
+          this.scrollContainer.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - this.scrollContainer.offsetLeft;
+            const walk = (x - startX) * 2;
+            this.scrollContainer.scrollLeft = scrollLeft - walk;
+          });
+
+          this.scrollContainer.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].pageX - this.scrollContainer.offsetLeft;
+            scrollLeft = this.scrollContainer.scrollLeft;
+          }, { passive: true });
+
+          this.scrollContainer.addEventListener('touchmove', (e) => {
+            if (!startX) return;
+            const x = e.touches[0].pageX - this.scrollContainer.offsetLeft;
+            const walk = (x - startX) * 1.5;
+            this.scrollContainer.scrollLeft = scrollLeft - walk;
+          }, { passive: true });
+        }
+      }
+
+      scrollPrevious() {
+        const scrollAmount = this.getScrollAmount();
+        this.scrollContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      }
+
+      scrollNext() {
+        const scrollAmount = this.getScrollAmount();
+        this.scrollContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+
+      getScrollAmount() {
+        const containerWidth = this.scrollContainer.clientWidth;
+        return Math.max(containerWidth * 0.7, 100);
+      }
+
+      updateNavigationButtons() {
+        if (!this.prevButton || !this.nextButton) return;
+
+        const { scrollLeft, scrollWidth, clientWidth } = this.scrollContainer;
+        
+        this.prevButton.disabled = scrollLeft <= 0;
+        this.nextButton.disabled = scrollLeft >= scrollWidth - clientWidth - 1;
+      }
+    }
+
+    customElements.define('coupon-strip-{{ ai_gen_id }}', CouponStrip{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Coupon codes strip",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section settings"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section title",
+      "default": "Limited Time Offers"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_status_dot",
+      "label": "Show status dot",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_if_empty",
+      "label": "Hide section if no coupons",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Coupon codes"
+    },
+    {
+      "type": "textarea",
+      "id": "coupon_codes",
+      "label": "Coupon codes",
+      "info": "Enter up to 10 coupon codes, separated by commas",
+      "default": "FREEGIFT20, SAVE20, FREESHIP, WELCOME10, FLASH25"
+    },
+    {
+      "type": "textarea",
+      "id": "offer_labels",
+      "label": "Offer labels",
+      "info": "Enter labels for each coupon (same order), separated by commas",
+      "default": "Free Gift, 20% Off, Free Shipping, Welcome Offer, Flash Sale"
+    },
+    {
+      "type": "textarea",
+      "id": "coupon_notes",
+      "label": "Coupon notes",
+      "info": "Optional notes for each coupon (same order), separated by commas",
+      "default": "On orders over $50, First time buyers, No minimum order, New customers, Limited time"
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Coupon codes strip"
+    }
+  ]
+}
+{% endschema %}
