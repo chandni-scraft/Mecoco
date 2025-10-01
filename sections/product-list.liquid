@@ -139,6 +139,59 @@
   </div>
 </div>
 
+<script>
+  (function attachWheelGuard(sectionId) {
+    const sectionRoot = document.getElementById(`shopify-section-${sectionId}`);
+    if (!sectionRoot) {
+      return;
+    }
+
+    const handleWheel = (event) => {
+      if (event.defaultPrevented) {
+        return;
+      }
+
+      const absDeltaY = Math.abs(event.deltaY);
+      const absDeltaX = Math.abs(event.deltaX);
+
+      if (event.shiftKey || absDeltaY <= absDeltaX) {
+        return;
+      }
+
+      const delta = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
+
+      if (typeof window.scrollBy === 'function') {
+        window.scrollBy({ top: delta, left: 0, behavior: 'auto' });
+      } else {
+        window.scrollTo(0, window.pageYOffset + delta);
+      }
+
+      event.preventDefault();
+    };
+
+    const mark = '__wheelGuardAttached';
+
+    const attachHandlers = () => {
+      const scrollers = sectionRoot.querySelectorAll('slideshow-component');
+      scrollers.forEach((component) => {
+        const track = component.querySelector('slideshow-slides');
+        if (!track || track[mark]) {
+          return;
+        }
+
+        track.addEventListener('wheel', handleWheel, { passive: false });
+        track[mark] = true;
+      });
+    };
+
+    const observer = new MutationObserver(() => {
+      attachHandlers();
+    });
+
+    observer.observe(sectionRoot, { childList: true, subtree: true });
+    attachHandlers();
+  })('{{ section.id | escape }}');
+</script>
 {% schema %}
 {
   "name": "t:names.product_list",
@@ -971,3 +1024,4 @@
   ]
 }
 {% endschema %}
+
