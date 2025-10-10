@@ -3,26 +3,12 @@
 {% liquid
   assign product = closest.product
 -%}
+  assign product_card_collection = collection | default: closest.collection
+-%}
 
 {% capture children %}
-  {% comment %} Ensure gallery and core info render in expected order {% endcomment %}
-  {% content_for 'block', type: '_product-card-gallery', id: 'product-card-gallery', closest.product: product, collection: collection %}
-  {% content_for 'block', type: 'product-title', id: 'product-card-title', closest.product: product %}
-  {% content_for 'block', type: 'price', id: 'product-card-price', closest.product: product %}
-
-  {% comment %} Insert requested blocks immediately after title & price {% endcomment %}
-  {% content_for 'block', type: 'product-card-variant-select', id: 'product-card-variant-select', closest.product: product %}
-  {% content_for 'block', type: 'product-card-add-to-cart', id: 'product-card-add-to-cart', closest.product: product %}
-
-  {% comment %} Render other supported product card blocks to preserve functionality {% endcomment %}
-  {% content_for 'block', type: 'swatches', id: 'product-card-swatches', closest.product: product %}
-  {% content_for 'block', type: 'review', id: 'product-card-review', closest.product: product %}
-  {% content_for 'block', type: 'text', id: 'product-card-text', closest.product: product %}
-  {% content_for 'block', type: 'image', id: 'product-card-image', closest.product: product %}
-  {% content_for 'block', type: '_product-card-group', id: 'product-card-group', closest.product: product %}
-  {% content_for 'block', type: 'product-card-variant-with-atc', id: 'product-card-variant-with-atc', closest.product: product %}
-  {% content_for 'block', type: 'buy-buttons', id: 'product-card-buy-buttons', closest.product: product %}
-  {% content_for 'block', type: 'custom-liquid', id: 'product-card-custom-liquid', closest.product: product %}
+  {% comment %}Render configured child blocks with product and collection context{% endcomment %}
+  {% content_for 'blocks', closest.product: product, closest.collection: product_card_collection %}
 {% endcapture %}
 
 {% render 'product-card', children: children, product: product %}
