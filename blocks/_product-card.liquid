@@ -1,14 +1,12 @@
-
-
 {% liquid
   assign product = closest.product
--%}
   assign product_card_collection = collection | default: closest.collection
+  assign collection = product_card_collection
 -%}
 
 {% capture children %}
   {% comment %}Render configured child blocks with product and collection context{% endcomment %}
-  {% content_for 'blocks', closest.product: product, closest.collection: product_card_collection %}
+  {% content_for 'blocks', closest.product: product %}
 {% endcapture %}
 
 {% render 'product-card', children: children, product: product %}
@@ -55,9 +53,6 @@
     },
     {
       "type": "custom-liquid"
-    },
-    {
-      "type": "_product-card-gallery"
     }
   ],
   "tag": null,
