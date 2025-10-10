@@ -5,11 +5,24 @@
 -%}
 
 {% capture children %}
-  {% comment %} Manually compose key blocks in a fixed order {% endcomment %}
+  {% comment %} Ensure gallery and core info render in expected order {% endcomment %}
+  {% content_for 'block', type: '_product-card-gallery', id: 'product-card-gallery' %}
   {% content_for 'block', type: 'product-title', id: 'product-card-title' %}
   {% content_for 'block', type: 'price', id: 'product-card-price' %}
+
+  {% comment %} Insert requested blocks immediately after title & price {% endcomment %}
   {% content_for 'block', type: 'product-card-variant-select', id: 'product-card-variant-select' %}
   {% content_for 'block', type: 'product-card-add-to-cart', id: 'product-card-add-to-cart' %}
+
+  {% comment %} Render other supported product card blocks to preserve functionality {% endcomment %}
+  {% content_for 'block', type: 'swatches', id: 'product-card-swatches' %}
+  {% content_for 'block', type: 'review', id: 'product-card-review' %}
+  {% content_for 'block', type: 'text', id: 'product-card-text' %}
+  {% content_for 'block', type: 'image', id: 'product-card-image' %}
+  {% content_for 'block', type: '_product-card-group', id: 'product-card-group' %}
+  {% content_for 'block', type: 'product-card-variant-with-atc', id: 'product-card-variant-with-atc' %}
+  {% content_for 'block', type: 'buy-buttons', id: 'product-card-buy-buttons' %}
+  {% content_for 'block', type: 'custom-liquid', id: 'product-card-custom-liquid' %}
 {% endcapture %}
 
 {% render 'product-card', children: children, product: product %}
@@ -46,19 +59,19 @@
       "type": "product-title"
     },
     {
-      "type": "product-card-variant-dropdown"
+      "type": "product-card-variant-select"
     },
     {
       "type": "product-card-add-to-cart"
-    },
-    {
-      "type": "product-card-variant-select"
     },
     {
       "type": "product-card-variant-with-atc"
     },
     {
       "type": "custom-liquid"
+    },
+    {
+      "type": "_product-card-gallery"
     }
   ],
   "tag": null,
