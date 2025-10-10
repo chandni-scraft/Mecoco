@@ -5,7 +5,11 @@
 -%}
 
 {% capture children %}
-  {% content_for 'blocks', closest.product: product %}
+  {% comment %} Manually compose key blocks in a fixed order {% endcomment %}
+  {% content_for 'block', type: 'product-title', id: 'product-card-title' %}
+  {% content_for 'block', type: 'price', id: 'product-card-price' %}
+  {% content_for 'block', type: 'product-card-variant-select', id: 'product-card-variant-select' %}
+  {% content_for 'block', type: 'product-card-add-to-cart', id: 'product-card-add-to-cart' %}
 {% endcapture %}
 
 {% render 'product-card', children: children, product: product %}
