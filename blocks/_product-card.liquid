@@ -11,6 +11,32 @@
 
 {% render 'product-card', children: children, product: product %}
 
+{% stylesheet %}
+  .product-card__content > [data-block-id] {
+    order: 0;
+  }
+
+  .product-card__content > [data-block-type='_product-card-gallery'] {
+    order: -400;
+  }
+
+  .product-card__content > [data-block-type='product-title'] {
+    order: -300;
+  }
+
+  .product-card__content > [data-block-type='price'] {
+    order: -200;
+  }
+
+  .product-card__content > [data-block-type='product-card-variant-select'] {
+    order: -110;
+  }
+
+  .product-card__content > [data-block-type='product-card-add-to-cart'] {
+    order: -100;
+  }
+{% endstylesheet %}
+
 {% schema %}
 {
   "name": "t:names.product_card",
