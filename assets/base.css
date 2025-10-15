@@ -4219,25 +4219,26 @@ text-component {
   }
 }
 
+/* Product card title truncation - general rule for all product cards */
+:is(.product-card, .product-grid__card) :is(h4, .h4) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  min-height: calc(2 * 1.5em); /* Ensure consistent 2-line spacing */
+}
+
 /* Product card title truncation - applied only to zoom-out view */
 [product-grid-view='zoom-out'] :is(.product-card, .product-grid__card) :is(h4, .h4) {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
+  min-height: calc(2 * 1.5em); /* Ensure consistent 2-line spacing */
 }
 
-/* Product card title truncation - applied on mobile regardless of view */
-@media screen and (max-width: 749px) {
-  :is(.product-card, .product-grid__card) :is(h4, .h4) {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    -webkit-line-clamp: 3;
-  }
-}
 
 .product-card:hover,
 .collection-card:hover,
