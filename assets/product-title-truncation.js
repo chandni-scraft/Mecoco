@@ -46,8 +46,22 @@ class ProductTitle extends Component {
     const textElement = this.refs.text || this.querySelector('.title-text') || this;
     if (!textElement.textContent) return;
 
-    const containerHeight = this.clientHeight;
+    // Check if this is a product card title
+    const isProductCard = this.closest('.product-card') || this.closest('.product-grid__card');
+    
+    if (isProductCard) {
+      // For product cards, always use exactly 2 lines
+      textElement.style.display = '-webkit-box';
+      textElement.style.webkitBoxOrient = 'vertical';
+      textElement.style.overflow = 'hidden';
+      textElement.style.textOverflow = 'ellipsis';
+      textElement.style.webkitLineClamp = '2';
+      textElement.style.minHeight = 'calc(2 * 1.5em)';
+      return;
+    }
 
+    // For other elements, use the original dynamic calculation
+    const containerHeight = this.clientHeight;
     const computedStyle = window.getComputedStyle(this);
     const lineHeight = parseFloat(computedStyle.lineHeight);
     const paddingTop = parseFloat(computedStyle.paddingTop);
@@ -55,18 +69,12 @@ class ProductTitle extends Component {
 
     const availableHeight = containerHeight - paddingTop - paddingBottom;
     const maxLines = Math.max(1, Math.floor(availableHeight / lineHeight));
-    
-    // Limit to maximum 2 lines for product card titles
-    const limitedMaxLines = Math.min(maxLines, 2);
 
     textElement.style.display = '-webkit-box';
     textElement.style.webkitBoxOrient = 'vertical';
     textElement.style.overflow = 'hidden';
     textElement.style.textOverflow = 'ellipsis';
-    textElement.style.webkitLineClamp = String(limitedMaxLines);
-    
-    // Ensure consistent 2-line spacing for product card titles
-    textElement.style.minHeight = 'calc(2 * 1.5em)';
+    textElement.style.webkitLineClamp = String(maxLines);
   }
 
   /**

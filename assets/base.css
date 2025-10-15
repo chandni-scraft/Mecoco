@@ -4222,7 +4222,10 @@ text-component {
 /* Product card title truncation - general rule for all product cards */
 :is(.product-card, .product-grid__card) .text-block p,
 :is(.product-card, .product-grid__card) .text-block :is(h1, h2, h3, h4, h5, h6),
-:is(.product-card, .product-grid__card) .text-block :is(.h1, .h2, .h3, .h4, .h5, .h6) {
+:is(.product-card, .product-grid__card) .text-block :is(.h1, .h2, .h3, .h4, .h5, .h6),
+:is(.product-card, .product-grid__card) product-title,
+:is(.product-card, .product-grid__card) product-title p,
+:is(.product-card, .product-grid__card) product-title :is(h1, h2, h3, h4, h5, h6) {
   display: -webkit-box !important;
   -webkit-box-orient: vertical !important;
   overflow: hidden !important;
@@ -4235,7 +4238,10 @@ text-component {
 /* Product card title truncation - applied only to zoom-out view */
 [product-grid-view='zoom-out'] :is(.product-card, .product-grid__card) .text-block p,
 [product-grid-view='zoom-out'] :is(.product-card, .product-grid__card) .text-block :is(h1, h2, h3, h4, h5, h6),
-[product-grid-view='zoom-out'] :is(.product-card, .product-grid__card) .text-block :is(.h1, .h2, .h3, .h4, .h5, .h6) {
+[product-grid-view='zoom-out'] :is(.product-card, .product-grid__card) .text-block :is(.h1, .h2, .h3, .h4, .h5, .h6),
+[product-grid-view='zoom-out'] :is(.product-card, .product-grid__card) product-title,
+[product-grid-view='zoom-out'] :is(.product-card, .product-grid__card) product-title p,
+[product-grid-view='zoom-out'] :is(.product-card, .product-grid__card) product-title :is(h1, h2, h3, h4, h5, h6) {
   display: -webkit-box !important;
   -webkit-box-orient: vertical !important;
   overflow: hidden !important;
