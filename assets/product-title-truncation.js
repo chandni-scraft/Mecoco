@@ -55,12 +55,18 @@ class ProductTitle extends Component {
 
     const availableHeight = containerHeight - paddingTop - paddingBottom;
     const maxLines = Math.max(1, Math.floor(availableHeight / lineHeight));
+    
+    // Limit to maximum 2 lines for product card titles
+    const limitedMaxLines = Math.min(maxLines, 2);
 
     textElement.style.display = '-webkit-box';
     textElement.style.webkitBoxOrient = 'vertical';
     textElement.style.overflow = 'hidden';
     textElement.style.textOverflow = 'ellipsis';
-    textElement.style.webkitLineClamp = String(maxLines);
+    textElement.style.webkitLineClamp = String(limitedMaxLines);
+    
+    // Ensure consistent 2-line spacing for product card titles
+    textElement.style.minHeight = 'calc(2 * 1.5em)';
   }
 
   /**
