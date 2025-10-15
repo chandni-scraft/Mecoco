@@ -17,6 +17,7 @@ class ProductTitle extends Component {
 
   connectedCallback() {
     super.connectedCallback();
+    console.log('ProductTitle component connected:', this);
     this.#initializeTruncation();
   }
 
@@ -24,6 +25,14 @@ class ProductTitle extends Component {
    * Initialize the title truncation
    */
   #initializeTruncation() {
+    // Apply truncation immediately
+    this.#calculateTruncation();
+    
+    // Also apply after a short delay to ensure DOM is ready
+    setTimeout(() => {
+      this.#calculateTruncation();
+    }, 100);
+    
     if ('ResizeObserver' in window) {
       this.resizeObserver = new ResizeObserver(() => {
         this.#calculateTruncation();
@@ -44,10 +53,12 @@ class ProductTitle extends Component {
   #calculateTruncation() {
     /** @type {HTMLElement} */
     const textElement = this.refs.text || this.querySelector('.title-text') || this;
+    console.log('Text element found:', textElement, 'Content:', textElement?.textContent);
     if (!textElement.textContent) return;
 
     // Check if this is a product card title
     const isProductCard = this.closest('.product-card') || this.closest('.product-grid__card');
+    console.log('Is product card:', isProductCard, 'Element:', this);
     
     if (isProductCard) {
       // For product cards, always use exactly 2 lines
