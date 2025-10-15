@@ -4220,23 +4220,29 @@ text-component {
 }
 
 /* Product card title truncation - general rule for all product cards */
-:is(.product-card, .product-grid__card) :is(h4, .h4) {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 2;
-  min-height: calc(2 * 1.5em); /* Ensure consistent 2-line spacing */
+:is(.product-card, .product-grid__card) .text-block p,
+:is(.product-card, .product-grid__card) .text-block :is(h1, h2, h3, h4, h5, h6),
+:is(.product-card, .product-grid__card) .text-block :is(.h1, .h2, .h3, .h4, .h5, .h6) {
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  min-height: calc(2 * 1.5em) !important; /* Ensure consistent 2-line spacing */
 }
 
 /* Product card title truncation - applied only to zoom-out view */
-[product-grid-view='zoom-out'] :is(.product-card, .product-grid__card) :is(h4, .h4) {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 2;
-  min-height: calc(2 * 1.5em); /* Ensure consistent 2-line spacing */
+[product-grid-view='zoom-out'] :is(.product-card, .product-grid__card) .text-block p,
+[product-grid-view='zoom-out'] :is(.product-card, .product-grid__card) .text-block :is(h1, h2, h3, h4, h5, h6),
+[product-grid-view='zoom-out'] :is(.product-card, .product-grid__card) .text-block :is(.h1, .h2, .h3, .h4, .h5, .h6) {
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  min-height: calc(2 * 1.5em) !important; /* Ensure consistent 2-line spacing */
 }
 
 
