@@ -4235,6 +4235,25 @@ text-component {
   min-height: calc(2 * 1.5em) !important; /* Ensure consistent 2-line spacing */
 }
 
+/* Precise clamp for product card title anchor */
+.product-card__title .text-block p,
+.product-card__title p,
+.product-card__title {
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  min-height: calc(2 * var(--font-paragraph--line-height, 1.5em)) !important;
+  max-height: calc(2 * var(--font-paragraph--line-height, 1.5em)) !important;
+}
+
+/* Remove default paragraph gaps inside the clamped title to avoid pushing to 3rd line */
+.product-card__title p {
+  margin: 0 !important;
+}
+
 /* More specific rule to ensure truncation works */
 .product-card .text-block p,
 .product-grid__card .text-block p,

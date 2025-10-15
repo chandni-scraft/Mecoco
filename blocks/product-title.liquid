@@ -7,7 +7,7 @@
 {% elsif closest.product != blank %}
   {% assign product_title = '<p>' | append: closest.product.title | append: '</p>' %}
   <a
-    class="contents user-select-text"
+    class="contents user-select-text product-card__title"
     ref="productTitleLink"
     href="{% render 'product-card-variant-url', product: closest.product %}"
     aria-hidden="true"
