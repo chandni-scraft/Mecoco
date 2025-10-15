@@ -4245,13 +4245,23 @@ text-component {
   text-overflow: ellipsis !important;
   -webkit-line-clamp: 2 !important;
   line-clamp: 2 !important;
-  min-height: calc(2 * var(--font-paragraph--line-height, 1.5em)) !important;
-  max-height: calc(2 * var(--font-paragraph--line-height, 1.5em)) !important;
+}
+
+/* Ensure any direct child text node inside the text-block also clamps */
+.product-card__title .text-block > * {
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  width: 100% !important;
 }
 
 /* Remove default paragraph gaps inside the clamped title to avoid pushing to 3rd line */
 .product-card__title p {
   margin: 0 !important;
+  line-height: var(--font-paragraph--line-height, 1.4) !important;
 }
 
 /* More specific rule to ensure truncation works */
