@@ -51,12 +51,36 @@ class ProductTitle extends Component {
     
     if (isProductCard) {
       // For product cards, always use exactly 2 lines
-      textElement.style.display = '-webkit-box';
-      textElement.style.webkitBoxOrient = 'vertical';
-      textElement.style.overflow = 'hidden';
-      textElement.style.textOverflow = 'ellipsis';
-      textElement.style.webkitLineClamp = '2';
-      textElement.style.minHeight = 'calc(2 * 1.5em)';
+      console.log('Applying 2-line truncation to product card title:', textElement.textContent);
+      
+      // Apply styles to the text element
+      textElement.style.setProperty('display', '-webkit-box', 'important');
+      textElement.style.setProperty('-webkit-box-orient', 'vertical', 'important');
+      textElement.style.setProperty('overflow', 'hidden', 'important');
+      textElement.style.setProperty('text-overflow', 'ellipsis', 'important');
+      textElement.style.setProperty('-webkit-line-clamp', '2', 'important');
+      textElement.style.setProperty('min-height', 'calc(2 * 1.5em)', 'important');
+      textElement.style.setProperty('max-height', 'calc(2 * 1.5em)', 'important');
+      
+      // Also apply to any child elements
+      const childElements = textElement.querySelectorAll('p, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6');
+      childElements.forEach(child => {
+        if (child instanceof HTMLElement) {
+          child.style.setProperty('display', '-webkit-box', 'important');
+          child.style.setProperty('-webkit-box-orient', 'vertical', 'important');
+          child.style.setProperty('overflow', 'hidden', 'important');
+          child.style.setProperty('text-overflow', 'ellipsis', 'important');
+          child.style.setProperty('-webkit-line-clamp', '2', 'important');
+          child.style.setProperty('min-height', 'calc(2 * 1.5em)', 'important');
+          child.style.setProperty('max-height', 'calc(2 * 1.5em)', 'important');
+        }
+      });
+      
+      console.log('Applied styles:', {
+        display: textElement.style.display,
+        webkitLineClamp: textElement.style.webkitLineClamp,
+        minHeight: textElement.style.minHeight
+      });
       return;
     }
 

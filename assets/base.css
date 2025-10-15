@@ -4235,6 +4235,48 @@ text-component {
   min-height: calc(2 * 1.5em) !important; /* Ensure consistent 2-line spacing */
 }
 
+/* More specific rule to ensure truncation works */
+.product-card .text-block p,
+.product-grid__card .text-block p,
+.product-card product-title,
+.product-grid__card product-title,
+.product-card product-title p,
+.product-grid__card product-title p {
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  min-height: calc(2 * 1.5em) !important;
+  max-height: calc(2 * 1.5em) !important;
+}
+
+/* Ultra-specific rule for product card titles - should override everything */
+.product-card * p,
+.product-grid__card * p,
+.product-card * h1,
+.product-card * h2,
+.product-card * h3,
+.product-card * h4,
+.product-card * h5,
+.product-card * h6,
+.product-grid__card * h1,
+.product-grid__card * h2,
+.product-grid__card * h3,
+.product-grid__card * h4,
+.product-grid__card * h5,
+.product-grid__card * h6 {
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  min-height: calc(2 * 1.5em) !important;
+  max-height: calc(2 * 1.5em) !important;
+}
+
 /* Product card title truncation - applied only to zoom-out view */
 [product-grid-view='zoom-out'] :is(.product-card, .product-grid__card) .text-block p,
 [product-grid-view='zoom-out'] :is(.product-card, .product-grid__card) .text-block :is(h1, h2, h3, h4, h5, h6),
