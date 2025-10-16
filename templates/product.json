@@ -156,6 +156,10 @@
               },
               "blocks": {}
             },
+            "judge_me_reviews_preview_badge_XdT8QW": {
+              "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+              "settings": {}
+            },
             "text_gXMUag": {
               "type": "text",
               "name": "Product description",
@@ -464,6 +468,7 @@
             "text_features_points",
             "reviews",
             "price_a7krng",
+            "judge_me_reviews_preview_badge_XdT8QW",
             "text_gXMUag",
             "variant_picker_R3rGDr",
             "discountcode_PBn9kY",
