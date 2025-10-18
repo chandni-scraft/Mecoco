@@ -1023,6 +1023,13 @@
     "shop_by_concern_aVgGgn": {
       "type": "shop-by-concern",
       "blocks": {
+        "collection_PiN3XM": {
+          "type": "collection",
+          "settings": {
+            "collection": "minimally-processed-dry-fruits",
+            "custom_label": ""
+          }
+        },
         "collection_KYM3Ex": {
           "type": "collection",
           "settings": {
@@ -1044,13 +1051,6 @@
             "custom_label": ""
           }
         },
-        "collection_PiN3XM": {
-          "type": "collection",
-          "settings": {
-            "collection": "minimally-processed-dry-fruits",
-            "custom_label": ""
-          }
-        },
         "collection_4FtFQj": {
           "type": "collection",
           "settings": {
@@ -1060,10 +1060,10 @@
         }
       },
       "block_order": [
+        "collection_PiN3XM",
         "collection_KYM3Ex",
         "collection_thNeUH",
         "collection_VW4aQm",
-        "collection_PiN3XM",
         "collection_4FtFQj"
       ],
       "name": "Shop by Concern Tabs",
