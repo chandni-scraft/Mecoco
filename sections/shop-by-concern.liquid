@@ -347,6 +347,7 @@
       grid-template-columns: repeat({{ products_per_row_mobile }}, minmax(0, 1fr));
       min-width: 0;
       max-width: 100%;
+      align-items: stretch;
     }
     #shop-by-concern-{{ section_id }} .shop-by-concern__card {
       background: var(--color-background, #fff);
@@ -421,6 +422,7 @@
         padding-bottom: .25rem;
         min-width: 0;
         max-width: 100%;
+        align-items: stretch;
       }
       #shop-by-concern-{{ section_id }} .shop-by-concern__panel { position: relative; overflow: hidden; }
       #shop-by-concern-{{ section_id }} .shop-by-concern__nav {
@@ -498,6 +500,7 @@
         scrollbar-width: none;
         min-width: 0;
         max-width: 100%;
+        align-items: stretch;
       }
       #shop-by-concern-{{ section_id }} .shop-by-concern__grid::-webkit-scrollbar {
         display: none;
