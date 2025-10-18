@@ -61,7 +61,7 @@
         class="resource-list__item"
       >
         {% content_for 'block', type: '_product-card', id: 'static-product-card', closest.product: product %}
-      </div>`
+      </div>
 
       {% unless forloop.last %}
         <!--@list/split-->
@@ -148,6 +148,11 @@
 
     const handleWheel = (event) => {
       if (event.defaultPrevented) {
+        return;
+      }
+
+      // Don't interfere with vertical scrolling on mobile devices
+      if (window.innerWidth <= 749) {
         return;
       }
 
