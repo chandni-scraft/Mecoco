@@ -1825,7 +1825,7 @@
         }
       },
       "custom_css": [
-        "#text{display: none;}"
+        "#text {display: none !important;}"
       ],
       "name": "t:names.products_grid",
       "settings": {
