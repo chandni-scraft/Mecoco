@@ -78,7 +78,7 @@
                             height="{{ product.featured_media.height }}"
                           />
                         {%- else -%}
-                          <div class="shop-by-concern__placeholder">{{ 'product-1' | placeholder_svg_tag }}</div>
+                          <div class="shop-by-concern__placeholder" style="height: 200px; display: flex; align-items: center; justify-content: center; background: #f5f5f5;">{{ 'product-1' | placeholder_svg_tag }}</div>
                         {%- endif -%}
                       </a>
                       <div class="shop-by-concern__details">
@@ -359,6 +359,7 @@
       display: flex;
       flex-direction: column;
       height: 100%;
+      min-height: 400px;
     }
     #shop-by-concern-{{ section_id }} .shop-by-concern__image-link {
       display: block;
@@ -366,7 +367,8 @@
     #shop-by-concern-{{ section_id }} .shop-by-concern__image {
       display: block;
       width: 100%;
-      height: auto;
+      height: 200px;
+      object-fit: cover;
       max-width: 100%;
     }
     #shop-by-concern-{{ section_id }} .shop-by-concern__details {
@@ -450,6 +452,7 @@
         display: flex;
         flex-direction: column;
         height: 100%;
+        min-height: 400px;
       }
     }
     @media (max-width: 749px) {
@@ -513,6 +516,7 @@
         display: flex;
         flex-direction: column;
         height: 100%;
+        min-height: 400px;
       }
       #shop-by-concern-{{ section_id }} .shop-by-concern__nav {
         display: none;
