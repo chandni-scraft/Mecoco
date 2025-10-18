@@ -355,6 +355,9 @@
       overflow: hidden;
       box-sizing: border-box;
       max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
     #shop-by-concern-{{ section_id }} .shop-by-concern__image-link {
       display: block;
@@ -367,9 +370,11 @@
     }
     #shop-by-concern-{{ section_id }} .shop-by-concern__details {
       padding: .75rem;
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: .5rem;
       min-width: 0;
+      flex: 1;
     }
     #shop-by-concern-{{ section_id }} .shop-by-concern__title {
       display: block;
@@ -380,6 +385,7 @@
     }
     #shop-by-concern-{{ section_id }} .shop-by-concern__price {
       min-width: 0;
+      flex: 1;
     }
     #shop-by-concern-{{ section_id }} .shop-by-concern__variant {
       width: 100%;
@@ -388,6 +394,12 @@
       border-radius: 6px;
       background: var(--color-background, #fff);
       max-width: 100%;
+    }
+    #shop-by-concern-{{ section_id }} .shop-by-concern__form {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      margin-top: auto;
     }
     #shop-by-concern-{{ section_id }} .shop-by-concern__atc {
       width: 100%;
@@ -433,6 +445,9 @@
         flex: 0 0 calc(100% / {{ cards_per_view_desktop }} - var(--grid-gap, 16px));
         min-width: 280px;
         max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
       }
     }
     @media (max-width: 749px) {
@@ -492,6 +507,9 @@
         width: clamp(72%, 78vw, 280px);
         min-width: 0;
         max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
       }
       #shop-by-concern-{{ section_id }} .shop-by-concern__nav {
         display: none;
