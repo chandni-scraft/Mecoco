@@ -1,5 +1,4 @@
 {% assign section_settings = section.settings %}
-
 {%- assign tab_blocks = section.blocks | where: 'type', 'faq-tab' -%}
 
 <div class="faq-tabs color-{{ section_settings.color_scheme }}" style="{% render 'spacing-style', settings: section_settings %}">
@@ -7,19 +6,30 @@
     <h2 class="faq-tabs__title">{{ section_settings.heading }}</h2>
   {% endif %}
 
-  <div class="faq-tabs__nav" role="tablist">
-    {% for tab in tab_blocks %}
-      {% assign handle = tab.settings.label | handleize %}
-      <button class="faq-tabs__nav-btn{% if forloop.first %} is-active{% endif %}" role="tab" aria-controls="tab-{{ handle }}" data-tab="{{ handle }}">{{ tab.settings.label }}</button>
-    {% endfor %}
-  </div>
-
-  {% for tab in tab_blocks %}
-    {% assign handle = tab.settings.label | handleize %}
-    <div id="tab-{{ handle }}" class="faq-tabs__panel{% if forloop.first %} is-active{% endif %}" role="tabpanel">
-      {% render tab %}
+  {% if tab_blocks.size > 0 %}
+    <div class="faq-tabs__nav" role="tablist">
+      {% for tab_block in tab_blocks %}
+        {% assign label = tab_block.settings.label | default: 'Tab ' | append: forloop.index %}
+        {% assign handle = label | handleize | append: '-' | append: tab_block.id %}
+        <button
+          class="faq-tabs__nav-btn{% if forloop.first %} is-active{% endif %}"
+          role="tab"
+          aria-controls="tab-{{ handle }}"
+          data-tab="{{ handle }}"
+        >
+          {{ label }}
+        </button>
+      {% endfor %}
     </div>
-  {% endfor %}
+
+    {% for tab_block in tab_blocks %}
+      {% assign label = tab_block.settings.label | default: 'Tab ' | append: forloop.index %}
+      {% assign handle = label | handleize | append: '-' | append: tab_block.id %}
+      <div id="tab-{{ handle }}" class="faq-tabs__panel{% if forloop.first %} is-active{% endif %}" role="tabpanel">
+        {% render tab_block %}
+      </div>
+    {% endfor %}
+  {% endif %}
 </div>
 
 {% javascript %}
