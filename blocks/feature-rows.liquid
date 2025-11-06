@@ -1,0 +1,78 @@
+
+{% liquid
+  assign rows = closest.product.metafields.custom.feature_row.value
+  assign selected_category = block.settings.category
+%}
+
+{% if rows != blank %}
+  <div class="FeatureTable">
+    {%- for r in rows -%}
+      {%- if r.category == selected_category -%}
+        <div class="FeatureRow">
+          {%- if r.icon != blank -%}
+            <img class="FeatureIcon" src="{{ r.icon | image_url: width: 64 }}" alt="{{ r.title | escape }}">
+          {%- endif -%}
+          <div class="FeatureText">
+            {%- if r.title != blank -%}
+              <div class="FeatureTitle">{{ r.title }}</div>
+            {%- endif -%}
+            {%- if r.body != blank -%}
+              <div class="FeatureBody">{{ r.body | metafield_tag }}</div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .FeatureTable {
+    display: grid;
+    gap: 16px;
+  }
+
+  .FeatureRow {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .FeatureIcon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+
+  .FeatureTitle {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .FeatureBody {
+    color: var(--color-foreground-secondary, #5f6b7a);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Feature rows",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "category",
+      "label": "Category",
+      "options": [
+        { "value": "Ingredients", "label": "Ingredients" },
+        { "value": "Benefits", "label": "Benefits" },
+        { "value": "Usage", "label": "Usage" }
+      ],
+      "default": "Benefits"
+    }
+  ]
+}
+{% endschema %}
+
+

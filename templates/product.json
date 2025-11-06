@@ -337,6 +337,66 @@
                     "text_mJaFnj"
                   ]
                 },
+                "accordion_row_feature_ingredients": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "Ingredients",
+                    "open_by_default": false,
+                    "icon": "none",
+                    "width": 20
+                  },
+                  "blocks": {
+                    "feature_rows_ing": {
+                      "type": "feature-rows",
+                      "settings": {
+                        "category": "Ingredients"
+                      }
+                    }
+                  },
+                  "block_order": [
+                    "feature_rows_ing"
+                  ]
+                },
+                "accordion_row_feature_benefits": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "Benefits",
+                    "open_by_default": false,
+                    "icon": "none",
+                    "width": 20
+                  },
+                  "blocks": {
+                    "feature_rows_ben": {
+                      "type": "feature-rows",
+                      "settings": {
+                        "category": "Benefits"
+                      }
+                    }
+                  },
+                  "block_order": [
+                    "feature_rows_ben"
+                  ]
+                },
+                "accordion_row_feature_usage": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "How to use",
+                    "open_by_default": false,
+                    "icon": "none",
+                    "width": 20
+                  },
+                  "blocks": {
+                    "feature_rows_use": {
+                      "type": "feature-rows",
+                      "settings": {
+                        "category": "Usage"
+                      }
+                    }
+                  },
+                  "block_order": [
+                    "feature_rows_use"
+                  ]
+                },
                 "accordion_row_LaaLCr": {
                   "type": "_accordion-row",
                   "settings": {
@@ -457,6 +517,9 @@
               },
               "block_order": [
                 "accordion_row_3fVjWL",
+                "accordion_row_feature_ingredients",
+                "accordion_row_feature_benefits",
+                "accordion_row_feature_usage",
                 "accordion_row_LaaLCr",
                 "accordion_row_eJefnJ",
                 "accordion_row_k7jmpn"
