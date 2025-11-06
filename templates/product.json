@@ -332,67 +332,16 @@
                       },
                       "blocks": {}
                     },
-                    "text_heading_ingredients": {
-                      "type": "text",
-                      "settings": {
-                        "text": "<p><strong>INGREDIENTS</strong></p>",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "paragraph",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)"
-                      }
-                    },
                     "feature_rows_ing_in_desc": {
                       "type": "feature-rows",
                       "settings": {
                         "category": "Ingredients"
                       }
                     },
-                    "text_heading_benefits": {
-                      "type": "text",
-                      "settings": {
-                        "text": "<p><strong>BENEFITS</strong></p>",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "paragraph",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)"
-                      }
-                    },
                     "feature_rows_ben_in_desc": {
                       "type": "feature-rows",
                       "settings": {
                         "category": "Benefits"
-                      }
-                    },
-                    "text_heading_usage": {
-                      "type": "text",
-                      "settings": {
-                        "text": "<p><strong>USAGE</strong></p>",
-                        "width": "100%",
-                        "max_width": "normal",
-                        "alignment": "left",
-                        "type_preset": "paragraph",
-                        "font": "var(--font-body--family)",
-                        "font_size": "1rem",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "var(--color-foreground)"
                       }
                     },
                     "feature_rows_use_in_desc": {
@@ -403,11 +352,9 @@
                     }
                   },
                   "block_order": [
-                    "text_heading_ingredients",
+                    "text_mJaFnj",
                     "feature_rows_ing_in_desc",
-                    "text_heading_benefits",
                     "feature_rows_ben_in_desc",
-                    "text_heading_usage",
                     "feature_rows_use_in_desc"
                   ]
                 },
