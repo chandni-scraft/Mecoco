@@ -2,6 +2,11 @@
 {% liquid
   assign rows = closest.product.metafields.custom.feature_row.value
   assign selected_category = block.settings.category | downcase | strip
+
+  assign filter_enabled = true
+  if selected_category == '' or selected_category == 'all'
+    assign filter_enabled = false
+  endif
 %}
 
 {% if rows != blank %}
@@ -26,7 +31,7 @@
         assign row_category = row_category | downcase | strip
       -%}
 
-      {%- if row_category == selected_category -%}
+      {%- if filter_enabled == false or row_category == selected_category -%}
         {%- liquid
           assign row_icon = r.icon | default: r.image | default: r.icon_file
           assign row_title = r.title | default: r.heading | default: r.name
@@ -87,13 +92,14 @@
     {
       "type": "select",
       "id": "category",
-      "label": "Category",
+      "label": "Category (optional)",
       "options": [
+        { "value": "All", "label": "All" },
         { "value": "Ingredients", "label": "Ingredients" },
         { "value": "Benefits", "label": "Benefits" },
         { "value": "Usage", "label": "Usage" }
       ],
-      "default": "Benefits"
+      "default": "All"
     }
   ]
 }
