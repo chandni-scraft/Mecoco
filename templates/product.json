@@ -875,6 +875,7 @@
         "icon_ApchDM",
         "icon_phjtRn"
       ],
+      "disabled": true,
       "name": "Marquee Icons",
       "settings": {
         "subheading": "",
