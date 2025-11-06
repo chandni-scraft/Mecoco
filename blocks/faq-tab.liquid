@@ -1,0 +1,30 @@
+{% assign block_settings = block.settings %}
+
+{%- comment -%}
+  Renders all FAQ rows added as child blocks to this tab.
+{%- endcomment -%}
+
+<div class="accordion accordion--faq-tabs accordion--plus accordion--dividers">
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "FAQ Tab",
+  "tag": null,
+  "blocks": [
+    { "type": "faq-accordion-row" }
+  ],
+  "settings": [
+    { "type": "text", "id": "label", "label": "Tab label", "default": "General" }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Tab",
+      "settings": { "label": "General" }
+    }
+  ]
+}
+{% endschema %}
+
+
