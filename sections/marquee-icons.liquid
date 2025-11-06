@@ -1,61 +1,17 @@
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
->
-<script
-  src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"
-  defer
-></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const container = document.querySelector('.marquee-icons-swiper-{{ section.id }}');
-  
-  if (container) {
-    container.classList.add('swiper');
-    const wrapper = container.querySelector('.marquee-icons-wrapper');
-    if (wrapper) {
-      wrapper.classList.add('swiper-wrapper');
-      wrapper.querySelectorAll('.marquee-icons-slide').forEach(slide => {
-        slide.classList.add('swiper-slide');
-      });
-
-      new Swiper('.marquee-icons-swiper-{{ section.id }}', {
-        slidesPerView: {{ section.settings.slides_per_view_mobile }},
-        spaceBetween: {{ section.settings.space_between }},
-        loop: true,
-        speed: {{ section.settings.speed }},
-        allowTouchMove: true,
-        autoplay: {
-          delay: {{ section.settings.autoplay_delay | default: 0 }},
-          disableOnInteraction: false
-        },
-        freeMode: {{ section.settings.free_mode | default: true }},
-        breakpoints: {
-          768: {
-            slidesPerView: {{ section.settings.slides_per_view_desktop }},
-            spaceBetween: {{ section.settings.space_between }},
-            allowTouchMove: {{ section.settings.allow_touch_desktop | default: false }}
-          }
-        },
-        pagination: {
-          el: '.marquee-icons-pagination-{{ section.id }}',
-          clickable: true,
-        }
-      });
-    }
-  }
-});
-</script>
-
 {%- liquid
-  assign section_id = 'marquee-icons-' | append: section.id
+  assign gap_between_elements = section.settings.gap_between_elements
 -%}
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
-<div 
-  class="marquee-icons-section section spacing-style color-{{ section.settings.color_scheme }}"
-  style="{%- render 'spacing-style', settings: section.settings %};"
+<marquee-component
+  class="marquee-icons-section section spacing-style gap-style color-{{ section.settings.color_scheme }}"
+  style="
+    {%- render 'spacing-style', settings: section.settings %};
+    {% render 'gap-style', value: gap_between_elements, name: 'marquee-gap' %}
+    --marquee-direction: {{ section.settings.movement_direction }};
+  "
+  data-speed-factor="20"
+  data-movement-direction="{{ section.settings.movement_direction }}"
 >
   <div class="marquee-icons-container">
     {% if section.settings.heading != blank or section.settings.subheading != blank %}
@@ -69,11 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     {% endif %}
 
-    {% if section.blocks.size > 0 %}
-      <div class="marquee-icons-swiper-{{ section.id }} overflow-visible">
-        <div class="marquee-icons-wrapper">
+    <div class="marquee__wrapper" ref="wrapper">
+      <div class="marquee__content" ref="content">
+        <div class="marquee__repeated-items">
           {% for block in section.blocks %}
-            <div class="marquee-icons-slide" {{ block.shopify_attributes }}>
+            <div class="marquee-icons-entry" {{ block.shopify_attributes }}>
               <div class="marquee-icons-item">
                 {% if block.settings.image != blank %}
                   {% assign marquee_alt = block.settings.alt | default: block.settings.caption | escape %}
@@ -86,17 +42,52 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           {% endfor %}
         </div>
-        {% if section.settings.pagination %}
-          <div class="marquee-icons-pagination-{{ section.id }}"></div>
-        {% endif %}
       </div>
-    {% endif %}
+    </div>
   </div>
-</div>
+</marquee-component>
 
 <style>
-  .marquee-icons-section {
+  marquee-component {
+    display: block;
     width: 100%;
+    overflow: hidden;
+  }
+
+  .marquee__wrapper {
+    display: flex;
+    gap: var(--marquee-gap);
+    width: fit-content;
+    white-space: nowrap;
+  }
+
+  .marquee__content {
+    min-width: max-content;
+    display: flex;
+    gap: var(--marquee-gap);
+  }
+
+  .marquee__repeated-items {
+    min-width: max-content;
+    display: flex;
+    gap: var(--marquee-gap);
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    marquee-component:not([data-disabled]) .marquee__wrapper {
+      animation: marquee-motion var(--marquee-speed) linear infinite var(--marquee-direction);
+    }
+  }
+
+  @keyframes marquee-motion {
+    to {
+      transform: translate3d(calc(-50% - (var(--marquee-gap) / 2)), 0, 0);
+    }
+  }
+
+  .marquee-icons-section {
     padding-top: {{ section.settings.padding_block_start | default: 24 }}px;
     padding-bottom: {{ section.settings.padding_block_end | default: 24 }}px;
   }
@@ -128,34 +119,19 @@ document.addEventListener('DOMContentLoaded', () => {
     color: {{ section.settings.heading_color | default: 'var(--color-foreground)' }};
   }
 
-  .marquee-icons-wrapper {
-    display: flex;
-    align-items: center;
-  }
-
-  .marquee-icons-slide {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: auto !important;
-    flex-shrink: 0;
+  .marquee-icons-entry {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
   }
 
   .marquee-icons-item {
-    display: flex !important;
+    display: flex;
     align-items: center;
     justify-content: center;
     width: {{ section.settings.icon_width | default: 120 }}px;
     height: {{ section.settings.icon_height | default: 60 }}px;
     overflow: hidden;
-    transition: transform 0.3s ease;
-  }
-
-  .marquee-icons-item:hover {
-    transform: scale(1.05);
   }
 
   .marquee-icons-item img {
@@ -173,36 +149,10 @@ document.addEventListener('DOMContentLoaded', () => {
     line-height: 1.4;
   }
 
-  .marquee-icons-pagination-{{ section.id }} {
-    display: {% if section.settings.pagination %}block{% else %}none{% endif %};
-    margin-top: 24px;
-    text-align: center;
-    position: relative;
-  }
-
-  .marquee-icons-pagination-{{ section.id }} .swiper-pagination-bullet {
-    width: 8px;
-    height: 8px;
-    background: var(--color-foreground);
-    opacity: 0.3;
-    margin: 0 4px;
-    border-radius: 50%;
-    transition: opacity 0.3s ease;
-  }
-
-  .marquee-icons-pagination-{{ section.id }} .swiper-pagination-bullet-active {
-    opacity: 1;
-    background: {{ section.settings.pagination_active_color | default: 'var(--color-foreground)' }};
-  }
-
   @media screen and (max-width: 768px) {
     .marquee-icons-section {
       padding-top: {{ section.settings.padding_block_start_mobile | default: 16 }}px;
       padding-bottom: {{ section.settings.padding_block_end_mobile | default: 16 }}px;
-    }
-
-    .marquee-icons-header {
-      margin-bottom: 24px;
     }
 
     .marquee-icons-item {
@@ -212,12 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     .marquee-icons-caption {
       font-size: 12px;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .marquee-icons-item {
-      transition: none;
     }
   }
 </style>
@@ -252,68 +196,24 @@ document.addEventListener('DOMContentLoaded', () => {
       "default": "scheme-1"
     },
     {
-      "type": "header",
-      "content": "Slider Settings"
+      "type": "select",
+      "id": "movement_direction",
+      "label": "t:settings.motion_direction",
+      "options": [
+        { "value": "reverse", "label": "t:options.forward" },
+        { "value": "normal", "label": "t:options.reverse" }
+      ],
+      "default": "normal"
     },
     {
       "type": "range",
-      "id": "slides_per_view_mobile",
-      "label": "Slides Per View (Mobile)",
-      "min": 1,
-      "max": 6,
-      "step": 0.1,
-      "default": 3.2
-    },
-    {
-      "type": "range",
-      "id": "slides_per_view_desktop",
-      "label": "Slides Per View (Desktop)",
-      "min": 1,
-      "max": 12,
-      "step": 1,
-      "default": 8
-    },
-    {
-      "type": "range",
-      "id": "space_between",
-      "label": "Space Between Slides (px)",
+      "id": "gap_between_elements",
+      "label": "t:settings.gap",
       "min": 0,
-      "max": 60,
+      "max": 100,
       "step": 1,
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "speed",
-      "label": "Slider Speed (ms)",
-      "min": 100,
-      "max": 5000,
-      "step": 100,
-      "default": 800
-    },
-    {
-      "type": "number",
-      "id": "autoplay_delay",
-      "label": "Autoplay Delay (0 for continuous)",
-      "default": 0
-    },
-    {
-      "type": "checkbox",
-      "id": "free_mode",
-      "label": "Enable Free Mode (marquee-like)",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "allow_touch_desktop",
-      "label": "Allow touch/drag on desktop",
-      "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "pagination",
-      "label": "Show pagination",
-      "default": false
+      "unit": "px",
+      "default": 24
     },
     {
       "type": "header",
@@ -375,12 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
       "type": "color",
       "id": "caption_color",
       "label": "Caption color",
-      "default": "#000000"
-    },
-    {
-      "type": "color",
-      "id": "pagination_active_color",
-      "label": "Pagination active color",
       "default": "#000000"
     },
     {
