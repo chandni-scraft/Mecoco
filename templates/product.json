@@ -880,7 +880,7 @@
         "subheading": "",
         "heading": "Certificates",
         "color_scheme": "",
-        "movement_direction": "reverse",
+        "movement_direction": "normal",
         "gap_between_elements": 100,
         "icon_width": 120,
         "icon_height": 60,
