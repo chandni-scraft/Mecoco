@@ -2350,8 +2350,9 @@
         "image_EwgwGT": {
           "type": "image",
           "settings": {
+            "image": "shopify://shop_images/REVIEW_CARD_02_f92979aa94.webp",
             "link": "",
-            "image_ratio": "square",
+            "image_ratio": "portrait",
             "width": "fill",
             "custom_width": 100,
             "width_mobile": "fill",
@@ -2371,8 +2372,9 @@
         "image_NzBTGY": {
           "type": "image",
           "settings": {
+            "image": "shopify://shop_images/2nd_card_091bd652e6.webp",
             "link": "",
-            "image_ratio": "square",
+            "image_ratio": "portrait",
             "width": "fill",
             "custom_width": 100,
             "width_mobile": "fill",
@@ -2392,8 +2394,9 @@
         "image_KaKRTq": {
           "type": "image",
           "settings": {
+            "image": "shopify://shop_images/2nd_card_091bd652e6_f6036a89-5b18-47b2-a137-29a99b08df69.webp",
             "link": "",
-            "image_ratio": "square",
+            "image_ratio": "portrait",
             "width": "fill",
             "custom_width": 100,
             "width_mobile": "fill",
