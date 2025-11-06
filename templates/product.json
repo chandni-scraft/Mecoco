@@ -332,30 +332,16 @@
                       },
                       "blocks": {}
                     },
-                    "feature_rows_ing_in_desc": {
+                    "feature_rows_all_in_desc": {
                       "type": "feature-rows",
                       "settings": {
-                        "category": "Ingredients"
-                      }
-                    },
-                    "feature_rows_ben_in_desc": {
-                      "type": "feature-rows",
-                      "settings": {
-                        "category": "Benefits"
-                      }
-                    },
-                    "feature_rows_use_in_desc": {
-                      "type": "feature-rows",
-                      "settings": {
-                        "category": "Usage"
+                        "category": "All"
                       }
                     }
                   },
                   "block_order": [
                     "text_mJaFnj",
-                    "feature_rows_ing_in_desc",
-                    "feature_rows_ben_in_desc",
-                    "feature_rows_use_in_desc"
+                    "feature_rows_all_in_desc"
                   ]
                 },
                 "accordion_row_LaaLCr": {
