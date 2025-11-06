@@ -1,6 +1,5 @@
 {% assign section_settings = section.settings %}
-{%- assign tab_blocks = section.blocks | where: 'type', 'tab_title' -%}
-{%- assign faq_blocks = section.blocks | where: 'type', 'faq-accordion-row' -%}
+{%- assign tab_blocks = section.blocks | where: 'type', 'faq-tab' -%}
 
 <div class="faq-tabs color-{{ section_settings.color_scheme }}" style="{% render 'spacing-style', settings: section_settings %}">
   {% if section_settings.heading != blank %}
@@ -14,8 +13,7 @@
         {% if tab_label == blank %}
           {% assign tab_label = 'Tab ' | append: forloop.index %}
         {% endif %}
-        {% assign tab_label_handle = tab_label | handleize %}
-        {% assign tab_handle = tab_label_handle | append: '-' | append: tab.id %}
+        {% assign tab_handle = tab_label | handleize | append: '-' | append: tab.id %}
         <button
           class="faq-tabs__nav-btn{% if forloop.first %} is-active{% endif %}"
           role="tab"
@@ -32,30 +30,13 @@
       {% if tab_label == blank %}
         {% assign tab_label = 'Tab ' | append: forloop.index %}
       {% endif %}
-      {% assign tab_label_handle = tab_label | handleize %}
-      {% assign tab_handle = tab_label_handle | append: '-' | append: tab.id %}
-      {% assign has_rows = false %}
+      {% assign tab_handle = tab_label | handleize | append: '-' | append: tab.id %}
       <div id="tab-{{ tab_handle }}" class="faq-tabs__panel{% if forloop.first %} is-active{% endif %}" role="tabpanel">
-        <div class="accordion accordion--faq-tabs accordion--plus accordion--dividers">
-          {% for faq in faq_blocks %}
-            {% assign row_handle = faq.settings.tab_label | handleize %}
-            {% if row_handle == tab_label_handle or (faq.settings.tab_label == blank and forloop.parentloop.first) %}
-              {% render faq %}
-              {% assign has_rows = true %}
-            {% endif %}
-          {% endfor %}
-          {% unless has_rows %}
-            <p class="faq-tabs__empty">No FAQs assigned to this tab yet.</p>
-          {% endunless %}
-        </div>
+        {% render tab %}
       </div>
     {% endfor %}
-  {% elsif faq_blocks.size > 0 %}
-    <div class="accordion accordion--faq-tabs accordion--plus accordion--dividers">
-      {% for faq in faq_blocks %}
-        {% render faq %}
-      {% endfor %}
-    </div>
+  {% else %}
+    <p class="faq-tabs__empty">Add a Tab block, then add FAQ Items inside each tab.</p>
   {% endif %}
 </div>
 
@@ -111,18 +92,18 @@
   }
   .faq-tabs__panel { display: none; }
   .faq-tabs__panel.is-active { display: block; }
-  
+
   .faq-tabs__empty {
     margin: var(--spacing-4) 0;
     text-align: center;
     color: var(--color-foreground);
     opacity: 0.7;
   }
-  
+
   .accordion--faq-tabs .faq-accordion-row:not(:first-child) .details {
     border-top: 1px solid var(--color-border);
   }
-  
+
   .accordion--faq-tabs .details__header {
     padding: var(--padding-sm) 0;
     display: flex;
@@ -130,16 +111,16 @@
     align-items: center;
     cursor: pointer;
   }
-  
+
   .accordion--faq-tabs .details[open] .icon-plus {
     transform: rotate(45deg);
     transition: transform 0.2s ease;
   }
-  
+
   .accordion--faq-tabs .icon-plus {
     transition: transform 0.2s ease;
   }
-  
+
   .accordion--faq-tabs .details-content {
     padding-bottom: var(--padding-sm);
   }
@@ -156,14 +137,7 @@
     { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 32 }
   ],
   "blocks": [
-    {
-      "type": "tab_title",
-      "name": "Tab",
-      "settings": [
-        { "type": "text", "id": "label", "label": "Label", "default": "General" }
-      ]
-    },
-    { "type": "faq-accordion-row", "name": "FAQ Item" }
+    { "type": "faq-tab", "name": "Tab" }
   ],
   "presets": [
     {
@@ -171,34 +145,34 @@
       "category": "t:categories.storytelling",
       "blocks": {
         "tab-1": {
-          "type": "tab_title",
-          "settings": { "label": "Our Products" }
+          "type": "faq-tab",
+          "settings": { "label": "Our Products" },
+          "blocks": {
+            "row-1": { "type": "faq-accordion-row" }
+          },
+          "block_order": ["row-1"]
         },
         "tab-2": {
-          "type": "tab_title",
-          "settings": { "label": "Our Company" }
+          "type": "faq-tab",
+          "settings": { "label": "Our Company" },
+          "blocks": {
+            "row-1": { "type": "faq-accordion-row" }
+          },
+          "block_order": ["row-1"]
         },
         "tab-3": {
-          "type": "tab_title",
-          "settings": { "label": "Shipping & Returns" }
-        },
-        "row-1": {
-          "type": "faq-accordion-row",
-          "settings": { "tab_label": "Shipping & Returns" }
-        },
-        "row-2": {
-          "type": "faq-accordion-row",
-          "settings": { "tab_label": "Shipping & Returns" }
-        },
-        "row-3": {
-          "type": "faq-accordion-row",
-          "settings": { "tab_label": "Our Products" }
+          "type": "faq-tab",
+          "settings": { "label": "Shipping & Returns" },
+          "blocks": {
+            "row-1": { "type": "faq-accordion-row" },
+            "row-2": { "type": "faq-accordion-row" }
+          },
+          "block_order": ["row-1", "row-2"]
         }
       },
-      "block_order": ["tab-1", "tab-2", "tab-3", "row-1", "row-2", "row-3"]
+      "block_order": ["tab-1", "tab-2", "tab-3"]
     }
   ]
 }
 {% endschema %}
-
 
