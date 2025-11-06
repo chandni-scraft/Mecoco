@@ -1,0 +1,23 @@
+
+{% assign block_settings = block.settings %}
+
+{% comment %}
+  This block is used internally by the FAQ Tabs section to define tab labels.
+  It doesn't render any visible content - the section handles the tab navigation.
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "FAQ Tab Title",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Tab Label",
+      "default": "General"
+    }
+  ]
+}
+{% endschema %}
+
