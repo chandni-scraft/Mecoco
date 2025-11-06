@@ -2,7 +2,7 @@
 
 {% capture tabs %}
   {% for block in section.blocks %}
-    {% if block.type == '_faq-tab-title' %}
+    {% if block.type == 'tab_title' %}
       {"id":"{{ block.id }}","label":"{{ block.settings.label | escape }}","handle":"{{ block.settings.label | handleize }}"}{% unless forloop.last %},{% endunless %}
     {% endif %}
   {% endfor %}
@@ -36,7 +36,8 @@
     <div id="tab-{{ handle }}" class="faq-tabs__panel{% if forloop.first %} is-active{% endif %}" role="tabpanel">
       <div class="accordion accordion--faq-tabs accordion--plus accordion--dividers">
         {% for block in section.blocks %}
-          {% if block.type == '_faq-accordion-row' and block.settings.tab_label != blank and block.settings.tab_label | handleize == handle %}
+          {% assign row_handle = block.settings.tab_label | handleize %}
+          {% if block.type == 'faq-accordion-row' and block.settings.tab_label != blank and row_handle == handle %}
             <div class="faq-accordion-row">
               {% render block %}
             </div>
@@ -137,20 +138,20 @@
     { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 32 }
   ],
   "blocks": [
-    { "type": "_faq-tab-title", "name": "Tab" },
-    { "type": "_faq-accordion-row", "name": "FAQ Item" }
+    { "type": "tab_title", "name": "Tab", "settings": [ { "type": "text", "id": "label", "label": "Label", "default": "General" } ] },
+    { "type": "faq-accordion-row", "name": "FAQ Item" }
   ],
   "presets": [
     {
       "name": "FAQ Tabs",
       "category": "t:categories.storytelling",
       "blocks": {
-        "tab-1": { "type": "_faq-tab-title" },
-        "tab-2": { "type": "_faq-tab-title" },
-        "tab-3": { "type": "_faq-tab-title" },
-        "row-1": { "type": "_faq-accordion-row" },
-        "row-2": { "type": "_faq-accordion-row" },
-        "row-3": { "type": "_faq-accordion-row" }
+        "tab-1": { "type": "tab_title", "settings": { "label": "Our Products" } },
+        "tab-2": { "type": "tab_title", "settings": { "label": "Our Company" } },
+        "tab-3": { "type": "tab_title", "settings": { "label": "Shipping & Returns" } },
+        "row-1": { "type": "faq-accordion-row" },
+        "row-2": { "type": "faq-accordion-row" },
+        "row-3": { "type": "faq-accordion-row" }
       },
       "block_order": ["tab-1", "tab-2", "tab-3", "row-1", "row-2", "row-3"]
     }
