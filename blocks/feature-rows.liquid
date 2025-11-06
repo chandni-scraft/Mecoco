@@ -1,23 +1,47 @@
 
 {% liquid
   assign rows = closest.product.metafields.custom.feature_row.value
-  assign selected_category = block.settings.category
+  assign selected_category = block.settings.category | downcase | strip
 %}
 
 {% if rows != blank %}
   <div class="FeatureTable">
     {%- for r in rows -%}
-      {%- if r.category == selected_category -%}
+      {%- liquid
+        assign row_category = ''
+        if r.category != blank
+          assign row_category = r.category
+        elsif r.section != blank
+          assign row_category = r.section
+        elsif r.group != blank
+          assign row_category = r.group
+        elsif r.type != blank
+          assign row_category = r.type
+        elsif r.title != blank
+          assign row_category = r.title
+        elsif r.name != blank
+          assign row_category = r.name
+        endif
+
+        assign row_category = row_category | downcase | strip
+      -%}
+
+      {%- if row_category == selected_category -%}
+        {%- liquid
+          assign row_icon = r.icon | default: r.image | default: r.icon_file
+          assign row_title = r.title | default: r.heading | default: r.name
+          assign row_body = r.body | default: r.text | default: r.description
+        -%}
         <div class="FeatureRow">
-          {%- if r.icon != blank -%}
-            <img class="FeatureIcon" src="{{ r.icon | image_url: width: 64 }}" alt="{{ r.title | escape }}">
+          {%- if row_icon != blank -%}
+            <img class="FeatureIcon" src="{{ row_icon | image_url: width: 64 }}" width="40" height="40" alt="{{ row_title | escape }}">
           {%- endif -%}
           <div class="FeatureText">
-            {%- if r.title != blank -%}
-              <div class="FeatureTitle">{{ r.title }}</div>
+            {%- if row_title != blank -%}
+              <div class="FeatureTitle">{{ row_title }}</div>
             {%- endif -%}
-            {%- if r.body != blank -%}
-              <div class="FeatureBody">{{ r.body | metafield_tag }}</div>
+            {%- if row_body != blank -%}
+              <div class="FeatureBody">{{ row_body | metafield_tag }}</div>
             {%- endif -%}
           </div>
         </div>
