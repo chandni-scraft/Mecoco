@@ -2532,6 +2532,9 @@
         "image_KaKRTq",
         "group_qHGyJ6"
       ],
+      "custom_css": [
+        "section section--page-width color-scheme-1 {width: 1200px; margin: 0 auto;}"
+      ],
       "name": "t:names.image_with_text",
       "settings": {
         "content_direction": "row",
