@@ -336,7 +336,8 @@
                       "type": "feature-rows",
                       "settings": {
                         "category": "All"
-                      }
+                      },
+                      "blocks": {}
                     }
                   },
                   "block_order": [
@@ -505,9 +506,9 @@
           "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
           "settings": {
             "review_data": "real_data",
+            "max_width": 1200,
             "show_shop_reviews": false,
-            "empty_state": "empty_widget",
-            "max_width": 1200
+            "empty_state": "empty_widget"
           }
         }
       },
@@ -813,11 +814,100 @@
         "padding-block-start": 1,
         "padding-block-end": 1
       }
+    },
+    "marquee_icons_wJdWqc": {
+      "type": "marquee-icons",
+      "blocks": {
+        "icon_pw9Yme": {
+          "type": "icon",
+          "settings": {
+            "image": "shopify://shop_images/Icons_2_-02.avif",
+            "alt": "",
+            "caption": ""
+          }
+        },
+        "icon_KfCjL3": {
+          "type": "icon",
+          "settings": {
+            "image": "shopify://shop_images/Icons_2_-02.avif",
+            "alt": "",
+            "caption": ""
+          }
+        },
+        "icon_DPFmiM": {
+          "type": "icon",
+          "settings": {
+            "image": "shopify://shop_images/Icons_2_-08.avif",
+            "alt": "",
+            "caption": ""
+          }
+        },
+        "icon_7dtT8Y": {
+          "type": "icon",
+          "settings": {
+            "image": "shopify://shop_images/Icons_2_-08.avif",
+            "alt": "",
+            "caption": ""
+          }
+        },
+        "icon_ApchDM": {
+          "type": "icon",
+          "settings": {
+            "image": "shopify://shop_images/Icons_2_-10.avif",
+            "alt": "",
+            "caption": ""
+          }
+        },
+        "icon_phjtRn": {
+          "type": "icon",
+          "settings": {
+            "image": "shopify://shop_images/Icons_2_-10.avif",
+            "alt": "",
+            "caption": ""
+          }
+        }
+      },
+      "block_order": [
+        "icon_pw9Yme",
+        "icon_KfCjL3",
+        "icon_DPFmiM",
+        "icon_7dtT8Y",
+        "icon_ApchDM",
+        "icon_phjtRn"
+      ],
+      "name": "Marquee Icons",
+      "settings": {
+        "subheading": "",
+        "heading": "Certificates",
+        "color_scheme": "",
+        "slides_per_view_mobile": 3.2,
+        "slides_per_view_desktop": 8,
+        "space_between": 16,
+        "speed": 800,
+        "autoplay_delay": 1,
+        "free_mode": true,
+        "allow_touch_desktop": true,
+        "pagination": false,
+        "icon_width": 120,
+        "icon_height": 60,
+        "icon_width_mobile": 100,
+        "icon_height_mobile": 50,
+        "heading_color": "#000000",
+        "subheading_color": "#666666",
+        "caption_color": "#000000",
+        "pagination_active_color": "#000000",
+        "image_filter": "none",
+        "padding_block_start": 24,
+        "padding_block_end": 24,
+        "padding_block_start_mobile": 16,
+        "padding_block_end_mobile": 16
+      }
     }
   },
   "order": [
     "main",
     "1760612013f61f40d6",
-    "product_recommendations_iA6pyd"
+    "product_recommendations_iA6pyd",
+    "marquee_icons_wJdWqc"
   ]
 }
