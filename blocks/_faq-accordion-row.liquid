@@ -1,0 +1,94 @@
+
+{% assign block_settings = block.settings %}
+
+<accordion-custom
+  {% if block_settings.open_by_default %}
+    open-by-default-on-desktop
+    open-by-default-on-mobile
+  {% endif %}
+>
+  <details
+    class="details"
+    data-testid="faq-accordion-details"
+    {{ block.shopify_attributes }}
+  >
+    <summary class="details__header">
+      {{ block_settings.heading }}
+      <span class="svg-wrapper icon-plus">
+        {{- 'icon-plus.svg' | inline_asset_content -}}
+      </span>
+    </summary>
+
+    <div class="details-content">
+      {% content_for 'blocks' %}
+    </div>
+  </details>
+</accordion-custom>
+
+{% stylesheet %}
+  .faq-accordion-row .details__header {
+    color: var(--color-foreground);
+    font-weight: 500;
+  }
+  
+  .faq-accordion-row .details-content {
+    color: var(--color-foreground);
+    opacity: 0.8;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FAQ Accordion Row",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Question",
+      "default": "How long does it take to process an order?"
+    },
+    {
+      "type": "text",
+      "id": "tab_label",
+      "label": "Tab label",
+      "info": "Enter the tab name this FAQ belongs to (e.g., 'Shipping & Returns', 'Our Products', 'Our Company')",
+      "default": "Shipping & Returns"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_by_default",
+      "label": "Open by default",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Accordion Row",
+      "blocks": {
+        "text-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Please allow 1-2 days for your order to be processed for shipping. We make every effort to fulfill orders as quickly as possible.</p>",
+            "width": "100%"
+          }
+        }
+      },
+      "block_order": ["text-1"],
+      "settings": {
+        "heading": "How long does it take to process an order?",
+        "tab_label": "Shipping & Returns"
+      }
+    }
+  ]
+}
+{% endschema %}
+
