@@ -1,29 +1,29 @@
-
 {% assign block_settings = block.settings %}
 
-<accordion-custom
-  {% if block_settings.open_by_default %}
-    open-by-default-on-desktop
-    open-by-default-on-mobile
-  {% endif %}
->
-  <details
-    class="details"
-    data-testid="faq-accordion-details"
-    {{ block.shopify_attributes }}
+<div class="faq-accordion-row" {{ block.shopify_attributes }}>
+  <accordion-custom
+    {% if block_settings.open_by_default %}
+      open-by-default-on-desktop
+      open-by-default-on-mobile
+    {% endif %}
   >
-    <summary class="details__header">
-      {{ block_settings.heading }}
-      <span class="svg-wrapper icon-plus">
-        {{- 'icon-plus.svg' | inline_asset_content -}}
-      </span>
-    </summary>
+    <details
+      class="details"
+      data-testid="faq-accordion-details"
+    >
+      <summary class="details__header">
+        {{ block_settings.heading }}
+        <span class="svg-wrapper icon-plus">
+          {{- 'icon-plus.svg' | inline_asset_content -}}
+        </span>
+      </summary>
 
-    <div class="details-content">
-      {% content_for 'blocks' %}
-    </div>
-  </details>
-</accordion-custom>
+      <div class="details-content">
+        {% content_for 'blocks' %}
+      </div>
+    </details>
+  </accordion-custom>
+</div>
 
 {% stylesheet %}
   .faq-accordion-row .details__header {
