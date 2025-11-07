@@ -879,7 +879,7 @@
         "video_EiKbUy"
       ],
       "custom_css": [
-        "shopify-section-template > .section-page-width.color-scheme-4 {width: 1200px; margin:0 auto;}"
+        ".section--page-width {max-width: 1200px !important; margin: 0 auto; width: 100%;}"
       ],
       "name": "t:names.image_with_text",
       "settings": {
