@@ -878,6 +878,9 @@
         "image_wd6XJd",
         "video_EiKbUy"
       ],
+      "custom_css": [
+        "element.style {width: 1200px; margin: auto;}"
+      ],
       "name": "t:names.image_with_text",
       "settings": {
         "content_direction": "row",
