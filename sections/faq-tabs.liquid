@@ -137,7 +137,13 @@
     { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 32 }
   ],
   "blocks": [
-    { "type": "faq-tab", "name": "Tab" }
+    {
+      "type": "faq-tab",
+      "name": "Tab",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Tab label", "default": "General" }
+      ]
+    }
   ],
   "presets": [
     {
@@ -146,28 +152,15 @@
       "blocks": {
         "tab-1": {
           "type": "faq-tab",
-          "settings": { "label": "Our Products" },
-          "blocks": {
-            "row-1": { "type": "faq-accordion-row" }
-          },
-          "block_order": ["row-1"]
+          "settings": { "label": "Our Products" }
         },
         "tab-2": {
           "type": "faq-tab",
-          "settings": { "label": "Our Company" },
-          "blocks": {
-            "row-1": { "type": "faq-accordion-row" }
-          },
-          "block_order": ["row-1"]
+          "settings": { "label": "Our Company" }
         },
         "tab-3": {
           "type": "faq-tab",
-          "settings": { "label": "Shipping & Returns" },
-          "blocks": {
-            "row-1": { "type": "faq-accordion-row" },
-            "row-2": { "type": "faq-accordion-row" }
-          },
-          "block_order": ["row-1", "row-2"]
+          "settings": { "label": "Shipping & Returns" }
         }
       },
       "block_order": ["tab-1", "tab-2", "tab-3"]
@@ -175,4 +168,3 @@
   ]
 }
 {% endschema %}
-
