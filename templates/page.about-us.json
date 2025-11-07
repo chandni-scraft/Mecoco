@@ -878,7 +878,9 @@
         "image_wd6XJd",
         "video_EiKbUy"
       ],
-      "custom_css": [],
+      "custom_css": [
+        "main > .section-page-width.color-scheme-4 {max-width: 1200px; margin: 0 auto;}"
+      ],
       "name": "t:names.image_with_text",
       "settings": {
         "content_direction": "row",
