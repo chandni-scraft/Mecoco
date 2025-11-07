@@ -2088,7 +2088,7 @@
             "border": "solid",
             "border_width": 2,
             "border_opacity": 100,
-            "border_radius": 20,
+            "border_radius": 0,
             "placeholder": "",
             "toggle_overlay": false,
             "overlay_color": "#00000026",
@@ -2239,7 +2239,7 @@
             "border": "solid",
             "border_width": 2,
             "border_opacity": 100,
-            "border_radius": 20,
+            "border_radius": 0,
             "placeholder": "",
             "toggle_overlay": false,
             "overlay_color": "#00000026",
@@ -2390,7 +2390,7 @@
             "border": "solid",
             "border_width": 2,
             "border_opacity": 100,
-            "border_radius": 20,
+            "border_radius": 0,
             "placeholder": "",
             "toggle_overlay": false,
             "overlay_color": "#00000026",
@@ -2521,7 +2521,9 @@
         "group_hfQHd4"
       ],
       "custom_css": [
-        ".section--page-width {max-width: 1200px !important; margin: 0 auto; width: 100%;}"
+        ".section--page-width {max-width: 1200px !important; margin: 0 auto; width: 100%;}",
+        ".group-block {border: 2px dashed green;}",
+        ".group-block .group-block {border: none; border-left: 3px dashed #4caf50;}"
       ],
       "name": "t:names.icons_with_text",
       "settings": {
