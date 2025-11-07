@@ -47,6 +47,7 @@
   ],
   "settings": [
     { "type": "text", "id": "heading", "label": "Question", "default": "How long does it take to process an order?" },
+    { "type": "text", "id": "tab_label", "label": "Tab label (legacy)", "info": "Optional legacy field kept for backward compatibility. Leave blank for new tabs.", "default": "" },
     { "type": "checkbox", "id": "open_by_default", "label": "Open by default", "default": false }
   ],
   "presets": [
@@ -56,7 +57,7 @@
         "text-1": { "type": "text", "settings": { "text": "<p>Please allow 1-2 days for your order to be processed for shipping. We make every effort to fulfill orders as quickly as possible.</p>", "width": "100%" } }
       },
       "block_order": ["text-1"],
-      "settings": { "heading": "How long does it take to process an order?" }
+      "settings": { "heading": "How long does it take to process an order?", "tab_label": "" }
     }
   ]
 }
