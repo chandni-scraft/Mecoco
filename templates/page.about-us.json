@@ -1545,7 +1545,8 @@
         "group_CwjBtH"
       ],
       "custom_css": [
-        ".section--page-width {max-width: 1200px !important; margin: 0 auto; width: 100%;}"
+        ".section--page-width {max-width: 1200px !important; margin: 0 auto; width: 100%;}",
+        ".group-block {box-shadow: -6px 0 8px -2px #c4c0bf; }"
       ],
       "name": "t:names.icons_with_text",
       "settings": {
