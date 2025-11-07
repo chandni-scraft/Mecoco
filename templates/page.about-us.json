@@ -1546,7 +1546,7 @@
       ],
       "custom_css": [
         ".section--page-width {max-width: 1200px !important; margin: 0 auto; width: 100%;}",
-        ".group-block {background: #fff; border-radius: 12px; box-shadow: -6px 0 #c4c0bf; padding: 20px;}",
+        ".group-block {box-shadow: -6px 0 #c4c0bf; }",
         ".group-block .group-block {box-shadow: none !important; background: transparent;}"
       ],
       "name": "t:names.icons_with_text",
