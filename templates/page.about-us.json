@@ -305,7 +305,7 @@
                 "width": "100%",
                 "max_width": "none",
                 "alignment": "center",
-                "type_preset": "paragraph",
+                "type_preset": "custom",
                 "font": "var(--font-body--family)",
                 "font_size": "1.125rem",
                 "line_height": "loose",
@@ -353,7 +353,7 @@
                 "width": "100%",
                 "max_width": "none",
                 "alignment": "center",
-                "type_preset": "paragraph",
+                "type_preset": "custom",
                 "font": "var(--font-body--family)",
                 "font_size": "1.125rem",
                 "line_height": "loose",
@@ -586,7 +586,7 @@
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
-        "color_scheme": "scheme-3",
+        "color_scheme": "scheme-7",
         "background_media": "none",
         "video_position": "cover",
         "background_image_position": "cover",
@@ -700,8 +700,8 @@
                 "text": "<p><strong>“Me”</strong> stands for <strong>you</strong> — the individual whose health matters most.<br/><br/><strong>“Coco”</strong> draws from the <strong>coconut</strong>, India’s timeless symbol of <strong>purity and nourishment</strong>.<br/><br/>Together, <strong>Meecoco</strong> means <strong>wellness that begins with you, powered by nature’s goodness.</strong></p>",
                 "width": "100%",
                 "max_width": "none",
-                "alignment": "left",
-                "type_preset": "paragraph",
+                "alignment": "center",
+                "type_preset": "custom",
                 "font": "var(--font-body--family)",
                 "font_size": "1.125rem",
                 "line_height": "loose",
@@ -1125,7 +1125,7 @@
               "type": "icon",
               "settings": {
                 "icon": "eye",
-                "width": 32,
+                "width": 130,
                 "link": "",
                 "open_in_new_tab": false
               },
@@ -1203,11 +1203,11 @@
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "center",
-                    "type_preset": "rte",
+                    "type_preset": "custom",
                     "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
+                    "font_size": "1.25rem",
+                    "line_height": "loose",
+                    "letter_spacing": "loose",
                     "case": "none",
                     "wrap": "pretty",
                     "color": "var(--color-foreground)",
@@ -1233,7 +1233,7 @@
             "group_xkmCDB"
           ]
         },
-        "group_neUiyP": {
+        "group_ekyCQx": {
           "type": "group",
           "settings": {
             "link": "",
@@ -1272,17 +1272,17 @@
             "padding-inline-end": 10
           },
           "blocks": {
-            "icon_rKQVjd": {
+            "icon_zbh3Ee": {
               "type": "icon",
               "settings": {
-                "icon": "heart",
-                "width": 32,
+                "icon": "eye",
+                "width": 130,
                 "link": "",
                 "open_in_new_tab": false
               },
               "blocks": {}
             },
-            "group_7FW9fQ": {
+            "group_jXcTeJ": {
               "type": "group",
               "settings": {
                 "link": "",
@@ -1321,11 +1321,11 @@
                 "padding-inline-end": 0
               },
               "blocks": {
-                "text_9tTr6W": {
+                "text_gjz7Cz": {
                   "type": "text",
                   "disabled": true,
                   "settings": {
-                    "text": "<h2>Made with care</h2>",
+                    "text": "<h2>Intentional design</h2>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "center",
@@ -1347,18 +1347,18 @@
                   },
                   "blocks": {}
                 },
-                "text_fxLTCx": {
+                "text_MEmW6z": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>We believe in building better</p>",
+                    "text": "<p>Everything we do starts with why</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "center",
-                    "type_preset": "rte",
+                    "type_preset": "custom",
                     "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
+                    "font_size": "1.25rem",
+                    "line_height": "loose",
+                    "letter_spacing": "loose",
                     "case": "none",
                     "wrap": "pretty",
                     "color": "var(--color-foreground)",
@@ -1374,17 +1374,17 @@
                 }
               },
               "block_order": [
-                "text_9tTr6W",
-                "text_fxLTCx"
+                "text_gjz7Cz",
+                "text_MEmW6z"
               ]
             }
           },
           "block_order": [
-            "icon_rKQVjd",
-            "group_7FW9fQ"
+            "icon_zbh3Ee",
+            "group_jXcTeJ"
           ]
         },
-        "group_zF73Mj": {
+        "group_CwjBtH": {
           "type": "group",
           "settings": {
             "link": "",
@@ -1423,17 +1423,17 @@
             "padding-inline-end": 10
           },
           "blocks": {
-            "icon_HjnziD": {
+            "icon_bpLFzC": {
               "type": "icon",
               "settings": {
-                "icon": "silhouette",
-                "width": 32,
+                "icon": "eye",
+                "width": 130,
                 "link": "",
                 "open_in_new_tab": false
               },
               "blocks": {}
             },
-            "group_GkHM7T": {
+            "group_rC6twN": {
               "type": "group",
               "settings": {
                 "link": "",
@@ -1472,11 +1472,11 @@
                 "padding-inline-end": 0
               },
               "blocks": {
-                "text_eJxnrr": {
+                "text_zLhV7R": {
                   "type": "text",
                   "disabled": true,
                   "settings": {
-                    "text": "<h2>A team with a goal</h2>",
+                    "text": "<h2>Intentional design</h2>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "center",
@@ -1498,18 +1498,18 @@
                   },
                   "blocks": {}
                 },
-                "text_WbWN6C": {
+                "text_tAefW4": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Real people making great products</p>",
+                    "text": "<p>Everything we do starts with why</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "center",
-                    "type_preset": "rte",
+                    "type_preset": "custom",
                     "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
+                    "font_size": "1.25rem",
+                    "line_height": "loose",
+                    "letter_spacing": "loose",
                     "case": "none",
                     "wrap": "pretty",
                     "color": "var(--color-foreground)",
@@ -1525,21 +1525,21 @@
                 }
               },
               "block_order": [
-                "text_eJxnrr",
-                "text_WbWN6C"
+                "text_zLhV7R",
+                "text_tAefW4"
               ]
             }
           },
           "block_order": [
-            "icon_HjnziD",
-            "group_GkHM7T"
+            "icon_bpLFzC",
+            "group_rC6twN"
           ]
         }
       },
       "block_order": [
         "group_xa7iPT",
-        "group_neUiyP",
-        "group_zF73Mj"
+        "group_ekyCQx",
+        "group_CwjBtH"
       ],
       "name": "t:names.icons_with_text",
       "settings": {
@@ -1554,7 +1554,7 @@
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
-        "color_scheme": "scheme-3",
+        "color_scheme": "scheme-7",
         "background_media": "none",
         "video_position": "cover",
         "background_image_position": "cover",
@@ -1840,8 +1840,8 @@
                 "text": "<p>Our ingredients travel from the world’s finest farms—dates from the <strong>Middle East</strong>, almonds and pistachios from <strong>California</strong>, walnuts from <strong>Kashmir</strong>.</p><p>Each batch passes through <strong>strict quality checks</strong> before reaching your home, so what you eat has…</p>",
                 "width": "100%",
                 "max_width": "none",
-                "alignment": "left",
-                "type_preset": "paragraph",
+                "alignment": "center",
+                "type_preset": "custom",
                 "font": "var(--font-body--family)",
                 "font_size": "1.125rem",
                 "line_height": "loose",
@@ -2538,16 +2538,15 @@
         "padding-block-end": 48
       }
     },
-    "section_EkLrVF": {
+    "section_DQBGVX": {
       "type": "section",
       "blocks": {
-        "image_beUjRr": {
+        "image_kFBQfh": {
           "type": "image",
           "disabled": true,
           "settings": {
-            "image": "shopify://shop_images/freepik__the-style-is-candid-image-photography-with-natural__15559.jpg",
             "link": "",
-            "image_ratio": "landscape",
+            "image_ratio": "square",
             "width": "fill",
             "custom_width": 100,
             "width_mobile": "fill",
@@ -2564,32 +2563,7 @@
           },
           "blocks": {}
         },
-        "video_cmBcVb": {
-          "type": "video",
-          "name": "t:names.video",
-          "settings": {
-            "source": "uploaded",
-            "video": "shopify://files/videos/social_tdsmidjourney2_httpss.mj.runEsTvWMy8Maw_A_cinematic_tabletop__10f7f2f9-d36b-4dfd-84cc-ed5189bd3e74_1.mp4",
-            "video_url": "",
-            "video_autoplay": false,
-            "video_loop": true,
-            "show_controls": true,
-            "alt": "",
-            "custom_width": 100,
-            "custom_width_mobile": 100,
-            "aspect_ratio": "auto",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
-        "group_anFLcP": {
+        "group_RYxVCB": {
           "type": "group",
           "settings": {
             "link": "",
@@ -2628,7 +2602,232 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "divider_EkkPdX": {
+            "text_kKQjcV": {
+              "type": "text",
+              "name": "t:names.heading",
+              "settings": {
+                "text": "<h2>Farmers to Families</h2>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "h3",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_cyjDQg": {
+              "type": "text",
+              "disabled": true,
+              "settings": {
+                "text": "<p>Made with care and unconditionally loved by our customers, this signature bestseller exceeds all expectations.</p>",
+                "width": "fit-content",
+                "max_width": "narrow",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "button_QV8tQW": {
+              "type": "button",
+              "disabled": true,
+              "settings": {
+                "label": "Shop now",
+                "link": "shopify://collections/all",
+                "open_in_new_tab": false,
+                "style_class": "button",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_kKQjcV",
+            "text_cyjDQg",
+            "button_QV8tQW"
+          ]
+        }
+      },
+      "block_order": [
+        "image_kFBQfh",
+        "group_RYxVCB"
+      ],
+      "name": "t:names.image_with_text",
+      "settings": {
+        "content_direction": "row",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 32,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-7",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 20,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 10,
+        "padding-block-end": 10
+      }
+    },
+    "section_3KcBkU": {
+      "type": "section",
+      "blocks": {
+        "image_WeEwKd": {
+          "type": "image",
+          "name": "t:names.image",
+          "settings": {
+            "image": "shopify://shop_images/2147669531.jpg",
+            "link": "",
+            "image_ratio": "adapt",
+            "width": "custom",
+            "custom_width": 60,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 20,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "group_Mq6Pdm": {
+          "type": "group",
+          "settings": {
+            "link": "",
+            "open_in_new_tab": false,
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 10,
+            "width": "custom",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "placeholder": "",
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "text_7RFyH6": {
+              "type": "text",
+              "name": "t:names.heading",
+              "disabled": true,
+              "settings": {
+                "text": "<h2>Our signature product.</h2>",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "h3",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_Epn9Nw": {
+              "type": "text",
+              "settings": {
+                "text": "<p>We work directly with growers across India and beyond to source ingredients that meet our uncompromising standards.</p><p>Because the journey from their <strong>hands to your home</strong> should always be <strong>honest</strong>.</p>",
+                "width": "100%",
+                "max_width": "none",
+                "alignment": "center",
+                "type_preset": "custom",
+                "font": "var(--font-body--family)",
+                "font_size": "1.125rem",
+                "line_height": "loose",
+                "letter_spacing": "loose",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "divider_T64iVq": {
               "type": "_divider",
               "name": "t:names.divider",
               "disabled": true,
@@ -2641,10 +2840,11 @@
               },
               "blocks": {}
             },
-            "text_kxMdBA": {
+            "text_39893W": {
               "type": "text",
+              "disabled": true,
               "settings": {
-                "text": "<p>But Meecoco is more than just food. It’s a movement towards <strong>clean living.</strong> A choice to replace confusion and adulteration with <strong>clarity and confidence.</strong> A promise that when you pick up a Meecoco pack, you know you’re making the right choice for yourself and your family.<br/><br/>Whether it’s your morning handful of almonds, an afternoon nut mix to power through work, or cold-pressed oils that bring natural goodness into your kitchen – Meecoco is here to be your <strong>everyday companion in clean eating.</strong><br/>  <br/>Because in the end, health is simple. It’s about eating right.<br/><br/>And with Meecoco, you always will.<br/>  <br/><strong>Meecoco - Eat Right!</strong><br/>  </p>",
+                "text": "<p>Our team is passionate about health and wellness, and we are committed to providing our customers with the best possible shopping experience. From our carefully selected products to our exceptional customer service, we strive to exceed your expectations</p>",
                 "width": "fit-content",
                 "max_width": "none",
                 "alignment": "left",
@@ -2659,6 +2859,342 @@
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "divider_DQ4yYV": {
+              "type": "_divider",
+              "name": "t:names.divider",
+              "disabled": true,
+              "settings": {
+                "thickness": 1,
+                "corner_radius": "square",
+                "width_percent": 100,
+                "padding-block-start": 0,
+                "padding-block-end": 0
+              },
+              "blocks": {}
+            },
+            "text_wny7DY": {
+              "type": "text",
+              "disabled": true,
+              "settings": {
+                "text": "<p>We believe that dry fruits should be accessible to everyone, which is why we offer a wide range of products, including modern and conventional options, as well as different packaging sizes to meet every need.</p>",
+                "width": "fit-content",
+                "max_width": "none",
+                "alignment": "left",
+                "type_preset": "paragraph",
+                "font": "var(--font-body--family)",
+                "font_size": "1.125rem",
+                "line_height": "loose",
+                "letter_spacing": "loose",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "button_Tp89eQ": {
+              "type": "button",
+              "disabled": true,
+              "settings": {
+                "label": "Shop now",
+                "link": "shopify://collections/all",
+                "open_in_new_tab": false,
+                "style_class": "button",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "text_7RFyH6",
+            "text_Epn9Nw",
+            "divider_T64iVq",
+            "text_39893W",
+            "divider_DQ4yYV",
+            "text_wny7DY",
+            "button_Tp89eQ"
+          ]
+        },
+        "image_MBEVhc": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/freepik__the-style-is-candid-image-photography-with-natural__15559.jpg",
+            "link": "",
+            "image_ratio": "landscape",
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "video_Hxicbc": {
+          "type": "video",
+          "name": "t:names.video",
+          "disabled": true,
+          "settings": {
+            "source": "uploaded",
+            "video_url": "",
+            "video_autoplay": false,
+            "video_loop": true,
+            "show_controls": true,
+            "alt": "",
+            "custom_width": 100,
+            "custom_width_mobile": 100,
+            "aspect_ratio": "auto",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "image_WeEwKd",
+        "group_Mq6Pdm",
+        "image_MBEVhc",
+        "video_Hxicbc"
+      ],
+      "name": "t:names.image_with_text",
+      "settings": {
+        "content_direction": "row",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "center",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 32,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-4",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
+    },
+    "section_EkLrVF": {
+      "type": "section",
+      "blocks": {
+        "image_beUjRr": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/freepik__the-style-is-candid-image-photography-with-natural__15559.jpg",
+            "link": "",
+            "image_ratio": "landscape",
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "video_cmBcVb": {
+          "type": "video",
+          "name": "t:names.video",
+          "disabled": true,
+          "settings": {
+            "source": "uploaded",
+            "video": "shopify://files/videos/social_tdsmidjourney2_httpss.mj.runEsTvWMy8Maw_A_cinematic_tabletop__10f7f2f9-d36b-4dfd-84cc-ed5189bd3e74_1.mp4",
+            "video_url": "",
+            "video_autoplay": false,
+            "video_loop": true,
+            "show_controls": true,
+            "alt": "",
+            "custom_width": 100,
+            "custom_width_mobile": 100,
+            "aspect_ratio": "auto",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_QH9JAJ": {
+          "type": "text",
+          "name": "t:names.heading",
+          "settings": {
+            "text": "<h3>Eat Right with Meecoco, Everyday!</h3>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": true,
+            "background_color": "#a42325",
+            "corner_radius": 20,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_ihaT3f": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p><strong>Join the community!</strong></p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "custom",
+            "font": "var(--font-body--family)",
+            "font_size": "1.5rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "group_anFLcP": {
+          "type": "group",
+          "settings": {
+            "link": "",
+            "open_in_new_tab": false,
+            "content_direction": "row",
+            "vertical_on_mobile": false,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 12,
+            "width": "custom",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "placeholder": "",
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "image_6LtNTT": {
+              "type": "image",
+              "name": "t:names.image",
+              "settings": {
+                "link": "",
+                "image_ratio": "adapt",
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "image_CVqXaB": {
+              "type": "image",
+              "name": "t:names.image",
+              "settings": {
+                "link": "",
+                "image_ratio": "adapt",
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -2683,18 +3219,125 @@
             }
           },
           "block_order": [
-            "divider_EkkPdX",
-            "text_kxMdBA",
+            "image_6LtNTT",
+            "image_CVqXaB",
             "button_YECifb"
+          ]
+        },
+        "group_yXNbY3": {
+          "type": "group",
+          "settings": {
+            "link": "",
+            "open_in_new_tab": false,
+            "content_direction": "row",
+            "vertical_on_mobile": false,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 12,
+            "width": "custom",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "placeholder": "",
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "solid",
+            "gradient_direction": "to top",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "image_xj4q9r": {
+              "type": "image",
+              "name": "t:names.image",
+              "settings": {
+                "link": "",
+                "image_ratio": "adapt",
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "image_iYjwfr": {
+              "type": "image",
+              "name": "t:names.image",
+              "settings": {
+                "link": "",
+                "image_ratio": "adapt",
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "button_gPjQWb": {
+              "type": "button",
+              "disabled": true,
+              "settings": {
+                "label": "Shop now",
+                "link": "shopify://collections/all",
+                "open_in_new_tab": false,
+                "style_class": "button",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "image_xj4q9r",
+            "image_iYjwfr",
+            "button_gPjQWb"
           ]
         }
       },
       "block_order": [
         "image_beUjRr",
         "video_cmBcVb",
-        "group_anFLcP"
+        "text_QH9JAJ",
+        "text_ihaT3f",
+        "group_anFLcP",
+        "group_yXNbY3"
       ],
-      "disabled": true,
       "name": "t:names.image_with_text",
       "settings": {
         "content_direction": "row",
@@ -2799,6 +3442,8 @@
     "section_4frjqF",
     "section_UMJY8k",
     "section_bd79Df",
+    "section_DQBGVX",
+    "section_3KcBkU",
     "section_EkLrVF",
     "section_7MNVNb"
   ]
