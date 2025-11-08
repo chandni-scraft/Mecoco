@@ -2352,7 +2352,7 @@
           "settings": {
             "image": "shopify://shop_images/1_0c7e5e93-06cd-4f73-965a-a2cf225dd9f6.png",
             "link": "https://meecoco.com/products/mejdool-dates",
-            "image_ratio": "square",
+            "image_ratio": "portrait",
             "width": "fill",
             "custom_width": 100,
             "width_mobile": "fill",
@@ -2374,7 +2374,7 @@
           "settings": {
             "image": "shopify://shop_images/2_338f0dbc-16ea-465f-8196-900cef5101f4.png",
             "link": "https://meecoco.com/products/meecoco-sampler-pack",
-            "image_ratio": "square",
+            "image_ratio": "portrait",
             "width": "fill",
             "custom_width": 100,
             "width_mobile": "fill",
@@ -2396,7 +2396,7 @@
           "settings": {
             "image": "shopify://shop_images/3_93d85855-e93c-4890-85fe-64a27fa539a2.png",
             "link": "https://meecoco.com/products/combo-almonds-cashews-pistachio-walnuts-green-raisins",
-            "image_ratio": "square",
+            "image_ratio": "portrait",
             "width": "fill",
             "custom_width": 55,
             "width_mobile": "fit-content",
@@ -2532,7 +2532,9 @@
         "image_KaKRTq",
         "group_qHGyJ6"
       ],
-      "custom_css": [],
+      "custom_css": [
+        ".section--page-width {max-width: 1200px !important; margin: 0 auto; width: 100%;}"
+      ],
       "name": "t:names.image_with_text",
       "settings": {
         "content_direction": "row",
