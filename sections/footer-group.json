@@ -11,96 +11,6 @@
   "type": "footer",
   "name": "Footer",
   "sections": {
-    "video_reels_stack_yGgHWT": {
-      "type": "video-reels-stack",
-      "blocks": {
-        "video_reel_E3D4gA": {
-          "type": "video_reel",
-          "settings": {
-            "video": "shopify://files/videos/7186201_Vertical_Video_Vertical_Content_720x1280.mp4",
-            "video_url": "",
-            "caption": "Meecoco Walnut",
-            "show_product_tag": true,
-            "tagged_product": "meecoco-walnut-kernels-1",
-            "tag_position_x": 50,
-            "tag_position_y": 70
-          }
-        },
-        "video_reel_LkjFH4": {
-          "type": "video_reel",
-          "settings": {
-            "video": "shopify://files/videos/7186201_Vertical_Video_Vertical_Content_720x1280.mp4",
-            "video_url": "",
-            "caption": "Meecoco Walnut",
-            "show_product_tag": true,
-            "tagged_product": "meecoco-walnut-kernels-1",
-            "tag_position_x": 50,
-            "tag_position_y": 70
-          }
-        },
-        "video_reel_ikwQUF": {
-          "type": "video_reel",
-          "settings": {
-            "video": "shopify://files/videos/7186201_Vertical_Video_Vertical_Content_720x1280.mp4",
-            "video_url": "",
-            "caption": "Meecoco Walnut",
-            "show_product_tag": true,
-            "tagged_product": "meecoco-walnut-kernels-1",
-            "tag_position_x": 50,
-            "tag_position_y": 70
-          }
-        },
-        "video_reel_PnbXh3": {
-          "type": "video_reel",
-          "settings": {
-            "video": "shopify://files/videos/7186201_Vertical_Video_Vertical_Content_720x1280.mp4",
-            "video_url": "",
-            "caption": "Meecoco Walnut",
-            "show_product_tag": true,
-            "tagged_product": "meecoco-walnut-kernels-1",
-            "tag_position_x": 50,
-            "tag_position_y": 70
-          }
-        },
-        "video_reel_ERyyMA": {
-          "type": "video_reel",
-          "settings": {
-            "video": "shopify://files/videos/7186201_Vertical_Video_Vertical_Content_720x1280.mp4",
-            "video_url": "",
-            "caption": "Meecoco Walnut",
-            "show_product_tag": true,
-            "tagged_product": "meecoco-walnut-kernels-1",
-            "tag_position_x": 50,
-            "tag_position_y": 70
-          }
-        }
-      },
-      "block_order": [
-        "video_reel_E3D4gA",
-        "video_reel_LkjFH4",
-        "video_reel_ikwQUF",
-        "video_reel_PnbXh3",
-        "video_reel_ERyyMA"
-      ],
-      "disabled": true,
-      "name": "Video Reels Stack",
-      "settings": {
-        "heading": "Shop The Look",
-        "subheading": "Discover our products in action",
-        "description": "<p>Experience the essence of luxury with our exclusive collection. Each fragrance tells a unique story.</p>",
-        "button_label": "Shop Collection",
-        "button_link": "",
-        "autoplay": true,
-        "autoplay_speed": 8,
-        "background_image": "shopify://shop_images/2147669531.jpg",
-        "full_width_background": false,
-        "background_overlay": true,
-        "overlay_color": "#000000",
-        "overlay_opacity": 30,
-        "background_position": "center center",
-        "background_blur": false
-      }
-    },
     "custom_section_76dqAh": {
       "type": "section",
       "blocks": {
@@ -478,7 +388,6 @@
     }
   },
   "order": [
-    "video_reels_stack_yGgHWT",
     "custom_section_76dqAh"
   ]
 }
