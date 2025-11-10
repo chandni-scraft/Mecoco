@@ -1129,7 +1129,7 @@
               "settings": {
                 "icon": "eye",
                 "image_upload": "shopify://shop_images/1_1.svg",
-                "width": 130,
+                "width": 80,
                 "link": "",
                 "open_in_new_tab": false
               },
@@ -1281,7 +1281,7 @@
               "settings": {
                 "icon": "eye",
                 "image_upload": "shopify://shop_images/2_1.svg",
-                "width": 130,
+                "width": 80,
                 "link": "",
                 "open_in_new_tab": false
               },
@@ -1433,7 +1433,7 @@
               "settings": {
                 "icon": "eye",
                 "image_upload": "shopify://shop_images/3.svg",
-                "width": 130,
+                "width": 80,
                 "link": "",
                 "open_in_new_tab": false
               },
