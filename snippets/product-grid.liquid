@@ -18,7 +18,8 @@
     {% case section.settings.layout_type %}
       {% when 'grid' %}
         .product-grid--{{ section.id }}:is(.product-grid--grid) {
-          --product-grid-columns-desktop: repeat(auto-fill, minmax({{ product_card_size }}, 1fr));
+          /* auto-fit collapses unused tracks so rows stay centered when product count is low */
+          --product-grid-columns-desktop: repeat(auto-fit, minmax({{ product_card_size }}, 1fr));
         }
       {% when 'organic' %}
         {% assign large_span = 2 %}
