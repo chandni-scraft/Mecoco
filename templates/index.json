@@ -1081,7 +1081,7 @@
       "name": "Shop by Concern Tabs",
       "settings": {
         "heading": "Shop by concern",
-        "container": "lg",
+        "container": "sm",
         "products_per_tab": 50,
         "products_per_row_mobile": 2,
         "products_per_row_desktop": 5,
