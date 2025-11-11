@@ -2650,7 +2650,7 @@
         "overlay_color": "#a42325",
         "overlay_opacity": 0,
         "background_position": "center center",
-        "background_blur": false
+        "background_blur": true
       }
     }
   },
