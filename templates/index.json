@@ -2644,10 +2644,9 @@
         "button_link": "",
         "autoplay": true,
         "autoplay_speed": 8,
-        "background_image": "shopify://shop_images/2147669531.jpg",
-        "full_width_background": false,
+        "full_width_background": true,
         "background_overlay": true,
-        "overlay_color": "#000000",
+        "overlay_color": "#a42325",
         "overlay_opacity": 30,
         "background_position": "center center",
         "background_blur": false
