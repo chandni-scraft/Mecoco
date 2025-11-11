@@ -2325,6 +2325,38 @@
         "padding-block-end": 40
       }
     },
+    "icon_text_grid_b6fp3K": {
+      "type": "icon-text-grid",
+      "blocks": {
+        "item_ELetjq": {
+          "type": "item",
+          "settings": {
+            "text": "<p>No Preservatives</p>"
+          }
+        },
+        "item_XAg4Cj": {
+          "type": "item",
+          "settings": {
+            "text": "<p>No Additives</p>"
+          }
+        },
+        "item_KN7r9c": {
+          "type": "item",
+          "settings": {
+            "text": "<p>No False Claims</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_ELetjq",
+        "item_XAg4Cj",
+        "item_KN7r9c"
+      ],
+      "name": "Icons & Text Grid",
+      "settings": {
+        "color_scheme": "default"
+      }
+    },
     "section_bd79Df": {
       "type": "section",
       "blocks": {
@@ -3763,6 +3795,7 @@
     "section_dCJXdW",
     "section_4frjqF",
     "section_UMJY8k",
+    "icon_text_grid_b6fp3K",
     "section_bd79Df",
     "section_DQBGVX",
     "section_3KcBkU",
