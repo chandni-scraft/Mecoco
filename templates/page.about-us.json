@@ -850,7 +850,7 @@
             "link": "",
             "image_ratio": "adapt",
             "width": "custom",
-            "custom_width": 60,
+            "custom_width": 100,
             "width_mobile": "fill",
             "custom_width_mobile": 100,
             "height": "fit",
@@ -3629,7 +3629,7 @@
       ],
       "custom_css": [
         ".section--page-width {max-width: 1200px !important; margin: 0 auto; width: 100%;}",
-        "h3{color:#fff;}"
+        "h3 {color: #fff;}"
       ],
       "name": "t:names.image_with_text",
       "settings": {
