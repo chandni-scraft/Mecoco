@@ -27,12 +27,7 @@
           {% assign image_index = 0 %}
           {% capture slides %}{% endcapture %}
         {% endif %}
-        {% case block.type %}
-          {% when '_hero-slider' %}
-            {% render '_hero-slider', block: block %}
-          {% else %}
-            {% render block %}
-        {% endcase %}
+        {% render block %}
       {% endif %}
     {% endfor %}
     {% if slideshow_opened %}
@@ -40,12 +35,7 @@
     {% endif %}
   {% else %}
     {% for block in section.blocks %}
-      {% case block.type %}
-        {% when '_hero-slider' %}
-          {% render '_hero-slider', block: block %}
-        {% else %}
-          {% render block %}
-      {% endcase %}
+      {% render block %}
     {% endfor %}
   {% endif %}
 {% endcapture %}
