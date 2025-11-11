@@ -35,7 +35,7 @@
 
   {% capture list_items %}
     {% for block in section.blocks %}
-      {% if block.type == 'full_image_review' %}
+      {% if block.type == 'review_image' %}
         <div class="customer-review-card customer-review-card--image-only" {{ block.shopify_attributes }}>
           {% if block.settings.image != blank %}
             {% if block.settings.link != blank %}<a href="{{ block.settings.link }}"{% if block.settings.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{% endif %}
@@ -48,135 +48,6 @@
               loading="lazy"
             >
             {% if block.settings.link != blank %}</a>{% endif %}
-          {% endif %}
-        </div>
-        {% unless forloop.last %}
-          <!--@list/split-->
-        {% endunless %}
-      {% elsif block.type == 'review_card' %}
-        <div class="customer-review-card" {{ block.shopify_attributes }}>
-          {% if block.settings.show_save_button %}
-            <button class="customer-review-card__save" aria-label="Save review">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M8 1L10.5 5.5L15.5 6.5L12 10L12.5 15L8 12.5L3.5 15L4 10L0.5 6.5L5.5 5.5L8 1Z" fill="currentColor"/>
-              </svg>
-            </button>
-          {% endif %}
-          
-          <div class="customer-review-card__content">
-            <div class="customer-review-card__reviewer">
-              {% if block.settings.reviewer_image != blank %}
-                <img 
-                  src="{{ block.settings.reviewer_image | image_url }}"
-                  alt="{{ block.settings.reviewer_name }}"
-                  width="{{ block.settings.reviewer_image.width }}"
-                  height="{{ block.settings.reviewer_image.height }}"
-                  class="customer-review-card__avatar"
-                >
-              {% else %}
-                <div class="customer-review-card__avatar customer-review-card__avatar--placeholder">
-                  {{ block.settings.reviewer_name | slice: 0, 1 }}
-                </div>
-              {% endif %}
-              <div class="customer-review-card__reviewer-info">
-                <h3 class="customer-review-card__reviewer-name">{{ block.settings.reviewer_name }}</h3>
-                {% if block.settings.reviewer_profession != blank %}
-                  <p class="customer-review-card__reviewer-profession">{{ block.settings.reviewer_profession }}</p>
-                {% endif %}
-              </div>
-            </div>
-
-            <div class="customer-review-card__rating">
-              {% assign rating = block.settings.rating | times: 1.0 %}
-              {% assign full_stars = rating | floor %}
-              {% assign decimal_part = rating | minus: full_stars %}
-              {% assign has_half = 0 %}
-              {% if decimal_part >= 0.5 %}
-                {% assign has_half = 1 %}
-              {% endif %}
-              {% assign next_star = full_stars | plus: 1 %}
-              {% for i in (1..5) %}
-                {% if i <= full_stars %}
-                  <svg class="star star--filled" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M10 1L12.5 7.5L19.5 8.5L14.5 13L16 20L10 16.5L4 20L5.5 13L0.5 8.5L7.5 7.5L10 1Z" fill="#FFD700"/>
-                  </svg>
-                {% elsif has_half == 1 and i == next_star %}
-                  <svg class="star star--half" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <defs>
-                      <linearGradient id="half-{{ block.id }}-{{ i }}">
-                        <stop offset="50%" stop-color="#FFD700"/>
-                        <stop offset="50%" stop-color="transparent"/>
-                      </linearGradient>
-                    </defs>
-                    <path d="M10 1L12.5 7.5L19.5 8.5L14.5 13L16 20L10 16.5L4 20L5.5 13L0.5 8.5L7.5 7.5L10 1Z" fill="url(#half-{{ block.id }}-{{ i }})"/>
-                  </svg>
-                {% else %}
-                  <svg class="star star--empty" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M10 1L12.5 7.5L19.5 8.5L14.5 13L16 20L10 16.5L4 20L5.5 13L0.5 8.5L7.5 7.5L10 1Z" fill="none" stroke="#FFD700" stroke-width="1"/>
-                  </svg>
-                {% endif %}
-              {% endfor %}
-              <span class="customer-review-card__rating-value">{{ rating }}</span>
-            </div>
-
-            {% if block.settings.headline != blank %}
-              <h4 class="customer-review-card__headline">{{ block.settings.headline }}</h4>
-            {% endif %}
-
-            {% if block.settings.review_text != blank %}
-              <p class="customer-review-card__text">{{ block.settings.review_text }}</p>
-            {% endif %}
-          </div>
-
-          {% if block.settings.product != blank %}
-            <div class="customer-review-card__product">
-              {% assign product = all_products[block.settings.product] %}
-              {% if product != blank %}
-                {% liquid
-                  if product.available == false
-                    assign can_add_to_cart = false
-                  else
-                    assign can_add_to_cart = true
-                  endif
-                %}
-                <div class="customer-review-card__product-image">
-                  {% if product.featured_image != blank %}
-                    <img 
-                      src="{{ product.featured_image | image_url }}"
-                      alt="{{ product.title }}"
-                      width="{{ product.featured_image.width }}"
-                      height="{{ product.featured_image.height }}"
-                    >
-                  {% endif %}
-                </div>
-                <div class="customer-review-card__product-info">
-                  <p class="customer-review-card__product-name">{{ product.title }}</p>
-                  <form method="post" action="{{ routes.cart_add_url }}" class="customer-review-card__atc-form" data-product-id="{{ product.id }}">
-                    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-                    <input type="hidden" name="quantity" value="1">
-                    <button
-                      type="button"
-                      class="customer-review-card__atc-button"
-                      {% unless can_add_to_cart %}disabled{% endunless %}
-                    >
-                      <span class="customer-review-card__atc-icon">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                          <path d="M3.5 4.5L2 14.5H14L12.5 4.5H3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                          <path d="M5 7V4.5C5 2.84315 6.34315 1.5 8 1.5C9.65685 1.5 11 2.84315 11 4.5V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                      </span>
-                      <span class="customer-review-card__atc-text">
-                        {% if can_add_to_cart %}
-                          Add to Cart
-                        {% else %}
-                          Sold Out
-                        {% endif %}
-                      </span>
-                    </button>
-                  </form>
-                </div>
-              {% endif %}
-            </div>
           {% endif %}
         </div>
         {% unless forloop.last %}
@@ -227,239 +98,23 @@
     background: #fff;
     border-radius: 12px;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
-    min-height: 400px;
   }
 
   .customer-review-card--image-only {
-    background: transparent;
-    border-radius: 12px;
-    box-shadow: none;
-    min-height: 0;
+    display: block;
   }
 
   .customer-review-card__full-image {
-    display: block;
     width: 100%;
     height: auto;
+    display: block;
     border-radius: 12px;
   }
 
-  .customer-review-card__save {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: #dc3545;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 8px;
-    cursor: pointer;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.3s ease;
-  }
-
-  .customer-review-card__save:hover {
-    background: #c82333;
-  }
-
-  .customer-review-card__save svg {
-    width: 14px;
-    height: 14px;
-  }
-
-  .customer-review-card__content {
-    padding: 24px;
-    background: #f5f5dc;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .customer-review-card__reviewer {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
-  }
-
-  .customer-review-card__avatar {
-    max-width: 100%;
-    height: auto;
-    border-radius: 0;
-    flex-shrink: 0;
-  }
-
-  .customer-review-card__avatar--placeholder {
-    background: #ae5245;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    font-weight: 600;
-  }
-
-  .customer-review-card__reviewer-info {
-    flex: 1;
-  }
-
-  .customer-review-card__reviewer-name {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 0 0 4px 0;
-    color: #3d2817;
-  }
-
-  .customer-review-card__reviewer-profession {
-    font-size: 0.875rem;
-    color: #666;
-    margin: 0;
-  }
-
-  .customer-review-card__rating {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-bottom: 8px;
-  }
-
-  .customer-review-card__rating-value {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #3d2817;
-    margin-left: 4px;
-  }
-
-  .star {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-  }
-
-  .star--filled path {
-    fill: #FFD700;
-  }
-
-  .star--empty path {
-    fill: none;
-    stroke: #FFD700;
-    stroke-width: 1;
-  }
-
-  .customer-review-card__headline {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #3d2817;
-    margin: 0 0 8px 0;
-  }
-
-  .customer-review-card__text {
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: #333;
-    margin: 0;
-    flex: 1;
-  }
-
-  .customer-review-card__product {
-    background: #3d2817;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .customer-review-card__product-image {
-    width: 60px;
-    height: 60px;
-    flex-shrink: 0;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #fff;
-  }
-
-  .customer-review-card__product-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  .customer-review-card__product-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .customer-review-card__product-name {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: #fff;
-    margin: 0;
-  }
-
-  .customer-review-card__atc-form {
-    width: 100%;
-    margin-top: 8px;
-  }
-
-  .customer-review-card__atc-button {
-    width: 100%;
-    background: #fff;
-    color: #3d2817;
-    border: none;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-
-  .customer-review-card__atc-button:hover:not(:disabled) {
-    background: #f5f5dc;
-    color: #3d2817;
-  }
-
-  .customer-review-card__atc-button:disabled {
-    background: #ccc;
-    color: #666;
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
-  .customer-review-card__atc-button.adding {
-    pointer-events: none;
-    opacity: 0.7;
-  }
-
-  .customer-review-card__atc-button.added {
-    background: #28a745;
-    color: #fff;
-  }
-
-  .customer-review-card__atc-icon {
-    display: flex;
-    align-items: center;
-    line-height: 1;
-  }
-
-  .customer-review-card__atc-icon svg {
-    width: 16px;
-    height: 16px;
+  .customer-review-card--image-only a {
+    display: block;
+    text-decoration: none;
   }
 
   @media screen and (max-width: 749px) {
@@ -470,91 +125,8 @@
     .section-customer-reviews__heading {
       font-size: 1.5rem;
     }
-
-    .customer-review-card__content {
-      padding: 20px;
-    }
-
-    .customer-review-card__product {
-      padding: 12px;
-    }
   }
 {% endstylesheet %}
-
-<script>
-  (function() {
-    const sectionId = '{{ section.id }}';
-    const sectionRoot = document.getElementById(`shopify-section-${sectionId}`);
-    if (!sectionRoot) return;
-
-    const forms = sectionRoot.querySelectorAll('.customer-review-card__atc-form');
-    
-    forms.forEach(form => {
-      const button = form.querySelector('.customer-review-card__atc-button');
-      const buttonText = form.querySelector('.customer-review-card__atc-text');
-      const variantInput = form.querySelector('input[name="id"]');
-      
-      if (!button || !buttonText || !variantInput) return;
-
-      button.addEventListener('click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        if (button.disabled || button.classList.contains('adding')) return;
-
-        button.disabled = true;
-        button.classList.add('adding');
-        const originalText = buttonText.textContent;
-        buttonText.textContent = 'Adding...';
-
-        try {
-          const response = await fetch('/cart/add.js', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              items: [{
-                id: variantInput.value,
-                quantity: 1
-              }]
-            })
-          });
-
-          if (!response.ok) throw new Error('Failed to add to cart');
-
-          button.classList.remove('adding');
-          button.classList.add('added');
-          buttonText.textContent = 'Added!';
-
-          setTimeout(() => {
-            button.classList.remove('added');
-            button.disabled = false;
-            buttonText.textContent = originalText;
-          }, 2000);
-
-          // Update cart count
-          const cartResponse = await fetch('/cart.js');
-          if (cartResponse.ok) {
-            const cart = await cartResponse.json();
-            document.querySelectorAll('[data-cart-count], .cart-count').forEach(el => {
-              el.textContent = cart.item_count;
-            });
-            document.dispatchEvent(new CustomEvent('cart:update', { detail: { cart } }));
-          }
-        } catch (error) {
-          console.error('Error adding to cart:', error);
-          button.classList.remove('adding');
-          button.disabled = false;
-          buttonText.textContent = 'Error - Try Again';
-          setTimeout(() => {
-            buttonText.textContent = originalText;
-          }, 2000);
-        }
-      });
-    });
-  })();
-</script>
 
 {% schema %}
 {
@@ -721,8 +293,8 @@
   ],
   "blocks": [
     {
-      "type": "full_image_review",
-      "name": "Full Image Review",
+      "type": "review_image",
+      "name": "Review Image",
       "settings": [
         {
           "type": "image_picker",
@@ -747,73 +319,6 @@
           "default": false
         }
       ]
-    },
-    {
-      "type": "review_card",
-      "name": "Review Card",
-      "settings": [
-        {
-          "type": "checkbox",
-          "id": "show_save_button",
-          "label": "Show save button",
-          "default": false
-        },
-        {
-          "type": "header",
-          "content": "Reviewer"
-        },
-        {
-          "type": "image_picker",
-          "id": "reviewer_image",
-          "label": "Reviewer image"
-        },
-        {
-          "type": "text",
-          "id": "reviewer_name",
-          "label": "Reviewer name",
-          "default": "John Doe"
-        },
-        {
-          "type": "text",
-          "id": "reviewer_profession",
-          "label": "Reviewer profession",
-          "default": "Customer"
-        },
-        {
-          "type": "header",
-          "content": "Review"
-        },
-        {
-          "type": "range",
-          "id": "rating",
-          "label": "Rating",
-          "min": 0,
-          "max": 5,
-          "step": 0.1,
-          "default": 5
-        },
-        {
-          "type": "text",
-          "id": "headline",
-          "label": "Headline",
-          "default": "GREAT PRODUCT"
-        },
-        {
-          "type": "textarea",
-          "id": "review_text",
-          "label": "Review text",
-          "default": "This is an amazing product that I highly recommend!"
-        },
-        {
-          "type": "header",
-          "content": "Product"
-        },
-        {
-          "type": "product",
-          "id": "product",
-          "label": "Product"
-        }
-      ]
     }
   ],
   "presets": [
@@ -821,39 +326,16 @@
       "name": "Customer Reviews Carousel",
       "blocks": [
         {
-          "type": "review_card",
-          "settings": {
-            "reviewer_name": "Faris Ahmad",
-            "reviewer_profession": "Aesthetician",
-            "rating": 4.9,
-            "headline": "100% RECOMMENDED",
-            "review_text": "I am a very big fan, as mejdool dates are pretty expensive there are so many brands out there, selling normal dates with mejdool written on packaging, but this one is original, really good quality and super chewy."
-          }
+          "type": "review_image"
         },
         {
-          "type": "review_card",
-          "settings": {
-            "show_save_button": true,
-            "reviewer_name": "Adhvika Joshi",
-            "reviewer_profession": "Fitness Influencer",
-            "rating": 4.6,
-            "headline": "GREAT DRY FRUIT MIX",
-            "review_text": "I ordered trail mix from them, i don't like eating dry fruit much, but they are very good source of nutrition, this mix is actually very tasty when you eat those cashews with all dried berries the combination is very very good!"
-          }
+          "type": "review_image"
         },
         {
-          "type": "review_card",
-          "settings": {
-            "reviewer_name": "Dhruv Kawade",
-            "reviewer_profession": "Educator",
-            "rating": 5,
-            "headline": "BEST QUALITY",
-            "review_text": "Ordered for my home and my wife loved this brand, their quality is very good, we use to buy open dry fruits from market, and we can see clear difference in quality they have uniform colour, size and even mild fragrance that is not available in market's dry fruit."
-          }
+          "type": "review_image"
         }
       ]
     }
   ]
 }
 {% endschema %}
-
