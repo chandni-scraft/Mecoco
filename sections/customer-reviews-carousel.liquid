@@ -35,7 +35,25 @@
 
   {% capture list_items %}
     {% for block in section.blocks %}
-      {% if block.type == 'review_card' %}
+      {% if block.type == 'full_image_review' %}
+        <div class="customer-review-card customer-review-card--image-only" {{ block.shopify_attributes }}>
+          {% if block.settings.image != blank %}
+            {% if block.settings.link != blank %}<a href="{{ block.settings.link }}"{% if block.settings.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>{% endif %}
+            <img
+              class="customer-review-card__full-image"
+              src="{{ block.settings.image | image_url }}"
+              alt="{{ block.settings.alt | default: 'Customer review' | escape }}"
+              width="{{ block.settings.image.width }}"
+              height="{{ block.settings.image.height }}"
+              loading="lazy"
+            >
+            {% if block.settings.link != blank %}</a>{% endif %}
+          {% endif %}
+        </div>
+        {% unless forloop.last %}
+          <!--@list/split-->
+        {% endunless %}
+      {% elsif block.type == 'review_card' %}
         <div class="customer-review-card" {{ block.shopify_attributes }}>
           {% if block.settings.show_save_button %}
             <button class="customer-review-card__save" aria-label="Save review">
@@ -49,10 +67,10 @@
             <div class="customer-review-card__reviewer">
               {% if block.settings.reviewer_image != blank %}
                 <img 
-                  src="{{ block.settings.reviewer_image | image_url: width: 80, height: 80, crop: 'center' }}"
+                  src="{{ block.settings.reviewer_image | image_url }}"
                   alt="{{ block.settings.reviewer_name }}"
-                  width="80"
-                  height="80"
+                  width="{{ block.settings.reviewer_image.width }}"
+                  height="{{ block.settings.reviewer_image.height }}"
                   class="customer-review-card__avatar"
                 >
               {% else %}
@@ -124,10 +142,10 @@
                 <div class="customer-review-card__product-image">
                   {% if product.featured_image != blank %}
                     <img 
-                      src="{{ product.featured_image | image_url: width: 120, height: 120, crop: 'center' }}"
+                      src="{{ product.featured_image | image_url }}"
                       alt="{{ product.title }}"
-                      width="120"
-                      height="120"
+                      width="{{ product.featured_image.width }}"
+                      height="{{ product.featured_image.height }}"
                     >
                   {% endif %}
                 </div>
@@ -217,6 +235,20 @@
     min-height: 400px;
   }
 
+  .customer-review-card--image-only {
+    background: transparent;
+    border-radius: 12px;
+    box-shadow: none;
+    min-height: 0;
+  }
+
+  .customer-review-card__full-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+  }
+
   .customer-review-card__save {
     position: absolute;
     top: 12px;
@@ -260,10 +292,9 @@
   }
 
   .customer-review-card__avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    object-fit: cover;
+    max-width: 100%;
+    height: auto;
+    border-radius: 0;
     flex-shrink: 0;
   }
 
@@ -689,6 +720,34 @@
     }
   ],
   "blocks": [
+    {
+      "type": "full_image_review",
+      "name": "Full Image Review",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Review image"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt text",
+          "default": "Customer review"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Optional link"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_in_new_tab",
+          "label": "Open link in new tab",
+          "default": false
+        }
+      ]
+    },
     {
       "type": "review_card",
       "name": "Review Card",
