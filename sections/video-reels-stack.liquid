@@ -12,7 +12,65 @@
     assign has_bg_image = true
   endif
 -%}
+<style>
+  #{{ section_id }} {
+    position: relative;
+    overflow: hidden;
+    padding: 60px 20px;
+    text-align: center;
+  }
 
+  /* ✅ Fix: ensure heading is visible above overlay */
+  #{{ section_id }} .video-reels-heading-wrapper {
+    position: relative;
+    z-index: 3; /* sits above overlay and videos */
+    max-width: 800px;
+    margin: 0 auto 40px auto;
+  }
+
+  /* optional: if you have dark overlay, make text bright */
+  #{{ section_id }} .video-reels-heading {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: {{ section.settings.heading_color | default: '#ffffff' }};
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  #{{ section_id }} .video-reels-subheading {
+    font-size: 1.1rem;
+    color: {{ section.settings.subheading_color | default: '#f0f0f0' }};
+    opacity: 0.9;
+    line-height: 1.6;
+  }
+
+  /* ✅ Make sure overlay is below content */
+  #{{ section_id }} .background-overlay {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #{{ section_id }} .video-reels-stack-container {
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (max-width: 768px) {
+    #{{ section_id }} {
+      padding: 40px 16px;
+    }
+    #{{ section_id }} .video-reels-heading {
+      font-size: 1.8rem;
+    }
+    #{{ section_id }} .video-reels-subheading {
+      font-size: 1rem;
+    }
+  }
+</style>
 <section id="{{ section_id }}" class="video-reels-stack-section {% if section.settings.full_width_background %}full-width-bg{% endif %}" data-section-id="{{ section.id }}" data-autoplay="{{ section.settings.autoplay }}" data-autoplay-speed="{{ section.settings.autoplay_speed }}">
   {%- if has_bg_image -%}
     <div class="video-reels-background-image {% if section.settings.background_blur %}blur-background{% endif %}">
@@ -23,27 +81,16 @@
       {%- endif -%}
     </div>
   {%- endif -%}
-  
+   <!-- ✨ Centered Heading and Subheading -->
+  <div class="video-reels-heading-wrapper">
+    
+      <h2 class="video-reels-heading">Watch Our Reels </h2>
+   
+      <p class="video-reels-subheading">Follow us on Instagram </p>
+  </div>
   <div class="video-reels-stack-container {% if section.settings.full_width_background %}full-width-container{% endif %}">
     <div class="video-reels-split-layout">
       {%- comment -%} Left side - Fixed content {%- endcomment -%}
-      <div class="video-reels-left-content">
-        <div class="left-content-inner">
-          {%- if section.settings.heading != blank -%}
-            <h2 class="video-reels-stack-heading">{{ section.settings.heading }}</h2>
-          {%- endif -%}
-          {%- if section.settings.subheading != blank -%}
-            <p class="video-reels-stack-subheading">{{ section.settings.subheading }}</p>
-          {%- endif -%}
-          {%- if section.settings.description != blank -%}
-            <div class="video-reels-description">{{ section.settings.description }}</div>
-          {%- endif -%}
-          {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
-            <a href="{{ section.settings.button_link }}" class="video-reels-button">{{ section.settings.button_label }}</a>
-          {%- endif -%}
-        </div>
-      </div>
-      
       {%- comment -%} Right side - Scrolling videos {%- endcomment -%}
       <div class="video-reels-right-scroll">
         <div class="video-reels-stack-wrapper">
@@ -142,7 +189,7 @@
                               </a>
                               
                               <div class="showcase-quick-add">
-                                <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
+                                <form action="/cart/add" method="post" enctype="multipart/form-data">
                                   <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
                                   <button type="submit" class="quick-add-btn">
                                     <svg width="16" height="16" viewBox="0 0 16 16">
@@ -288,15 +335,42 @@
       "id": "background_position",
       "label": "Background position",
       "options": [
-        { "value": "top left", "label": "Top left" },
-        { "value": "top center", "label": "Top center" },
-        { "value": "top right", "label": "Top right" },
-        { "value": "center left", "label": "Center left" },
-        { "value": "center center", "label": "Center" },
-        { "value": "center right", "label": "Center right" },
-        { "value": "bottom left", "label": "Bottom left" },
-        { "value": "bottom center", "label": "Bottom center" },
-        { "value": "bottom right", "label": "Bottom right" }
+        {
+          "value": "top left",
+          "label": "Top left"
+        },
+        {
+          "value": "top center",
+          "label": "Top center"
+        },
+        {
+          "value": "top right",
+          "label": "Top right"
+        },
+        {
+          "value": "center left",
+          "label": "Center left"
+        },
+        {
+          "value": "center center",
+          "label": "Center"
+        },
+        {
+          "value": "center right",
+          "label": "Center right"
+        },
+        {
+          "value": "bottom left",
+          "label": "Bottom left"
+        },
+        {
+          "value": "bottom center",
+          "label": "Bottom center"
+        },
+        {
+          "value": "bottom right",
+          "label": "Bottom right"
+        }
       ],
       "default": "center center"
     },
@@ -369,9 +443,15 @@
     {
       "name": "Video Reels Stack",
       "blocks": [
-        { "type": "video_reel" },
-        { "type": "video_reel" },
-        { "type": "video_reel" }
+        {
+          "type": "video_reel"
+        },
+        {
+          "type": "video_reel"
+        },
+        {
+          "type": "video_reel"
+        }
       ]
     }
   ]
@@ -379,3 +459,303 @@
 {% endschema %}
 
 
+{% comment %} {{ 'video-reels-pure.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'video-reels-smooth.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign section_id = 'video-reels-stack-' | append: section.id
+  assign reel_count = section.blocks.size
+  assign has_bg_image = false
+  if section.settings.background_image != blank
+    assign has_bg_image = true
+  endif
+-%}
+<style>
+  #{{ section_id }} {
+    position: relative;
+    overflow: hidden;
+    padding: 60px 20px;
+    text-align: center;
+  }
+
+  /* ✅ Fix: ensure heading is visible above overlay */
+  #{{ section_id }} .video-reels-heading-wrapper {
+    position: relative;
+    z-index: 3; /* sits above overlay and videos */
+    max-width: 800px;
+    margin: 0 auto 40px auto;
+  }
+
+  /* optional: if you have dark overlay, make text bright */
+  #{{ section_id }} .video-reels-heading {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: {{ section.settings.heading_color | default: '#ffffff' }};
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  #{{ section_id }} .video-reels-subheading {
+    font-size: 1.1rem;
+    color: {{ section.settings.subheading_color | default: '#f0f0f0' }};
+    opacity: 0.9;
+    line-height: 1.6;
+  }
+
+  /* ✅ Make sure overlay is below content */
+  #{{ section_id }} .background-overlay {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #{{ section_id }} .video-reels-stack-container {
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (max-width: 768px) {
+    #{{ section_id }} {
+      padding: 40px 16px;
+    }
+    #{{ section_id }} .video-reels-heading {
+      font-size: 1.8rem;
+    }
+    #{{ section_id }} .video-reels-subheading {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+
+<section id="{{ section_id }}" 
+  class="video-reels-stack-section {% if section.settings.full_width_background %}full-width-bg{% endif %}"
+  data-section-id="{{ section.id }}"
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-autoplay-speed="{{ section.settings.autoplay_speed }}"
+>
+  {%- if has_bg_image -%}
+    <div class="video-reels-background-image {% if section.settings.background_blur %}blur-background{% endif %}">
+      {%- capture bg_style -%}object-position: {{ section.settings.background_position }};{%- endcapture -%}
+      {{ section.settings.background_image | image_url: width: 3840 | image_tag: loading: 'lazy', class: 'background-image', style: bg_style }}
+      {%- if section.settings.background_overlay -%}
+        <div class="background-overlay" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; background-color: {{ section.settings.overlay_color }};"></div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <!-- ✨ Centered Heading and Subheading -->
+  <div class="video-reels-heading-wrapper">
+    {%- if section.settings.main_heading != blank -%}
+      <h2 class="video-reels-heading">{{ section.settings.main_heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.main_subheading != blank -%}
+      <p class="video-reels-subheading">{{ section.settings.main_subheading }}</p>
+    {%- endif -%}
+  </div>
+
+  <!-- Original Video Reels Stack -->
+  <div class="video-reels-stack-container {% if section.settings.full_width_background %}full-width-container{% endif %}">
+    <div class="video-reels-split-layout">
+      <div class="video-reels-right-scroll">
+        <div class="video-reels-stack-wrapper">
+          <div class="video-reels-stack" data-reel-count="{{ reel_count }}">
+            {%- for block in section.blocks -%}
+              <div class="video-reel-stack-card" data-reel-index="{{ forloop.index0 }}" data-active="{% if forloop.first %}true{% else %}false{% endif %}" {{ block.shopify_attributes }}>
+                <div class="video-reel-stack-inner">
+                  <div class="video-reel-stack-media">
+                    {%- if block.settings.video != blank -%}
+                      <video 
+                        class="reel-stack-video"
+                        playsinline
+                        muted
+                        loop
+                        {% if forloop.first %}autoplay{% endif %}
+                        preload="auto"
+                        poster="{{ block.settings.video.preview_image | image_url: width: 720 }}"
+                      >
+                        {%- for source in block.settings.video.sources -%}
+                          <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                        {%- endfor -%}
+                      </video>
+                    {%- elsif block.settings.video_url != blank -%}
+                      <div class="reel-stack-video-embed" data-video-url="{{ block.settings.video_url }}">
+                        <iframe
+                          src="{{ block.settings.video_url }}"
+                          class="reel-stack-video"
+                          frameborder="0"
+                          allow="autoplay; encrypted-media"
+                          allowfullscreen
+                        ></iframe>
+                      </div>
+                    {%- else -%}
+                      <div class="reel-stack-placeholder">
+                        <p>Add a video to showcase your products</p>
+                      </div>
+                    {%- endif -%}
+                    <div class="video-progress-bar">
+                      <div class="video-progress-fill"></div>
+                    </div>
+                  </div>
+
+                  <div class="video-reel-stack-overlay">
+                    <div class="video-reel-stack-content">
+                      {%- if block.settings.caption != blank -%}
+                        <div class="reel-stack-caption">
+                          <h3>{{ block.settings.caption }}</h3>
+                        </div>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+        <div class="video-reels-progress">
+          <div class="progress-line"><div class="progress-fill"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Video Reels Stack",
+  "tag": "section",
+  "class": "section-video-reels-stack",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Main Section Heading"
+    },
+    {
+      "type": "text",
+      "id": "main_heading",
+      "label": "Main Heading",
+      "default": "Watch Our Reels"
+    },
+    {
+      "type": "text",
+      "id": "main_subheading",
+      "label": "Subheading",
+      "default": "Experience our collection in motion"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#555555"
+    },
+    {
+      "type": "header",
+      "content": "Video Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-advance reels",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 5,
+      "max": 15,
+      "step": 1,
+      "unit": "sec",
+      "label": "Change reels every",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "info": "Recommended: 3840 x 800px"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width_background",
+      "label": "Full width background",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "background_overlay",
+      "label": "Add overlay",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 30
+    },
+    {
+      "type": "select",
+      "id": "background_position",
+      "label": "Background position",
+      "default": "center center",
+      "options": [
+        { "value": "top left", "label": "Top left" },
+        { "value": "top center", "label": "Top center" },
+        { "value": "top right", "label": "Top right" },
+        { "value": "center left", "label": "Center left" },
+        { "value": "center center", "label": "Center" },
+        { "value": "center right", "label": "Center right" },
+        { "value": "bottom left", "label": "Bottom left" },
+        { "value": "bottom center", "label": "Bottom center" },
+        { "value": "bottom right", "label": "Bottom right" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "background_blur",
+      "label": "Blur background",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video_reel",
+      "name": "Video Reel",
+      "settings": [
+        { "type": "video", "id": "video", "label": "Video" },
+        { "type": "text", "id": "video_url", "label": "Or video URL" },
+        { "type": "text", "id": "caption", "label": "Caption" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Reels Stack",
+      "blocks": [{ "type": "video_reel" }, { "type": "video_reel" }]
+    }
+  ]
+}
+{% endschema %} {% endcomment %}
