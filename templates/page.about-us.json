@@ -195,6 +195,32 @@
         "padding-block-end": 40
       }
     },
+    "custom_banner_slider_k_J3aKdU": {
+      "type": "custom-banner-slider-k",
+      "blocks": {
+        "slide_BfKMdf": {
+          "type": "slide",
+          "settings": {
+            "desktop_image": "shopify://shop_images/Untitled_design_15_b6f6c986-cfbc-4ce2-83d7-79b2af234b7d.png",
+            "mobile_image": "shopify://shop_images/4.png",
+            "slide_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_BfKMdf"
+      ],
+      "name": "Custom Banner Slider",
+      "settings": {
+        "show_dots": true,
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "hide_on_desktop": false,
+        "hide_on_mobile": false,
+        "desktop_size": "fit_image",
+        "mobile_size": "fit_image"
+      }
+    },
     "section_M67N86": {
       "type": "section",
       "blocks": {
@@ -402,6 +428,7 @@
         "video_rCDAPP",
         "group_UyVeAh"
       ],
+      "disabled": true,
       "name": "t:names.image_with_text",
       "settings": {
         "content_direction": "row",
@@ -3727,6 +3754,7 @@
   "order": [
     "main",
     "hero_9LwWQB",
+    "custom_banner_slider_k_J3aKdU",
     "section_M67N86",
     "section_PxLMa4",
     "section_GWNjJk",
