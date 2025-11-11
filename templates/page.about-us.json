@@ -3628,7 +3628,8 @@
         "group_yXNbY3"
       ],
       "custom_css": [
-        ".section--page-width {max-width: 1200px !important; margin: 0 auto; width: 100%;}"
+        ".section--page-width {max-width: 1200px !important; margin: 0 auto; width: 100%;}",
+        "h3{color:#fff;}"
       ],
       "name": "t:names.image_with_text",
       "settings": {
