@@ -1,0 +1,128 @@
+{% comment %}
+  Icons & Text Grid Section
+  - Desktop: 3 columns, each with circular check icon above text. Dashed green borders.
+  - Mobile: 3 rows, icon left, text right. Dashed green borders between cells.
+{% endcomment %}
+
+<section class="icons-text-grid color-{{ section.settings.color_scheme }}">
+  <div class="icons-text-grid__inner page-width-{{ settings.page_width }}">
+    {% for block in section.blocks %}
+      <div class="icons-text-grid__item" {{ block.shopify_attributes }}>
+        <div class="icons-text-grid__icon" aria-hidden="true">
+          {%- comment -%} Inline SVG to avoid external asset dependency {%- endcomment -%}
+          <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+            <circle cx="36" cy="36" r="30" stroke="#5A7866" stroke-width="4"/>
+            <path d="M26 37.5L33.5 45L48 29.5" stroke="#5A7866" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="icons-text-grid__text rte">
+          {{ block.settings.text }}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% stylesheet %}
+.icons-text-grid__inner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.icons-text-grid__item {
+  display: grid;
+  grid-template-rows: auto auto;
+  align-items: center;
+  justify-items: center;
+  padding: 24px;
+  border: 2px dashed #2a8b3e; /* green dashed border similar to screenshots */
+  border-radius: 8px;
+  background: transparent;
+}
+
+.icons-text-grid__icon {
+  line-height: 0;
+  margin-bottom: 12px;
+}
+
+.icons-text-grid__text {
+  color: #231f20;
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Mobile layout: 1 column, icon on left, text on right in each row */
+@media screen and (max-width: 749px) {
+  .icons-text-grid__inner {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .icons-text-grid__item {
+    grid-template-columns: 72px 1fr;
+    grid-template-rows: auto;
+    justify-items: start;
+    align-items: center;
+    padding: 16px;
+  }
+
+  .icons-text-grid__icon {
+    margin: 0 12px 0 0;
+    grid-column: 1 / span 1;
+  }
+
+  .icons-text-grid__text {
+    grid-column: 2 / span 1;
+    text-align: left;
+    font-size: 18px;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Icons & Text Grid",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "inverse", "label": "Inverse" }
+      ],
+      "default": "default"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>No Additives</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Icons & Text Grid",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+
