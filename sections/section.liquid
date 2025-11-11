@@ -1,5 +1,3 @@
-
-
 {% capture children %}
   {% if section.settings.mobile_image_carousel %}
     {% assign slideshow_opened = false %}
@@ -19,10 +17,17 @@
           {{ slides }}
           {% render 'slideshow-slide', index: image_index, children: slide_children %}
         {% endcapture %}
+        <div class="section-content-viewport hidden--mobile">
+          {{ slide_children }}
+        </div>
         {% assign image_index = image_index | plus: 1 %}
       {% else %}
         {% if slideshow_opened %}
-          {% render 'slideshow', slide_count: image_index, slides: slides, class: 'section-image-carousel' %}
+          {% render 'slideshow',
+            slide_count: image_index,
+            slides: slides,
+            class: 'section-image-carousel hidden--desktop'
+          %}
           {% assign slideshow_opened = false %}
           {% assign image_index = 0 %}
           {% capture slides %}{% endcapture %}
@@ -31,7 +36,11 @@
       {% endif %}
     {% endfor %}
     {% if slideshow_opened %}
-      {% render 'slideshow', slide_count: image_index, slides: slides, class: 'section-image-carousel' %}
+      {% render 'slideshow',
+        slide_count: image_index,
+        slides: slides,
+        class: 'section-image-carousel hidden--desktop'
+      %}
     {% endif %}
   {% else %}
     {% for block in section.blocks %}
@@ -41,6 +50,12 @@
 {% endcapture %}
 
 {% render 'section', section: section, children: children %}
+
+{% stylesheet %}
+  .section-content-viewport {
+    display: contents;
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
