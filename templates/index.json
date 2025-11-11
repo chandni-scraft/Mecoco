@@ -2399,7 +2399,7 @@
             "image_ratio": "portrait",
             "width": "fill",
             "custom_width": 55,
-            "width_mobile": "fit-content",
+            "width_mobile": "fill",
             "custom_width_mobile": 100,
             "height": "fit",
             "border": "none",
