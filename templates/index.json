@@ -1635,7 +1635,6 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "mobile_image_carousel": false,
         "padding-block-start": 0,
         "padding-block-end": 0
       }
@@ -2341,9 +2340,59 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "mobile_image_carousel": false,
         "padding-block-start": 48,
         "padding-block-end": 48
+      }
+    },
+    "customer_reviews_carousel_UVmjfi": {
+      "type": "customer-reviews-carousel",
+      "blocks": {
+        "review_image_jyazJL": {
+          "type": "review_image",
+          "settings": {
+            "image": "shopify://shop_images/1_0c7e5e93-06cd-4f73-965a-a2cf225dd9f6.png",
+            "alt": "Customer review",
+            "link": "",
+            "open_in_new_tab": false
+          }
+        },
+        "review_image_WW9QJJ": {
+          "type": "review_image",
+          "settings": {
+            "image": "shopify://shop_images/2_338f0dbc-16ea-465f-8196-900cef5101f4.png",
+            "alt": "Customer review",
+            "link": "",
+            "open_in_new_tab": false
+          }
+        },
+        "review_image_BCqPEA": {
+          "type": "review_image",
+          "settings": {
+            "image": "shopify://shop_images/3_93d85855-e93c-4890-85fe-64a27fa539a2.png",
+            "alt": "Customer review",
+            "link": "",
+            "open_in_new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "review_image_jyazJL",
+        "review_image_WW9QJJ",
+        "review_image_BCqPEA"
+      ],
+      "name": "Customer Reviews Carousel",
+      "settings": {
+        "heading": "What Our Customers Say",
+        "section_width": "page-width",
+        "columns": 3,
+        "mobile_columns": "1",
+        "mobile_card_size": "85cqw",
+        "columns_gap": 16,
+        "icons_style": "arrow",
+        "icons_shape": "circle",
+        "padding-block-start": 48,
+        "padding-block-end": 48,
+        "color_scheme": ""
       }
     },
     "section_DQ9nyq": {
@@ -2562,7 +2611,6 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "mobile_image_carousel": true,
         "padding-block-start": 40,
         "padding-block-end": 40
       }
@@ -2673,6 +2721,7 @@
     "section_RhpYRt",
     "product_list_9efECi",
     "section_KBPrmB",
+    "customer_reviews_carousel_UVmjfi",
     "section_DQ9nyq",
     "video_reels_stack_qxfLHP"
   ]
