@@ -1076,7 +1076,7 @@
         "collection_4FtFQj"
       ],
       "custom_css": [
-        ".custom-section-content {max-width: 1400px !important; margin: 0 auto; width: 100%;}"
+        ".custom-section-content {max-width: 1400px !important; margin: 0 auto; width: 100%; padding: 48px 0;}"
       ],
       "name": "Shop by Concern Tabs",
       "settings": {
