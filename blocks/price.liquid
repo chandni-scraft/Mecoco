@@ -53,6 +53,21 @@
     show_sale_price_first: block_settings.show_sale_price_first
   %}
 
+  {% if product_resource and product_resource.variants %}
+    <div class="product-price__templates" hidden>
+      {% for variant in product_resource.variants %}
+        <template data-variant-id="{{ variant.id }}">
+          {% render 'price',
+            show_unit_price: true,
+            product_resource: product_resource,
+            show_sale_price_first: block_settings.show_sale_price_first,
+            selected_variant: variant
+          %}
+        </template>
+      {% endfor %}
+    </div>
+  {% endif %}
+
   {% if block_settings.show_tax_info %}
     <div class="tax-note">
       {%- if cart.duties_included and cart.taxes_included -%}

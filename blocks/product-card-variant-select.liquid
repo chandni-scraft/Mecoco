@@ -224,6 +224,7 @@
         this.updateSelectInputs(variant);
         this.updateHiddenVariant(variant);
         this.syncLocalAddToCart(variant);
+        this.updatePriceDisplay(variant);
         this.updateProductCard(String(variant.id));
 
         document.dispatchEvent(new CustomEvent('variant:changed', {
@@ -246,6 +247,7 @@
         this.updateSelectInputs(variant);
         this.updateHiddenVariant(variant);
         this.syncLocalAddToCart(variant);
+        this.updatePriceDisplay(variant);
 
         document.dispatchEvent(new CustomEvent('variant:changed', {
           detail: {
@@ -357,6 +359,86 @@
         if (buttonText) {
           buttonText.textContent = variant.available ? defaultLabel : soldOutLabel;
         }
+      }
+
+      updatePriceDisplay(variant) {
+        const productCard = this.container.closest('product-card');
+        if (!productCard) {
+          return;
+        }
+
+        const priceElements = productCard.querySelectorAll('product-price');
+        if (!priceElements.length) {
+          return;
+        }
+
+        const self = this;
+        priceElements.forEach(function(priceElement) {
+          self.replacePriceContent(priceElement, variant);
+        });
+      }
+
+      replacePriceContent(priceComponent, variant) {
+        const priceContainer = priceComponent.querySelector('[ref="priceContainer"]');
+        if (!priceContainer) {
+          return;
+        }
+
+        const variantId = String(variant.id);
+        const templateSelector = '.product-price__templates template[data-variant-id="' + variantId + '"]';
+        const template = priceComponent.querySelector(templateSelector);
+
+        if (template && 'content' in template) {
+          const fragment = template.content.cloneNode(true);
+          const newPriceContainer = fragment.querySelector('[ref="priceContainer"]') || fragment.firstElementChild;
+          if (newPriceContainer) {
+            priceContainer.replaceWith(newPriceContainer);
+            return;
+          }
+        }
+
+        this.updatePriceFallback(priceContainer, variant);
+      }
+
+      updatePriceFallback(priceContainer, variant) {
+        const priceElements = priceContainer.querySelectorAll('.price');
+        const compareElements = priceContainer.querySelectorAll('.compare-at-price');
+        const variantPrice = Number(variant.price || 0);
+        const variantComparePrice = Number(variant.compare_at_price || 0);
+        const hasCompare = Boolean(variantComparePrice && variantComparePrice > variantPrice);
+
+        const formatMoney = window.Shopify && typeof window.Shopify.formatMoney === 'function'
+          ? window.Shopify.formatMoney
+          : null;
+        const moneyFormat = (window.Shopify && window.Shopify.money_format) || '${{amount}}';
+
+        const formattedPrice = formatMoney
+          ? formatMoney(variantPrice, moneyFormat)
+          : (variantPrice / 100).toFixed(2);
+
+        priceElements.forEach(function(element) {
+          element.innerHTML = formattedPrice;
+        });
+
+        compareElements.forEach(function(element) {
+          const compareGroup = element.closest('[role="group"]');
+          if (hasCompare) {
+            const formattedCompare = formatMoney
+              ? formatMoney(variantComparePrice, moneyFormat)
+              : (variantComparePrice / 100).toFixed(2);
+            element.innerHTML = formattedCompare;
+            if (compareGroup) {
+              compareGroup.style.removeProperty('display');
+              compareGroup.removeAttribute('hidden');
+            }
+          } else {
+            element.innerHTML = '';
+            if (compareGroup) {
+              compareGroup.style.display = 'none';
+              compareGroup.setAttribute('hidden', 'hidden');
+            }
+          }
+        });
       }
 
       updateProductCard(variantId) {
