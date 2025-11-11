@@ -83,7 +83,8 @@
         }
       },
       "custom_css": [
-        ".blog-post-content {max-width: 100%;}"
+        ".blog-post-content {max-width: 100%;}",
+        "p{font-size:16px;}"
       ],
       "settings": {
         "content_direction": "column",
