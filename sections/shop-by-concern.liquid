@@ -83,8 +83,17 @@
                       </a>
                       <div class="shop-by-concern__details">
                         <a class="shop-by-concern__title" href="{{ product.url }}">{{ product.title }}</a>
-                        <div class="shop-by-concern__price">
+                        <div class="shop-by-concern__price" data-price-wrapper data-product-id="{{ product.id }}">
                           {% render 'price', product_resource: product %}
+                          {% if product.variants.size > 0 %}
+                            <div class="shop-by-concern__price-templates" hidden>
+                              {% for variant in product.variants %}
+                                <template data-variant-id="{{ variant.id }}">
+                                  {% render 'price', product_resource: product, selected_variant: variant %}
+                                </template>
+                              {% endfor %}
+                            </div>
+                          {% endif %}
                         </div>
                         <form class="shop-by-concern__form" method="post" action="{{ routes.cart_add_url }}">
                           {%- if product.variants.size > 1 -%}
@@ -94,7 +103,14 @@
                                     name="id"
                                     aria-label="Select variant for {{ product.title | escape }}">
                               {%- for variant in product.variants -%}
-                                <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+                                <option
+                                  value="{{ variant.id }}"
+                                  data-price="{{ variant.price }}"
+                                  data-compare-at-price="{{ variant.compare_at_price }}"
+                                  data-available="{{ variant.available }}"
+                                  {% if variant == product.selected_or_first_available_variant %}selected{% endif %}
+                                  {% unless variant.available %}disabled{% endunless %}
+                                >
                                   {{ variant.title }}{% unless variant.available %} - {{ 'products.product.sold_out' | t }}{% endunless %}
                                 </option>
                               {%- endfor -%}
@@ -239,6 +255,79 @@
         }, { passive: false }); {% endcomment %}
 
         grid.__wheelHandlerAttached = true;
+      });
+
+      function formatMoneyValue(value) {
+        var amount = Number(value || 0);
+        if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
+          var moneyFormat = window.Shopify.money_format || '${{amount}}';
+          return window.Shopify.formatMoney(amount, moneyFormat);
+        }
+        return (amount / 100).toFixed(2);
+      }
+
+      function updatePriceFallback(priceContainer, option) {
+        if (!priceContainer || !option) return;
+        var priceValue = Number(option.getAttribute('data-price') || 0);
+        var compareValue = Number(option.getAttribute('data-compare-at-price') || 0);
+        var hasCompare = compareValue && compareValue > priceValue;
+
+        var formattedPrice = formatMoneyValue(priceValue);
+        priceContainer.querySelectorAll('.price').forEach(function(span) {
+          span.innerHTML = formattedPrice;
+        });
+
+        priceContainer.querySelectorAll('.compare-at-price').forEach(function(span) {
+          var group = span.closest('[role="group"]');
+          if (hasCompare) {
+            span.innerHTML = formatMoneyValue(compareValue);
+            if (group) {
+              group.removeAttribute('hidden');
+              group.style.removeProperty('display');
+            }
+          } else {
+            span.innerHTML = '';
+            if (group) {
+              group.setAttribute('hidden', 'hidden');
+              group.style.display = 'none';
+            }
+          }
+        });
+      }
+
+      function swapPriceTemplate(priceWrapper, variantId, option) {
+        if (!priceWrapper || !variantId) return;
+        var priceContainer = priceWrapper.querySelector('[ref="priceContainer"]');
+        if (!priceContainer) return;
+
+        var templateSelector = '.shop-by-concern__price-templates template[data-variant-id=\"' + variantId + '\"]';
+        var template = priceWrapper.querySelector(templateSelector);
+
+        if (template && 'content' in template) {
+          var fragment = template.content.cloneNode(true);
+          var newPriceContainer = fragment.querySelector('[ref="priceContainer"]') || fragment.firstElementChild;
+          if (newPriceContainer) {
+            priceContainer.replaceWith(newPriceContainer);
+            return;
+          }
+        }
+
+        updatePriceFallback(priceContainer, option);
+      }
+
+      root.addEventListener('change', function(event) {
+        var select = event.target.closest('.shop-by-concern__variant');
+        if (!select) return;
+
+        var card = select.closest('.shop-by-concern__card');
+        if (!card) return;
+
+        var variantId = select.value;
+        if (!variantId) return;
+
+        var priceWrapper = card.querySelector('[data-price-wrapper]');
+        var option = select.options[select.selectedIndex];
+        swapPriceTemplate(priceWrapper, variantId, option);
       });
 
       // AJAX Add to Cart handling (progressive enhancement)
