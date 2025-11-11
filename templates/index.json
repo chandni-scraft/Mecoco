@@ -636,7 +636,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<h3>Explore categories</h3>",
+                "text": "<h2>Explore categories</h2>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
