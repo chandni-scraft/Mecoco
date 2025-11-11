@@ -1635,6 +1635,7 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
+        "mobile_image_carousel": false,
         "padding-block-start": 0,
         "padding-block-end": 0
       }
@@ -2340,6 +2341,7 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
+        "mobile_image_carousel": false,
         "padding-block-start": 48,
         "padding-block-end": 48
       }
@@ -2560,6 +2562,7 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
+        "mobile_image_carousel": true,
         "padding-block-start": 40,
         "padding-block-end": 40
       }
