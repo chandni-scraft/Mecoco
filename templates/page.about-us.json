@@ -2352,7 +2352,9 @@
         "item_XAg4Cj",
         "item_KN7r9c"
       ],
-      "custom_css": [],
+      "custom_css": [
+        ".icons-text-grid__inner {width: 1200px; margin: 0 auto; padding: 48px;}"
+      ],
       "name": "Icons & Text Grid",
       "settings": {
         "color_scheme": "default"
