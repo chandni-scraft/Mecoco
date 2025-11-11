@@ -1,14 +1,53 @@
 
 
 {% capture children %}
-  {% for block in section.blocks %}
-    {% case block.type %}
-      {% when '_hero-slider' %}
-        {% render '_hero-slider', block: block %}
+  {% if section.settings.mobile_image_carousel %}
+    {% assign slideshow_opened = false %}
+    {% assign image_index = 0 %}
+    {% capture slides %}{% endcapture %}
+    {% for block in section.blocks %}
+      {% if block.type == 'image' %}
+        {% if slideshow_opened == false %}
+          {% assign slideshow_opened = true %}
+          {% assign image_index = 0 %}
+          {% capture slides %}{% endcapture %}
+        {% endif %}
+        {% capture slide_children %}
+          {% render block %}
+        {% endcapture %}
+        {% capture slides %}
+          {{ slides }}
+          {% render 'slideshow-slide', index: image_index, children: slide_children %}
+        {% endcapture %}
+        {% assign image_index = image_index | plus: 1 %}
       {% else %}
-        {% render block %}
-    {% endcase %}
-  {% endfor %}
+        {% if slideshow_opened %}
+          {% render 'slideshow', slide_count: image_index, slides: slides, class: 'section-image-carousel' %}
+          {% assign slideshow_opened = false %}
+          {% assign image_index = 0 %}
+          {% capture slides %}{% endcapture %}
+        {% endif %}
+        {% case block.type %}
+          {% when '_hero-slider' %}
+            {% render '_hero-slider', block: block %}
+          {% else %}
+            {% render block %}
+        {% endcase %}
+      {% endif %}
+    {% endfor %}
+    {% if slideshow_opened %}
+      {% render 'slideshow', slide_count: image_index, slides: slides, class: 'section-image-carousel' %}
+    {% endif %}
+  {% else %}
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when '_hero-slider' %}
+          {% render '_hero-slider', block: block %}
+        {% else %}
+          {% render block %}
+      {% endcase %}
+    {% endfor %}
+  {% endif %}
 {% endcapture %}
 
 {% render 'section', section: section, children: children %}
@@ -408,6 +447,12 @@
     {
       "type": "header",
       "content": "t:content.padding"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_image_carousel",
+      "label": "Enable image carousel on mobile",
+      "default": false
     },
     {
       "type": "range",
