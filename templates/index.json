@@ -2647,7 +2647,7 @@
         "full_width_background": true,
         "background_overlay": true,
         "overlay_color": "#a42325",
-        "overlay_opacity": 30,
+        "overlay_opacity": 0,
         "background_position": "center center",
         "background_blur": false
       }
