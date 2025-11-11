@@ -966,6 +966,7 @@ summary::-webkit-details-marker {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--product-grid-gap);
+  justify-content: center;
   margin: auto;
   padding: 0;
   list-style: none;
