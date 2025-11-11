@@ -766,7 +766,7 @@
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "center",
-                "type_preset": "h3",
+                "type_preset": "h2",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -862,8 +862,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 10,
-        "padding-block-end": 10
+        "padding-block-start": 40,
+        "padding-block-end": 40
       }
     },
     "section_cWmMyV": {
@@ -1246,7 +1246,7 @@
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "center",
-                "type_preset": "h3",
+                "type_preset": "h2",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -1342,8 +1342,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 10,
-        "padding-block-end": 10
+        "padding-block-start": 40,
+        "padding-block-end": 40
       }
     },
     "section_dCJXdW": {
@@ -1841,8 +1841,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-start": 40,
+        "padding-block-end": 40
       }
     },
     "section_4frjqF": {
@@ -1917,7 +1917,7 @@
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "center",
-                "type_preset": "h3",
+                "type_preset": "h2",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -2013,8 +2013,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 10,
-        "padding-block-end": 10
+        "padding-block-start": 40,
+        "padding-block-end": 40
       }
     },
     "section_UMJY8k": {
@@ -2353,7 +2353,7 @@
         "item_KN7r9c"
       ],
       "custom_css": [
-        ".icons-text-grid__inner {width: 1200px; margin: 0 auto; padding: 48px;}"
+        ".icons-text-grid__inner {width: 1200px; margin: 0 auto; padding: 40px;}"
       ],
       "name": "Icons & Text Grid",
       "settings": {
@@ -2955,7 +2955,7 @@
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "center",
-                "type_preset": "h3",
+                "type_preset": "h2",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -3051,8 +3051,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 10,
-        "padding-block-end": 10
+        "padding-block-start": 40,
+        "padding-block-end": 40
       }
     },
     "section_3KcBkU": {
@@ -3419,11 +3419,11 @@
           "type": "text",
           "name": "t:names.heading",
           "settings": {
-            "text": "<h3>Eat Right with Meecoco, Everyday!</h3>",
+            "text": "<h2>Eat Right with Meecoco, Everyday!</h2>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "center",
-            "type_preset": "rte",
+            "type_preset": "h2",
             "font": "var(--font-body--family)",
             "font_size": "1rem",
             "line_height": "normal",
@@ -3445,11 +3445,11 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p><strong>Join the community!</strong></p>",
+            "text": "<h3><strong>Join the community!</strong></h3>",
             "width": "100%",
             "max_width": "normal",
             "alignment": "center",
-            "type_preset": "custom",
+            "type_preset": "h3",
             "font": "var(--font-body--family)",
             "font_size": "1.5rem",
             "line_height": "normal",
@@ -3692,7 +3692,7 @@
       ],
       "custom_css": [
         ".section--page-width {max-width: 1200px !important; margin: 0 auto; width: 100%;}",
-        "h3 {color: #fff;}"
+        "h2 {color: #fff;}"
       ],
       "name": "t:names.image_with_text",
       "settings": {
