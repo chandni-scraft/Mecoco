@@ -723,6 +723,11 @@
 }
 
 @media (max-width: 749px) {
+  .video-reel-stack-card {
+    width: 70%;
+    flex-basis: 70%;
+  }
+  
   .video-reels-stack-heading {
     font-size: 2rem;
   }
