@@ -1,61 +1,10 @@
+
+
 {% capture children %}
-  {% if section.settings.mobile_image_carousel %}
-    {% assign slideshow_opened = false %}
-    {% assign image_index = 0 %}
-    {% capture slides %}{% endcapture %}
-    {% for block in section.blocks %}
-      {% if block.type == 'image' %}
-        {% if slideshow_opened == false %}
-          {% assign slideshow_opened = true %}
-          {% assign image_index = 0 %}
-          {% capture slides %}{% endcapture %}
-        {% endif %}
-        {% capture slide_children %}
-          {% render block %}
-        {% endcapture %}
-        {% capture slides %}
-          {{ slides }}
-          {% render 'slideshow-slide', index: image_index, children: slide_children %}
-        {% endcapture %}
-        <div class="section-content-viewport hidden--mobile">
-          {{ slide_children }}
-        </div>
-        {% assign image_index = image_index | plus: 1 %}
-      {% else %}
-        {% if slideshow_opened %}
-          {% render 'slideshow',
-            slide_count: image_index,
-            slides: slides,
-            class: 'section-image-carousel hidden--desktop'
-          %}
-          {% assign slideshow_opened = false %}
-          {% assign image_index = 0 %}
-          {% capture slides %}{% endcapture %}
-        {% endif %}
-        {% render block %}
-      {% endif %}
-    {% endfor %}
-    {% if slideshow_opened %}
-      {% render 'slideshow',
-        slide_count: image_index,
-        slides: slides,
-        class: 'section-image-carousel hidden--desktop'
-      %}
-    {% endif %}
-  {% else %}
-    {% for block in section.blocks %}
-      {% render block %}
-    {% endfor %}
-  {% endif %}
+  {% content_for 'blocks' %}
 {% endcapture %}
 
 {% render 'section', section: section, children: children %}
-
-{% stylesheet %}
-  .section-content-viewport {
-    display: contents;
-  }
-{% endstylesheet %}
 
 {% schema %}
 {
@@ -70,9 +19,6 @@
     },
     {
       "type": "_divider"
-    },
-    {
-      "type": "_hero-slider"
     }
   ],
   "disabled_on": {
@@ -452,12 +398,6 @@
     {
       "type": "header",
       "content": "t:content.padding"
-    },
-    {
-      "type": "checkbox",
-      "id": "mobile_image_carousel",
-      "label": "Enable image carousel on mobile",
-      "default": false
     },
     {
       "type": "range",
