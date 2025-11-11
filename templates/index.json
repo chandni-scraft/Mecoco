@@ -733,7 +733,8 @@
         "group_qeMyUq"
       ],
       "custom_css": [
-        ".collection-card.collection-card--image-bg .collection-card__content {padding: 0px;}"
+        ".collection-card.collection-card--image-bg .collection-card__content {padding: 0px;}",
+        ".section--page-width {max-width: 1400px !important; margin: 0 auto; width: 100%;}"
       ],
       "name": "t:names.collections_grid",
       "settings": {
@@ -1073,6 +1074,9 @@
         "collection_VW4aQm",
         "collection_KUHLCB",
         "collection_4FtFQj"
+      ],
+      "custom_css": [
+        ".section--page-width {max-width: 1400px !important; margin: 0 auto; width: 100%;}"
       ],
       "name": "Shop by Concern Tabs",
       "settings": {
@@ -1833,7 +1837,8 @@
         }
       },
       "custom_css": [
-        "#text {display: none !important;}"
+        "#text {display: none !important;}",
+        ".section--page-width {max-width: 1400px !important; margin: 0 auto; width: 100%;}"
       ],
       "name": "t:names.products_grid",
       "settings": {
@@ -2315,6 +2320,9 @@
         "group_TQkEwB",
         "group_aXxE43"
       ],
+      "custom_css": [
+        ".section--page-width {max-width: 1400px !important; margin: 0 auto; width: 100%;}"
+      ],
       "name": "t:names.icons_with_text",
       "settings": {
         "content_direction": "row",
@@ -2468,6 +2476,9 @@
         "video_reel_PJRtdn",
         "video_reel_jgNqdU",
         "video_reel_FxANgc"
+      ],
+      "custom_css": [
+        ".section--page-width {max-width: 1400px !important; margin: 0 auto; width: 100%;}"
       ],
       "name": "Video Reels Stack",
       "settings": {
