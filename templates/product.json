@@ -795,6 +795,7 @@
           ]
         }
       },
+      "custom_css": [],
       "name": "t:names.product_recommendations",
       "settings": {
         "product": "{{ closest.product }}",
