@@ -481,27 +481,61 @@
     }
     #shop-by-concern-{{ section_id }} .shop-by-concern__variant {
       width: 100%;
-      padding: .5rem .6rem;
-      border: 1px solid rgba(0,0,0,.12);
-      border-radius: 6px;
-      background: var(--color-background, #fff);
+      padding: 10px 32px 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #ffffff;
+      font-size: 14px;
+      color: #333333;
+      cursor: pointer;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      outline: none;
+      transition: border-color 0.2s;
       max-width: 100%;
     }
     #shop-by-concern-{{ section_id }} .shop-by-concern__form {
       display: flex;
       flex-direction: column;
-      gap: .5rem;
+      gap: 8px;
       margin-top: auto;
     }
     #shop-by-concern-{{ section_id }} .shop-by-concern__atc {
       width: 100%;
-      margin-top: .5rem;
-      padding: .6rem .8rem;
-      border-radius: 8px;
-      background: var(--color-foreground, #111);
-      color: var(--color-background, #fff);
-      border: 0;
+      padding: 12px 20px;
+      border-radius: 4px;
+      background: #000000;
+      color: #ffffff;
+      border: none;
       cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    #shop-by-concern-{{ section_id }} .shop-by-concern__atc:hover:not(:disabled) {
+      background: #333333;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    #shop-by-concern-{{ section_id }} .shop-by-concern__atc:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    #shop-by-concern-{{ section_id }} .shop-by-concern__atc:disabled {
+      background: #cccccc;
+      color: #666666;
+      cursor: not-allowed;
+      opacity: 0.6;
+      box-shadow: none;
     }
     @media (min-width: 768px) {
       /* Make desktop a horizontally scrollable strip */
