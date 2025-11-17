@@ -83,7 +83,7 @@
                       </a>
                       <div class="shop-by-concern__details">
                         <a class="shop-by-concern__title" href="{{ product.url }}">{{ product.title }}</a>
-                        <div class="shop-by-concern__price" data-price-wrapper data-product-id="{{ product.id }}">
+                        <h5 class="shop-by-concern__price" data-price-wrapper data-product-id="{{ product.id }}">
                           {% render 'price', product_resource: product %}
                           {% if product.variants.size > 0 %}
                             <div class="shop-by-concern__price-templates" hidden>
@@ -94,7 +94,7 @@
                               {% endfor %}
                             </div>
                           {% endif %}
-                        </div>
+                        </h5>
                         <form class="shop-by-concern__form" method="post" action="{{ routes.cart_add_url }}">
                           {%- if product.variants.size > 1 -%}
                             <label class="visually-hidden" for="variant-{{ section_id }}-{{ forloop.index }}">Select variant</label>
