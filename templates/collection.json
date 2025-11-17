@@ -176,12 +176,34 @@
                 "padding-inline-end": 0
               },
               "blocks": {}
+            },
+            "variant_dropdown_X1pC7Q": {
+              "type": "product-card-variant-select",
+              "name": "Variant dropdown",
+              "settings": {
+                "show_labels": true
+              },
+              "blocks": {}
+            },
+            "add_to_cart_Ba9L4M": {
+              "type": "product-card-add-to-cart",
+              "name": "Add to Cart",
+              "settings": {
+                "button_text": "Add to Cart",
+                "select_options_text": "Select Options",
+                "sold_out_text": "Sold Out",
+                "adding_text": "Adding...",
+                "added_text": "Added!"
+              },
+              "blocks": {}
             }
           },
           "block_order": [
             "product_card_gallery_68C7TN",
             "product_title_7jb4gR",
-            "price_7xPa99"
+            "price_7xPa99",
+            "variant_dropdown_X1pC7Q",
+            "add_to_cart_Ba9L4M"
           ]
         }
       },
