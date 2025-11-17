@@ -100,7 +100,7 @@
           "type": "_product-card",
           "static": true,
           "settings": {
-            "product_card_gap": 10,
+            "product_card_gap": 0,
             "inherit_color_scheme": false,
             "color_scheme": "scheme-2",
             "border": "none",
