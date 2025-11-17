@@ -795,6 +795,9 @@
           ]
         }
       },
+      "custom_css": [
+        ".product-recommendations {max-width: 1400px; margin: 0 auto; width: 100%; }"
+      ],
       "name": "t:names.product_recommendations",
       "settings": {
         "product": "{{ closest.product }}",
