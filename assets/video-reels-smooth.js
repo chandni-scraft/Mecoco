@@ -25,6 +25,9 @@ class VideoReelsSmooth {
     this.animationId = null;
     this.lastTime = 0;
     this.lastX = 0;
+    this.startY = 0;
+    this.isPointerDown = false;
+    this.dragThreshold = 8;
     
     // Settings
     this.dragMultiplier = 2; // Increase drag sensitivity
@@ -92,16 +95,15 @@ class VideoReelsSmooth {
    */
   onPointerDown(e) {
     if (!this.stack) return;
-    // Prevent native vertical scroll on touch when starting a drag
-    if ('touches' in e && typeof e.preventDefault === 'function' && e.cancelable) {
-      e.preventDefault();
-    }
-    this.isDragging = true;
-    this.stack.classList.add('dragging');
+    this.isPointerDown = true;
+    this.isDragging = false;
+    this.stack.classList.remove('dragging');
     this.velocity = 0;
     
     const clientX = this.getClientX(e);
+    const clientY = this.getClientY(e);
     this.startX = clientX;
+    this.startY = clientY;
     this.lastX = clientX;
     this.lastTime = performance.now();
     
@@ -113,14 +115,39 @@ class VideoReelsSmooth {
    * @param {MouseEvent|TouchEvent} e
    */
   onPointerMove(e) {
-    if (!this.isDragging || !this.stack) return;
+    if (!this.isPointerDown || !this.stack) return;
+    const currentTime = performance.now();
+    const clientX = this.getClientX(e);
+    const clientY = this.getClientY(e);
+    
+    if (!this.isDragging) {
+      const deltaXAbs = Math.abs(clientX - this.startX);
+      const deltaYAbs = Math.abs(clientY - this.startY);
+      
+      if (deltaYAbs > this.dragThreshold && deltaYAbs > deltaXAbs) {
+        // Gesture is vertical; release control so the page can scroll.
+        this.isPointerDown = false;
+        this.isDragging = false;
+        this.stack.classList.remove('dragging');
+        return;
+      }
+      
+      if (deltaXAbs > this.dragThreshold && deltaXAbs >= deltaYAbs) {
+        this.isDragging = true;
+        this.stack.classList.add('dragging');
+        this.lastX = clientX;
+        this.lastTime = currentTime;
+      } else {
+        this.lastX = clientX;
+        this.lastTime = currentTime;
+        return;
+      }
+    }
+    
     // Prevent page scroll while dragging on touch
     if ('touches' in e && typeof e.preventDefault === 'function' && e.cancelable) {
       e.preventDefault();
     }
-    
-    const currentTime = performance.now();
-    const clientX = this.getClientX(e);
     
     // Calculate velocity based on movement
     const deltaTime = currentTime - this.lastTime;
@@ -163,10 +190,24 @@ class VideoReelsSmooth {
     const t0 = te.touches && te.touches.length > 0 ? te.touches[0] : (te.changedTouches && te.changedTouches.length > 0 ? te.changedTouches[0] : null);
     return t0 ? t0.clientX : this.lastX || 0;
   }
+
+  /**
+   * Safely extract clientY from mouse/touch events.
+   * @param {MouseEvent|TouchEvent} e
+   * @returns {number}
+   */
+  getClientY(e) {
+    if ('clientY' in e && typeof e.clientY === 'number') {
+      return e.clientY;
+    }
+    const te = /** @type {TouchEvent} */(e);
+    const t0 = te.touches && te.touches.length > 0 ? te.touches[0] : (te.changedTouches && te.changedTouches.length > 0 ? te.changedTouches[0] : null);
+    return t0 ? t0.clientY : 0;
+  }
   
   onPointerUp() {
-    if (!this.isDragging || !this.stack) return;
-    
+    this.isPointerDown = false;
+    if (!this.stack || !this.isDragging) return;
     this.isDragging = false;
     this.stack.classList.remove('dragging');
     
@@ -352,5 +393,3 @@ if (window.Shopify && window.Shopify.designMode) {
     }
   });
 }
-
-
