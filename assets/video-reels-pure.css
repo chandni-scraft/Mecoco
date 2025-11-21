@@ -356,12 +356,13 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 20px;
+  padding: 20px 0;
   opacity: 1;
 }
 
 .video-reel-stack-content {
   margin-top: auto;
+  width: 100%;
 }
 
 .reel-stack-caption {
@@ -381,17 +382,20 @@
   position: absolute;
   z-index: 15;
   transform: translate(-50%, -50%);
+  width: 100%;
 }
 
 .hotspot-wrapper {
   position: relative;
-}
+  width: 100%;
+}/*  */
 
 /* Animated Pulse Effect */
 .hotspot-pulse {
   position: relative;
   width: 60px;
   height: 60px;
+  margin-inline: auto;
 }
 
 .pulse-dot {
@@ -628,18 +632,21 @@
 /* Mobile adjustments */
 @media (max-width: 749px) {
   .product-showcase {
-    width: 260px;
+    max-width: 260px;
+    width: calc(100% - 10px);
     left: 0;
+    right: 0;
     transform: translateX(-20px) translateY(20px) scale(0.9);
   }
   
   .hotspot-trigger:hover ~ .product-showcase,
   .product-showcase:hover {
-    transform: translateX(-20px) translateY(0) scale(1);
+    transform: translateX(0px) translateY(0) scale(1);
+    margin-inline: 5px;
   }
   
   .showcase-image {
-    width: 70px;
+    width: 65px;
     height: 70px;
   }
   

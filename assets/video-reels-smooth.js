@@ -72,22 +72,6 @@ class VideoReelsSmooth {
     this.soundButtons.forEach((button) => {
       button.addEventListener('click', (e) => this.toggleSound(/** @type {MouseEvent} */(e)));
     });
-    
-    // Wheel event for horizontal scroll
-    this.stack.addEventListener('wheel', (e) => {
-      const we = /** @type {WheelEvent} */(e);
-      // Use whichever axis has higher intent; map vertical to horizontal
-      const primaryDelta = Math.abs(we.deltaY) >= Math.abs(we.deltaX) ? we.deltaY : we.deltaX;
-      if (primaryDelta !== 0) {
-        if (we.cancelable) we.preventDefault();
-        // Sync from actual scrollLeft to avoid drift
-        if (this.stack) {
-          this.scrollX = this.stack.scrollLeft;
-        }
-        this.scrollX += primaryDelta; // natural scrolling (right on positive)
-        this.velocity = primaryDelta * 0.35;
-      }
-    }, { passive: false });
   }
   
   /**
