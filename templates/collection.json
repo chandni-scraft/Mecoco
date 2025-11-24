@@ -225,6 +225,9 @@
     },
     "expandable_content_yrCeXy": {
       "type": "expandable-content",
+      "custom_css": [
+        ".section--page-width {max-width: 1400px !important; margin: 0 auto; width: 100%;}"
+      ],
       "name": "Expandable Content",
       "settings": {
         "main_heading": "DISCOVER THE BEST DRY FRUIT & NUT COMBOS BY MEECOCONUTRITION'S POWER PACKED. CONVENIENCE CURATED.",
