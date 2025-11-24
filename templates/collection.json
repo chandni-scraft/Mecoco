@@ -226,7 +226,7 @@
     "expandable_content_yrCeXy": {
       "type": "expandable-content",
       "custom_css": [
-        ".section--page-width {max-width: 1400px !important; margin: 0 auto; width: 100%;}"
+        ".section--page-width {max-width: 1500px !important; margin: 0 auto; width: 100%;}"
       ],
       "name": "Expandable Content",
       "settings": {
