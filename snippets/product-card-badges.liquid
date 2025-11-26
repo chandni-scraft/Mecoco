@@ -18,22 +18,20 @@
   "
 >
   {%- comment -%} Default sale/sold out badges {%- endcomment -%}
-  {%- unless closest.collection.metafields.custom.collection_badges_simple or product.metafields.custom.product_badges_simple -%}
-    {%- if product.available == false or product.compare_at_price > product.price and product.available -%}
-      <div
-        class="
-          product-badges__badge product-badges__badge--rectangle
-          {% if product.available == false %} color-{{ settings.badge_sold_out_color_scheme }}{% elsif product.compare_at_price > product.price %} color-{{ settings.badge_sale_color_scheme }}{% endif %}
-        "
-      >
-        {%- if product.available == false -%}
-          {{ 'content.product_badge_sold_out' | t }}
-        {%- elsif product.compare_at_price > product.price -%}
-          {{ 'content.product_badge_sale' | t }}
-        {%- endif -%}
-      </div>
-    {%- endif -%}
-  {%- endunless -%}
+  {%- if product.available == false or product.compare_at_price > product.price and product.available -%}
+    <div
+      class="
+        product-badges__badge product-badges__badge--rectangle product-badges__badge--sale
+        {% if product.available == false %} color-{{ settings.badge_sold_out_color_scheme }}{% elsif product.compare_at_price > product.price %} color-{{ settings.badge_sale_color_scheme }}{% endif %}
+      "
+    >
+      {%- if product.available == false -%}
+        {{ 'content.product_badge_sold_out' | t }}
+      {%- elsif product.compare_at_price > product.price -%}
+        {{ 'content.product_badge_sale' | t }}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
 
   {%- comment -%} Custom meta field badges - Collection badges take priority over product badges {%- endcomment -%}
   {%- assign badge_content = blank -%}
@@ -131,6 +129,14 @@
   .product-badges__badge--rectangle {
     padding-block: var(--badge-rectangle-padding-block);
     padding-inline: var(--badge-rectangle-padding-inline);
+  }
+
+  .product-badges__badge--sale {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: var(--layer-flat);
   }
 
   .product-badges__badge--custom {
