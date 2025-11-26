@@ -89,20 +89,11 @@ class VideoReelsSmooth {
    */
   onPointerDown(e) {
     if (!this.stack) return;
-    this.isPointerDown = true;
+    this.isPointerDown = false;
     this.isDragging = false;
     this.stack.classList.remove('dragging');
     this.velocity = 0;
-    
-    const clientX = this.getClientX(e);
-    const clientY = this.getClientY(e);
-    this.startX = clientX;
-    this.startY = clientY;
-    this.lastX = clientX;
-    this.lastTime = performance.now();
-    
-    // Get current scroll position
-    this.scrollX = this.stack.scrollLeft;
+    // Drag scrolling disabled; keep default browser behavior and nav buttons only.
   }
   
   /**
