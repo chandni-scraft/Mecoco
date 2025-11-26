@@ -1614,6 +1614,9 @@
         "video_NqWNaD",
         "group_TEanyT"
       ],
+      "custom_css": [
+        ".section-wrapper {max-width: 1400px; width: 100%; margin: 0 auto;}"
+      ],
       "name": "t:names.video_section",
       "settings": {
         "content_direction": "row",
