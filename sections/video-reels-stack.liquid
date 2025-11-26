@@ -93,6 +93,20 @@
       {%- comment -%} Left side - Fixed content {%- endcomment -%}
       {%- comment -%} Right side - Scrolling videos {%- endcomment -%}
       <div class="video-reels-right-scroll">
+        <button class="video-reels-nav video-reels-nav-prev" type="button" aria-label="Previous reel">
+          <span class="video-reels-nav-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M12.5 4.5L7 10l5.5 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </button>
+        <button class="video-reels-nav video-reels-nav-next" type="button" aria-label="Next reel">
+          <span class="video-reels-nav-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M7.5 4.5L13 10l-5.5 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </button>
         <div class="video-reels-stack-wrapper">
           <div class="video-reels-stack" data-reel-count="{{ reel_count }}">
         {%- for block in section.blocks -%}
