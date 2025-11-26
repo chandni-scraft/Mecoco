@@ -15,6 +15,8 @@ class VideoReelsSmooth {
     this.progressFill = /** @type {HTMLElement|null} */(section.querySelector('.progress-fill'));
     /** @type {NodeListOf<HTMLButtonElement>} */
     this.soundButtons = /** @type {NodeListOf<HTMLButtonElement>} */(section.querySelectorAll('.reel-sound'));
+    this.prevButton = section.querySelector('.video-reels-nav-prev');
+    this.nextButton = section.querySelector('.video-reels-nav-next');
     
     // Smooth scrolling variables
     this.isDragging = false;
@@ -72,6 +74,14 @@ class VideoReelsSmooth {
     this.soundButtons.forEach((button) => {
       button.addEventListener('click', (e) => this.toggleSound(/** @type {MouseEvent} */(e)));
     });
+
+    if (this.prevButton) {
+      this.prevButton.addEventListener('click', () => this.scrollByCard(-1));
+    }
+
+    if (this.nextButton) {
+      this.nextButton.addEventListener('click', () => this.scrollByCard(1));
+    }
   }
   
   /**
@@ -253,13 +263,43 @@ class VideoReelsSmooth {
     const targetIndex = Math.round(currentScroll / snapInterval);
     const targetScroll = targetIndex * snapInterval;
     
-    // Smooth snap animation
     const diff = targetScroll - currentScroll;
     if (Math.abs(diff) > 1) {
       this.velocity = diff * 0.1;
     }
   }
-  
+
+  scrollByCard(direction) {
+    if (!this.stack || this.cards.length === 0) return;
+    const firstCard = this.cards.item(0);
+    if (!firstCard) return;
+    const gap = this.getComputedGap();
+    const cardWidth = firstCard.offsetWidth;
+    const snapInterval = cardWidth + gap;
+
+    const currentScroll = this.stack.scrollLeft;
+    const maxIndex = this.cards.length - 1;
+    let targetIndex = Math.round(currentScroll / snapInterval) + direction;
+    if (targetIndex < 0) targetIndex = 0;
+    if (targetIndex > maxIndex) targetIndex = maxIndex;
+
+    const targetScroll = targetIndex * snapInterval;
+
+    this.isPointerDown = false;
+    this.isDragging = false;
+    this.velocity = 0;
+    this.scrollX = targetScroll;
+
+    if (typeof this.stack.scrollTo === 'function') {
+      this.stack.scrollTo({ left: targetScroll, behavior: 'smooth' });
+    } else {
+      this.stack.scrollLeft = targetScroll;
+    }
+
+    this.updateProgress();
+    this.updateActiveCards();
+  }
+
   setupIntersectionObserver() {
     if (!this.stack) return;
     const observer = new IntersectionObserver((entries) => {
