@@ -18,7 +18,7 @@
   "
 >
   {%- comment -%} Default sale/sold out badges {%- endcomment -%}
-  {%- unless (closest.collection and closest.collection.metafields.custom.collection_badges_simple != blank) or product.metafields.custom.product_badges_simple != blank -%}
+  {%- unless closest.collection.metafields.custom.collection_badges_simple or product.metafields.custom.product_badges_simple -%}
     {%- if product.available == false or product.compare_at_price > product.price and product.available -%}
       <div
         class="
