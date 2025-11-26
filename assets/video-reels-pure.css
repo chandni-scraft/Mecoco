@@ -276,6 +276,7 @@
   left: 20px;
   right: 20px;
   max-width: calc(100% - 40px);
+  display: none;
 }
 
 .progress-line {
