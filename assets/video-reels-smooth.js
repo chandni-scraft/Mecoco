@@ -46,7 +46,6 @@ class VideoReelsSmooth {
     this.setupEventListeners();
     this.setupIntersectionObserver();
     this.updateProgress();
-    this.startAnimation();
     
     // Play first video
     const firstVideo = this.cards[0]?.querySelector('video');
