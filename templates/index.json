@@ -1737,14 +1737,14 @@
             "product_card_gap": 4,
             "inherit_color_scheme": true,
             "color_scheme": "",
-            "border": "none",
+            "border": "solid",
             "border_width": 1,
             "border_opacity": 100,
             "border_radius": 0,
             "padding-block-start": 0,
             "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-start": 10,
+            "padding-inline-end": 10
           },
           "blocks": {
             "product_card_gallery_bcNVQL": {
@@ -1852,7 +1852,7 @@
         "columns": 4,
         "mobile_columns": "2",
         "mobile_card_size": "60cqw",
-        "columns_gap": 8,
+        "columns_gap": 20,
         "rows_gap": 24,
         "icons_style": "arrow",
         "icons_shape": "none",
