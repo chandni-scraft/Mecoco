@@ -13,7 +13,9 @@
 <div class="product-variant-selects" data-product-id="{{ product.id }}" data-variants="{{ product.variants | json | escape }}">
   {% for option in product.options_with_values %}
     <div class="variant-select-wrapper">
-    
+    /* {% if block.settings.show_labels %}
+        <label class="variant-select-label">{{ option.name }}</label>
+      {% endif %}  */
       <div class="select-container">
         <select
           class="variant-select"
