@@ -45,7 +45,7 @@
             <div class="reel-video-card flex flex-col w-full" style="max-width: {{ video_max_width }}px;" {{ block.shopify_attributes }}>
               
               {% comment %} Video Container {% endcomment %}
-              <div class="relative rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700" style="aspect-ratio: {{ video_aspect_ratio }};">
+              <div class="relative reel-video-frame bg-gray-200 dark:bg-gray-700" style="aspect-ratio: {{ video_aspect_ratio }};">
                 {% if block.settings.video_source == 'uploaded' and block.settings.video != blank %}
                   {{
                     block.settings.video
@@ -163,6 +163,11 @@ h2{padding-bottom: 20px;}
     flex: 0 0 calc((100% - 72px) / 4);
     max-width: calc((100% - 72px) / 4);
     scroll-snap-align: start;
+  }
+
+  .reel-video-frame {
+    border-radius: 18px;
+    overflow: hidden;
   }
   .line-clamp-2 {
     display: -webkit-box;
