@@ -1841,7 +1841,8 @@
       },
       "custom_css": [
         "#text {display: none !important;}",
-        ".section--page-width {max-width: 1400px !important; margin: 0 auto; width: 100%;}"
+        ".section--page-width {max-width: 1400px !important; margin: 0 auto; width: 100%;}",
+        ".product-card .text-block p,.product-grid__card .text-block p {min-height: 1.5em !important; max-height: 0em !important;}"
       ],
       "name": "t:names.products_grid",
       "settings": {
