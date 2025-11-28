@@ -2426,6 +2426,19 @@
             "product": "meecoco-walnut-kernels-1"
           }
         },
+        "video_reel_JrWENh": {
+          "type": "video_reel",
+          "settings": {
+            "video_source": "uploaded",
+            "video": "shopify://files/videos/7186201_Vertical_Video_Vertical_Content_720x1280.mp4",
+            "video_alt": "",
+            "video_autoplay": false,
+            "video_loop": true,
+            "video_title": "",
+            "video_description": "",
+            "product": "meecoco-walnut-kernels-1"
+          }
+        },
         "video_reel_c8xLgt": {
           "type": "video_reel",
           "settings": {
@@ -2455,6 +2468,7 @@
       },
       "block_order": [
         "video_reel_JWPVCw",
+        "video_reel_JrWENh",
         "video_reel_c8xLgt",
         "video_reel_QaAr9h"
       ],
