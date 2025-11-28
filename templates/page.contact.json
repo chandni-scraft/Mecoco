@@ -145,7 +145,7 @@
         "contact_form_jWxXkm"
       ],
       "custom_css": [
-        ".section--page-width {max-width: 1000px !important; margin: 0 auto; width: 100%;}"
+        ".section--page-width {max-width: 700px !important; margin: 0 auto; width: 100%;}"
       ],
       "settings": {
         "content_direction": "column",
