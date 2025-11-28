@@ -485,7 +485,7 @@
       "name": "t:names.marquee_section",
       "settings": {
         "movement_direction": "normal",
-        "color_scheme": "",
+        "color_scheme": "scheme-2",
         "padding-block-start": 24,
         "padding-block-end": 24,
         "gap_between_elements": 24
@@ -580,6 +580,7 @@
           "block_order": []
         }
       },
+      "disabled": true,
       "name": "t:names.featured_product",
       "settings": {
         "product": "meecoco-california-pistachios",
