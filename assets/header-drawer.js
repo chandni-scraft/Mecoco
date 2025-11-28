@@ -12,6 +12,7 @@ import { onAnimationEnd } from '@theme/utilities';
  */
 class HeaderDrawer extends Component {
   requiredRefs = ['details'];
+  #closeTimeoutId;
 
   connectedCallback() {
     super.connectedCallback();
@@ -23,6 +24,10 @@ class HeaderDrawer extends Component {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('keyup', this.#onKeyUp);
+    if (this.#closeTimeoutId) {
+      clearTimeout(this.#closeTimeoutId);
+      this.#closeTimeoutId = undefined;
+    }
   }
 
   /**
@@ -65,6 +70,10 @@ class HeaderDrawer extends Component {
    * @param {Event} [event]
    */
   open(event) {
+    if (this.#closeTimeoutId) {
+      clearTimeout(this.#closeTimeoutId);
+      this.#closeTimeoutId = undefined;
+    }
     const details = this.#getDetailsElement(event);
     const summary = details.querySelector('summary');
 
@@ -104,22 +113,34 @@ class HeaderDrawer extends Component {
 
     if (!summary) return;
 
-    summary.setAttribute('aria-expanded', 'false');
-    details.classList.remove('menu-open');
+    const performClose = () => {
+      this.#closeTimeoutId = undefined;
+      summary.setAttribute('aria-expanded', 'false');
+      details.classList.remove('menu-open');
 
-    onAnimationEnd(details, () => {
-      reset(details);
+      onAnimationEnd(details, () => {
+        reset(details);
 
-      if (details === this.refs.details) {
-        removeTrapFocus();
-        const openDetails = this.querySelectorAll('details[open]');
-        openDetails.forEach(reset);
-      } else {
-        setTimeout(() => {
-          trapFocus(this.refs.details);
-        }, 0);
+        if (details === this.refs.details) {
+          removeTrapFocus();
+          const openDetails = this.querySelectorAll('details[open]');
+          openDetails.forEach(reset);
+        } else {
+          setTimeout(() => {
+            trapFocus(this.refs.details);
+          }, 0);
+        }
+      });
+    };
+
+    if (details === this.refs.details) {
+      if (this.#closeTimeoutId) {
+        clearTimeout(this.#closeTimeoutId);
       }
-    });
+      this.#closeTimeoutId = setTimeout(performClose, 2000);
+    } else {
+      performClose();
+    }
   }
 
   /**
