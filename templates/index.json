@@ -2468,13 +2468,28 @@
             "video_description": "",
             "product": "meecoco-ajwa-dates"
           }
+        },
+        "video_reel_GpFetg": {
+          "type": "video_reel",
+          "settings": {
+            "video_source": "uploaded",
+            "video": "shopify://files/videos/7186201_Vertical_Video_Vertical_Content_720x1280.mp4",
+            "video_url": "",
+            "video_alt": "",
+            "video_autoplay": true,
+            "video_loop": true,
+            "video_title": "",
+            "video_description": "",
+            "product": "meecoco-ajwa-dates"
+          }
         }
       },
       "block_order": [
         "video_reel_JWPVCw",
         "video_reel_JrWENh",
         "video_reel_c8xLgt",
-        "video_reel_QaAr9h"
+        "video_reel_QaAr9h",
+        "video_reel_GpFetg"
       ],
       "custom_css": [
         ".section--page-width {max-width: 1400px !important; margin: 0 auto; width: 100%;}"
