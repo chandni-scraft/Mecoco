@@ -670,7 +670,7 @@
         "max_products": 6,
         "columns": 4,
         "mobile_columns": "1",
-        "columns_gap": 1,
+        "columns_gap": 20,
         "rows_gap": 2,
         "icons_style": "arrow",
         "icons_shape": "none",
