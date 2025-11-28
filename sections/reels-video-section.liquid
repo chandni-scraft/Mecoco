@@ -15,6 +15,7 @@
 <section 
   class="section section--page-width spacing-style" 
   style="{% render 'spacing-style', settings: section.settings %}"
+  data-reels-section-id="{{ section.id }}"
   {{ section.shopify_attributes }}
 >
   <div class="page-width-content">
@@ -38,7 +39,11 @@
 
     {% comment %} Reels Videos Stack - One Over One {% endcomment %}
     {% if section.blocks.size > 0 %}
-      <div class="reel-video-list flex flex-col gap-8 md:gap-12 items-center">
+      <div class="reel-video-wrapper">
+        <button class="reel-nav reel-nav--prev" type="button" aria-label="Previous reels">
+          ‹
+        </button>
+        <div class="reel-video-list flex flex-col gap-8 md:gap-12 items-center">
         {% for block in section.blocks %}
           {% if block.type == 'video_reel' %}
             {% assign product = block.settings.product %}
@@ -128,16 +133,51 @@
             </div>
           {% endif %}
         {% endfor %}
+        </div>
+        <button class="reel-nav reel-nav--next" type="button" aria-label="Next reels">
+          ›
+        </button>
       </div>
     {% else %}
       <div class="text-center py-12">
         <p class="text-gray-500 dark:text-gray-400">Add video reels to get started</p>
       </div>
     {% endif %}
-
-
   </div>
 </section>
+
+{% javascript %}
+  const initReelsSection = (sectionId) => {
+    const section = document.querySelector(`[data-reels-section-id="${sectionId}"]`);
+    if (!section) return;
+
+    const scroller = section.querySelector('.reel-video-list');
+    const prevButton = section.querySelector('.reel-nav--prev');
+    const nextButton = section.querySelector('.reel-nav--next');
+
+    if (!scroller || !prevButton || !nextButton) return;
+
+    const getScrollAmount = () => scroller.clientWidth || 0;
+
+    prevButton.addEventListener('click', () => {
+      scroller.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+    });
+
+    nextButton.addEventListener('click', () => {
+      scroller.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initReelsSection('{{ section.id }}');
+  });
+
+  document.addEventListener('shopify:section:load', (event) => {
+    if (event.detail && event.detail.sectionId === '{{ section.id }}') {
+      initReelsSection('{{ section.id }}');
+    }
+  });
+{% endjavascript %}
 
 
 {% stylesheet %}
@@ -163,6 +203,36 @@ h2{padding-bottom: 20px;}
     flex: 0 0 calc((100% - 72px) / 4);
     max-width: calc((100% - 72px) / 4);
     scroll-snap-align: start;
+  }
+
+  .reel-video-wrapper {
+    position: relative;
+  }
+
+  .reel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 9999px;
+    border: none;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #111827;
+    z-index: 5;
+  }
+
+  .reel-nav--prev {
+    left: 0;
+  }
+
+  .reel-nav--next {
+    right: 0;
   }
 
   .reel-video-frame {
