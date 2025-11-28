@@ -110,7 +110,7 @@
                         {% endif %}
                       </div>
                       <div class="reel-product-info">
-                        <p class="reel-product-title line-clamp-2">{{ product.title }}</p>
+                        <p class="reel-product-title">{{ product.title }}</p>
                         <div class="reel-product-pricing">
                           {% if product.compare_at_price > product.price %}
                             <span class="reel-product-compare">{{ product.compare_at_price | money }}</span>
@@ -142,6 +142,12 @@
 
 {% stylesheet %}
 h2{padding-bottom: 20px;}
+  .reel-video-list {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+  }
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -230,6 +236,9 @@ h2{padding-bottom: 20px;}
     font-size: 14px;
     color: #111827;
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
 
