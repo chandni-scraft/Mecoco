@@ -87,6 +87,7 @@ class ProductRecommendations extends HTMLElement {
         if (recommendations?.innerHTML && recommendations.innerHTML.trim().length) {
           this.dataset.recommendationsPerformed = 'true';
           this.innerHTML = recommendations.innerHTML;
+          this.#executeInlineScripts();
         } else {
           this.#handleError(new Error('No recommendations available'));
         }
@@ -94,6 +95,38 @@ class ProductRecommendations extends HTMLElement {
       .catch((e) => {
         this.#handleError(e);
       });
+  }
+
+  /**
+   * Execute inline scripts within the loaded recommendations markup.
+   * This is needed because scripts added via innerHTML do not execute by default,
+   * but some snippets (like product-card-add-to-cart) rely on inline scripts to
+   * attach global event listeners.
+   */
+  #executeInlineScripts() {
+    const scripts = this.querySelectorAll('script');
+
+    for (const oldScript of scripts) {
+      const type = oldScript.type;
+
+      // Skip non-JavaScript types such as JSON-LD
+      if (type && type !== 'module' && type !== 'text/javascript') continue;
+
+      const newScript = document.createElement('script');
+
+      if (type) {
+        newScript.type = type;
+      }
+
+      if (oldScript.src) {
+        newScript.src = oldScript.src;
+      } else if (oldScript.textContent) {
+        newScript.textContent = oldScript.textContent;
+      }
+
+      document.head.appendChild(newScript);
+      document.head.removeChild(newScript);
+    }
   }
 
   /**
