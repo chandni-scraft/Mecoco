@@ -208,7 +208,8 @@
         }
       },
       "custom_css": [
-        ".product-card .text-block p,.product-grid__card .text-block p {min-height: 2em !important; max-height: 0em !important;}"
+        ".product-card .text-block p,.product-grid__card .text-block p {min-height: 2em !important; max-height: 0em !important;}",
+        ".product-variant-selects {margin-bottom: 5px;}"
       ],
       "settings": {
         "layout_type": "grid",
