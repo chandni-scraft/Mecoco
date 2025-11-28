@@ -103,7 +103,7 @@
                       assign accordion_state = 'open'
                     endif
                   %}
-                  <accordion-custom>
+                  <accordion-custom {% if accordion_state == 'open' %}open-by-default-on-mobile{% endif %}>
                     <details
                       id="Details-menu-drawer-{{ link.handle }}"
                       {{ accordion_state }}
@@ -350,7 +350,7 @@
                                   {%- comment -%}
                                     Accordion for links with children, in menus with 3 levels of links
                                   {%- endcomment -%}
-                                  <accordion-custom>
+                                  <accordion-custom {% if accordion_state == 'open' %}open-by-default-on-mobile{% endif %}>
                                     <details
                                       id="Details-menu-drawer-{{ link.handle }}-{{ childlink.handle }}"
                                       {{ accordion_state }}
