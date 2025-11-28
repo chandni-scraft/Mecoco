@@ -368,13 +368,25 @@
       {% endif %}
 
       {% if render_mobile_slideshow_controls %}
-        {%- render 'slideshow-controls',
-          class: 'desktop:hidden media-gallery__mobile-controls',
-          style: block_settings.slideshow_mobile_controls_style,
-          item_count: sorted_media.size,
-          controls_on_media: true,
-          pagination_position: 'center',
-        -%}
+        {% if block_settings.slideshow_mobile_controls_style == 'thumbnails' %}
+          {%- render 'slideshow-controls',
+            class: 'desktop:hidden media-gallery__mobile-controls',
+            style: 'thumbnails',
+            item_count: sorted_media.size,
+            thumbnails: sorted_media,
+            controls_on_media: false,
+            pagination_position: 'center',
+            aspect_ratio: block_settings.aspect_ratio
+          -%}
+        {% else %}
+          {%- render 'slideshow-controls',
+            class: 'desktop:hidden media-gallery__mobile-controls',
+            style: block_settings.slideshow_mobile_controls_style,
+            item_count: sorted_media.size,
+            controls_on_media: true,
+            pagination_position: 'center',
+          -%}
+        {% endif %}
       {% endif %}
     {% endcapture %}
   {% endif %}
@@ -862,6 +874,10 @@
         {
           "value": "counter",
           "label": "t:options.counter"
+        },
+        {
+          "value": "thumbnails",
+          "label": "t:options.thumbnails"
         },
         {
           "value": "hint",
