@@ -148,7 +148,7 @@
                 "background_color": "#00000026",
                 "corner_radius": 0,
                 "padding-block-start": 10,
-                "padding-block-end": 10,
+                "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
@@ -208,7 +208,7 @@
         }
       },
       "custom_css": [
-        ".product-card .text-block p,.product-grid__card .text-block p {min-height: 2em !important; max-height: 0em !important;}",
+        ".product-card .text-block p,.product-grid__card .text-block p {min-height: 1.5em !important; max-height: 0em !important;}",
         ".product-variant-selects {margin-bottom: 5px;}"
       ],
       "settings": {
