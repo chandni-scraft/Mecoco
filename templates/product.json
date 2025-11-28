@@ -140,7 +140,7 @@
                 "show_sale_price_first": true,
                 "show_installments": true,
                 "show_tax_info": true,
-                "type_preset": "h4",
+                "type_preset": "h5",
                 "width": "100%",
                 "alignment": "left",
                 "font": "var(--font-body--family)",
@@ -796,7 +796,7 @@
         }
       },
       "custom_css": [
-        ".product-recommendations {max-width: 1400px; margin: 0 auto; width: 100%; }"
+        ".product-recommendations {max-width: 1400px; margin: 0 auto; width: 100%;}"
       ],
       "name": "t:names.product_recommendations",
       "settings": {
