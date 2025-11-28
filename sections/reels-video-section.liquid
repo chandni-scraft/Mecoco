@@ -156,15 +156,33 @@
     const nextButton = section.querySelector('.reel-nav--next');
 
     if (!scroller || !prevButton || !nextButton) return;
+    const firstCard = scroller.querySelector('.reel-video-card');
 
-    const getScrollAmount = () => scroller.clientWidth || 0;
+    const getScrollAmount = () => {
+      if (firstCard) {
+        const cardWidth = firstCard.getBoundingClientRect().width;
+        const gap = 24; // matches CSS gap on desktop
+        return cardWidth + gap;
+      }
+      return scroller.clientWidth || 0;
+    };
+
+    const scrollByAmount = (direction) => {
+      const amount = getScrollAmount() * direction;
+      const newLeft = scroller.scrollLeft + amount;
+      if (scroller.scrollTo) {
+        scroller.scrollTo({ left: newLeft, behavior: 'smooth' });
+      } else {
+        scroller.scrollLeft = newLeft;
+      }
+    };
 
     prevButton.addEventListener('click', () => {
-      scroller.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+      scrollByAmount(-1);
     });
 
     nextButton.addEventListener('click', () => {
-      scroller.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+      scrollByAmount(1);
     });
   };
 
@@ -228,11 +246,11 @@ h2{padding-bottom: 20px;}
   }
 
   .reel-nav--prev {
-    left: 0;
+    left: 8px;
   }
 
   .reel-nav--next {
-    right: 0;
+    right: 8px;
   }
 
   .reel-video-frame {
@@ -364,6 +382,10 @@ h2{padding-bottom: 20px;}
   }
   
   @media (max-width: 767px) {
+    .reel-nav {
+      display: none;
+    }
+
     .reel-video-list {
       gap: 12px;
     }
