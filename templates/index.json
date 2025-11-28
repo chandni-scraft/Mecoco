@@ -2458,12 +2458,15 @@
         "video_reel_c8xLgt",
         "video_reel_QaAr9h"
       ],
+      "custom_css": [
+        ".section--page-width {max-width: 1400px !important; margin: 0 auto; width: 100%;}"
+      ],
       "name": "Reels Video Section",
       "settings": {
         "title": "Shop Our Reels",
         "description": "",
         "video_aspect_ratio": "9/16",
-        "video_max_width": 600,
+        "video_max_width": 400,
         "padding-block-start": 64,
         "padding-block-end": 64,
         "padding-inline-start": 20,
@@ -2541,6 +2544,7 @@
         "video_reel_jgNqdU",
         "video_reel_FxANgc"
       ],
+      "disabled": true,
       "custom_css": [
         ".section--page-width {max-width: 1400px !important; margin: 0 auto; width: 100%;}"
       ],
