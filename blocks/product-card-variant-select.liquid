@@ -152,6 +152,9 @@
 
 <script>
   (function() {
+    if (window.__productVariantSelectsInitialized) return;
+    window.__productVariantSelectsInitialized = true;
+
     function normalizeOption(value) {
       return (value || '').toString().trim().toLowerCase();
     }
@@ -475,7 +478,7 @@
       containers.forEach(initializeVariantSelect);
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    function setupVariantSelects() {
       initializeAllVariantSelects();
 
       document.addEventListener('click', function(event) {
@@ -509,7 +512,13 @@
       document.querySelectorAll('.section-resource-list, .product-list, .resource-list').forEach(function(section) {
         visibilityObserver.observe(section);
       });
-    });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupVariantSelects);
+    } else {
+      setupVariantSelects();
+    }
 
     window.addEventListener('load', initializeAllVariantSelects);
   })();
