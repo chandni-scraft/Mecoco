@@ -557,6 +557,19 @@
             country_style: section.settings.country_selector_style
           %}
         {%- endif -%}
+        {% if data_header_drawer_type == 'mobile-drawer' and settings.logo %}
+          <a
+            href="{{ routes.root_url }}"
+            class="menu-drawer__brand-logo"
+          >
+            {% render 'image',
+              image: settings.logo,
+              height: 32,
+              class: 'menu-drawer__brand-logo-image',
+              text_fallback: shop.name
+            %}
+          </a>
+        {% endif %}
       </div>
 
       {% liquid
@@ -1072,6 +1085,19 @@
     margin-block: auto var(--padding-sm);
     margin-inline-start: var(--padding-xl);
     background-color: rgb(var(--color-foreground) 0.03);
+  }
+
+  .menu-drawer__brand-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--padding-md) 0 var(--padding-lg);
+    text-decoration: none;
+  }
+
+  .menu-drawer__brand-logo-image {
+    max-height: 32px;
+    width: auto;
   }
 
   .menu-drawer__account {
