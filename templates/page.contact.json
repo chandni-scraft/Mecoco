@@ -144,6 +144,9 @@
         "group_PnXWxT",
         "contact_form_jWxXkm"
       ],
+      "custom_css": [
+        ".section--page-width {max-width: 1000px !important; margin: 0 auto; width: 100%;}"
+      ],
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
