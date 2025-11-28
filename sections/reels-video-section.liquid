@@ -147,54 +147,57 @@
 </section>
 
 {% javascript %}
-  const initReelsSection = (sectionId) => {
-    const section = document.querySelector(`[data-reels-section-id="${sectionId}"]`);
-    if (!section) return;
+  function initAllReelsSections() {
+    var sections = document.querySelectorAll('[data-reels-section-id]');
 
-    const scroller = section.querySelector('.reel-video-list');
-    const prevButton = section.querySelector('.reel-nav--prev');
-    const nextButton = section.querySelector('.reel-nav--next');
+    sections.forEach(function (section) {
+      if (section.dataset.reelsInit === 'true') return;
 
-    if (!scroller || !prevButton || !nextButton) return;
-    const firstCard = scroller.querySelector('.reel-video-card');
+      var scroller = section.querySelector('.reel-video-list');
+      var prevButton = section.querySelector('.reel-nav--prev');
+      var nextButton = section.querySelector('.reel-nav--next');
 
-    const getScrollAmount = () => {
-      if (firstCard) {
-        const cardWidth = firstCard.getBoundingClientRect().width;
-        const gap = 24; // matches CSS gap on desktop
-        return cardWidth + gap;
+      if (!scroller || !prevButton || !nextButton) return;
+
+      var firstCard = scroller.querySelector('.reel-video-card');
+
+      function getScrollAmount() {
+        if (firstCard) {
+          var rect = firstCard.getBoundingClientRect();
+          var cardWidth = rect.width;
+          var gap = 24; // matches CSS gap on desktop
+          return cardWidth + gap;
+        }
+        return scroller.clientWidth || 0;
       }
-      return scroller.clientWidth || 0;
-    };
 
-    const scrollByAmount = (direction) => {
-      const amount = getScrollAmount() * direction;
-      const newLeft = scroller.scrollLeft + amount;
-      if (scroller.scrollTo) {
-        scroller.scrollTo({ left: newLeft, behavior: 'smooth' });
-      } else {
-        scroller.scrollLeft = newLeft;
+      function scrollByAmount(direction) {
+        var amount = getScrollAmount() * direction;
+        var newLeft = scroller.scrollLeft + amount;
+        if (typeof scroller.scrollTo === 'function') {
+          scroller.scrollTo({ left: newLeft, behavior: 'smooth' });
+        } else {
+          scroller.scrollLeft = newLeft;
+        }
       }
-    };
 
-    prevButton.addEventListener('click', () => {
-      scrollByAmount(-1);
+      prevButton.addEventListener('click', function () {
+        scrollByAmount(-1);
+      });
+
+      nextButton.addEventListener('click', function () {
+        scrollByAmount(1);
+      });
+
+      section.dataset.reelsInit = 'true';
     });
+  }
 
-    nextButton.addEventListener('click', () => {
-      scrollByAmount(1);
-    });
-  };
+  // Initialize immediately in case DOMContentLoaded has already fired
+  initAllReelsSections();
 
-  document.addEventListener('DOMContentLoaded', () => {
-    initReelsSection('{{ section.id }}');
-  });
-
-  document.addEventListener('shopify:section:load', (event) => {
-    if (event.detail && event.detail.sectionId === '{{ section.id }}') {
-      initReelsSection('{{ section.id }}');
-    }
-  });
+  document.addEventListener('DOMContentLoaded', initAllReelsSections);
+  document.addEventListener('shopify:section:load', initAllReelsSections);
 {% endjavascript %}
 
 
@@ -220,6 +223,7 @@ h2{padding-bottom: 20px;}
   .reel-video-card {
     flex: 0 0 calc((100% - 72px) / 4);
     max-width: calc((100% - 72px) / 4);
+    flex-shrink: 0;
     scroll-snap-align: start;
   }
 
