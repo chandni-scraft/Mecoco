@@ -2418,6 +2418,7 @@
           "settings": {
             "video_source": "uploaded",
             "video": "shopify://files/videos/7186201_Vertical_Video_Vertical_Content_720x1280.mp4",
+            "video_url": "",
             "video_alt": "",
             "video_autoplay": true,
             "video_loop": true,
@@ -2431,6 +2432,7 @@
           "settings": {
             "video_source": "uploaded",
             "video": "shopify://files/videos/7186201_Vertical_Video_Vertical_Content_720x1280.mp4",
+            "video_url": "",
             "video_alt": "",
             "video_autoplay": true,
             "video_loop": true,
@@ -2444,6 +2446,7 @@
           "settings": {
             "video_source": "uploaded",
             "video": "shopify://files/videos/7186201_Vertical_Video_Vertical_Content_720x1280.mp4",
+            "video_url": "",
             "video_alt": "",
             "video_autoplay": false,
             "video_loop": true,
@@ -2452,24 +2455,12 @@
             "product": "meecoco-ajwa-dates"
           }
         },
-        "video_reel_7fEHtM": {
-          "type": "video_reel",
-          "settings": {
-            "video_source": "uploaded",
-            "video_url": "",
-            "video_alt": "",
-            "video_autoplay": true,
-            "video_loop": true,
-            "video_title": "",
-            "video_description": "",
-            "product": ""
-          }
-        },
         "video_reel_QaAr9h": {
           "type": "video_reel",
           "settings": {
             "video_source": "uploaded",
             "video": "shopify://files/videos/7186201_Vertical_Video_Vertical_Content_720x1280.mp4",
+            "video_url": "",
             "video_alt": "",
             "video_autoplay": true,
             "video_loop": true,
@@ -2483,7 +2474,6 @@
         "video_reel_JWPVCw",
         "video_reel_JrWENh",
         "video_reel_c8xLgt",
-        "video_reel_7fEHtM",
         "video_reel_QaAr9h"
       ],
       "custom_css": [
