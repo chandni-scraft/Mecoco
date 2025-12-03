@@ -85,10 +85,14 @@
       <div>
         <ul class="list-unstyled">
           {% for link in menu_links %}
-            <li>
+            {% assign has_children = link.links != blank %}
+            <li
+              class="shop-parent{% if has_children %} shop-parent--has-children{% endif %}{% if forloop.index0 == first_parent_index %} shop-parent--active{% endif %}"
+              data-shop-parent-index="{{ forloop.index0 }}"
+            >
               <a
                 href="{{ link.url }}"
-                class="mega-menu__link {% if link.links != blank %}mega-menu__link--parent{% endif %}"
+                class="mega-menu__link {% if has_children %}mega-menu__link--parent{% endif %}"
               >
                 <span class="mega-menu__link-title">{{- link.title -}}</span>
               </a>
@@ -98,21 +102,28 @@
       </div>
     </li>
 
-    {% if first_parent_index >= 0 and first_parent.links != blank %}
+    {% if menu_links.size > 0 %}
       <li class="mega-menu__column mega-menu__column--span-1 mega-menu__column--shop-children">
         <div>
-          <ul class="list-unstyled">
-            {% for childLink in first_parent.links %}
-              <li>
-                <a
-                  href="{{ childLink.url }}"
-                  class="mega-menu__link"
-                >
-                  <span class="mega-menu__link-title">{{- childLink.title -}}</span>
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
+          {% for link in menu_links %}
+            {% if link.links != blank %}
+              <ul
+                class="list-unstyled shop-children-group{% if forloop.index0 == first_parent_index %} shop-children-group--active{% endif %}"
+                data-shop-parent-index="{{ forloop.index0 }}"
+              >
+                {% for childLink in link.links %}
+                  <li>
+                    <a
+                      href="{{ childLink.url }}"
+                      class="mega-menu__link"
+                    >
+                      <span class="mega-menu__link-title">{{- childLink.title -}}</span>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          {% endfor %}
         </div>
       </li>
     {% endif %}

@@ -292,6 +292,55 @@ if (!customElements.get('header-menu')) {
   customElements.define('header-menu', HeaderMenu);
 }
 
+onDocumentLoaded(setupShopMegaMenus);
+
+function setupShopMegaMenus() {
+  const grids = document.querySelectorAll('.mega-menu__grid');
+
+  grids.forEach((grid) => {
+    const mainColumn = grid.querySelector('.mega-menu__column--shop-main');
+    const childrenColumn = grid.querySelector('.mega-menu__column--shop-children');
+
+    if (!mainColumn || !childrenColumn) return;
+
+    const parentItems = mainColumn.querySelectorAll('.shop-parent--has-children');
+    const childGroups = childrenColumn.querySelectorAll('.shop-children-group');
+
+    if (!parentItems.length || !childGroups.length) return;
+
+    const setActiveByIndex = (index) => {
+      parentItems.forEach((item) => {
+        if (item.dataset.shopParentIndex === index) {
+          item.classList.add('shop-parent--active');
+        } else {
+          item.classList.remove('shop-parent--active');
+        }
+      });
+
+      childGroups.forEach((group) => {
+        if (group.dataset.shopParentIndex === index) {
+          group.classList.add('shop-children-group--active');
+        } else {
+          group.classList.remove('shop-children-group--active');
+        }
+      });
+    };
+
+    parentItems.forEach((item) => {
+      const link = item.querySelector('.mega-menu__link');
+      if (!link) return;
+
+      const index = item.dataset.shopParentIndex;
+      if (typeof index === 'undefined') return;
+
+      const activate = () => setActiveByIndex(index);
+
+      link.addEventListener('pointerenter', activate);
+      link.addEventListener('focus', activate);
+    });
+  });
+}
+
 /**
  * Find the closest menu item.
  * @param {Element | null | undefined} element
