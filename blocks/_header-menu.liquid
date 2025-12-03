@@ -564,6 +564,22 @@
     text-decoration: underline;
   }
 
+  /* In the Shop main column, keep typography consistent for all items,
+     even if they have children (override parent font styles) */
+  .header-menu .mega-menu__column--shop-main .mega-menu__link--parent {
+    font-family: var(--menu-child-font-family);
+    font-style: var(--menu-child-font-style);
+    font-weight: var(--menu-child-font-weight);
+    font-size: var(--menu-child-font-size);
+    line-height: var(--menu-child-font-line-height);
+    text-transform: var(--menu-child-font-case);
+    color: var(--menu-child-font-color);
+
+    &:hover {
+      color: var(--menu-child-active-font-color);
+    }
+  }
+
   /* Apply title case to featured products and collections */
   .mega-menu__content-list--products .resource-card__title,
   .mega-menu__content-list--collections .resource-card__title {
