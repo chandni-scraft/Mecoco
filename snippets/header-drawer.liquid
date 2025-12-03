@@ -963,17 +963,19 @@
 
   .menu-drawer__menu-item:has(> .menu-drawer__link-image) {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     justify-content: flex-start;
-    row-gap: var(--padding-3xs);
-    padding: 0;
+    column-gap: var(--padding-3xs);
+    padding: var(--padding-2xs) 0;
   }
 
   .menu-drawer__link-image {
-    width: 100%;
+    width: var(--icon-size-xs);
+    height: var(--icon-size-xs);
+    min-width: var(--icon-size-xs);
     position: relative;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
   }
 
@@ -981,19 +983,20 @@
   /* Target menu items in grids that have images */
   .menu-drawer__menu--grid:has(.menu-drawer__link-image) .menu-drawer__menu-item:not(:has(> .menu-drawer__link-image)) {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     justify-content: flex-start;
-    row-gap: var(--padding-3xs);
-    padding: 0;
+    column-gap: var(--padding-3xs);
+    padding: var(--padding-2xs) 0;
   }
 
   .menu-drawer__menu--grid:has(.menu-drawer__link-image)
     .menu-drawer__menu-item:not(:has(> .menu-drawer__link-image))::before {
     content: '';
     display: block;
-    width: 100%;
-    aspect-ratio: 16 / 9;
+    width: var(--icon-size-xs);
+    height: var(--icon-size-xs);
+    min-width: var(--icon-size-xs);
     background-color: var(--color-foreground-muted);
     opacity: 0.1;
     border-radius: var(--menu-image-border-radius);
