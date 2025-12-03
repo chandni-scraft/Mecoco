@@ -298,16 +298,35 @@ function setupShopMegaMenus() {
   const grids = document.querySelectorAll('.mega-menu__grid');
 
   grids.forEach((grid) => {
-    const mainColumn = grid.querySelector('.mega-menu__column--shop-main');
-    const childrenColumn = grid.querySelector('.mega-menu__column--shop-children');
+    const mainColumn = /** @type {HTMLElement | null} */ (
+      grid.querySelector('.mega-menu__column--shop-main')
+    );
+    const childrenColumn = /** @type {HTMLElement | null} */ (
+      grid.querySelector('.mega-menu__column--shop-children')
+    );
+    const imageColumn = /** @type {HTMLElement | null} */ (
+      grid.querySelector('.mega-menu__column--shop-images')
+    );
 
     if (!mainColumn || !childrenColumn) return;
 
-    const parentItems = mainColumn.querySelectorAll('.shop-parent--has-children');
-    const childGroups = childrenColumn.querySelectorAll('.shop-children-group');
+    const parentItems = /** @type {NodeListOf<HTMLElement>} */ (
+      mainColumn.querySelectorAll('.shop-parent--has-children')
+    );
+    const childGroups = /** @type {NodeListOf<HTMLElement>} */ (
+      childrenColumn.querySelectorAll('.shop-children-group')
+    );
+    const imageGroups = imageColumn
+      ? /** @type {NodeListOf<HTMLElement>} */ (
+          imageColumn.querySelectorAll('.shop-image-group')
+        )
+      : /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.__no-images'));
 
     if (!parentItems.length || !childGroups.length) return;
 
+    /**
+     * @param {string} index
+     */
     const setActiveByIndex = (index) => {
       parentItems.forEach((item) => {
         if (item.dataset.shopParentIndex === index) {
@@ -322,6 +341,14 @@ function setupShopMegaMenus() {
           group.classList.add('shop-children-group--active');
         } else {
           group.classList.remove('shop-children-group--active');
+        }
+      });
+
+      imageGroups.forEach((group) => {
+        if (group.dataset.shopParentIndex === index) {
+          group.classList.add('shop-image-group--active');
+        } else {
+          group.classList.remove('shop-image-group--active');
         }
       });
     };

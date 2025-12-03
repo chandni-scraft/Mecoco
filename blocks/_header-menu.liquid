@@ -564,6 +564,28 @@
     text-decoration: underline;
   }
 
+  .shop-image-group {
+    display: none;
+  }
+
+  .shop-image-group--active {
+    display: block;
+  }
+
+  .mega-menu__column--shop-images {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .shop-image-group__image {
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--menu-image-border-radius);
+  }
+
   /* In the Shop main column, keep typography consistent for all items,
      even if they have children (override parent font styles) */
   .header-menu .mega-menu__column--shop-main .mega-menu__link--parent {

@@ -125,6 +125,25 @@
           {% endfor %}
         </div>
       </li>
+
+      <li class="mega-menu__column mega-menu__column--span-2 mega-menu__column--shop-images">
+        <div>
+          {% for link in menu_links %}
+            {% if link.links != blank %}
+              <div
+                class="shop-image-group{% if forloop.index0 == first_parent_index %} shop-image-group--active{% endif %}"
+                data-shop-parent-index="{{ forloop.index0 }}"
+              >
+                {% render 'link-featured-image',
+                  link: link,
+                  class: 'shop-image-group__image',
+                  sizes: 'auto, 600px'
+                %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </li>
     {% endif %}
   {% else %}
     {% for link in parent_link.links %}
