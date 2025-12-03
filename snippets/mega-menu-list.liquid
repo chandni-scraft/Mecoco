@@ -85,14 +85,13 @@
       <div>
         <ul class="list-unstyled">
           {% for link in menu_links %}
-            {% assign has_children = link.links != blank %}
             <li
-              class="shop-parent{% if has_children %} shop-parent--has-children{% endif %}{% if forloop.index0 == first_parent_index %} shop-parent--active{% endif %}"
+              class="shop-parent{% if link.links != blank %} shop-parent--has-children{% endif %}{% if forloop.index0 == first_parent_index %} shop-parent--active{% endif %}"
               data-shop-parent-index="{{ forloop.index0 }}"
             >
               <a
                 href="{{ link.url }}"
-                class="mega-menu__link {% if has_children %}mega-menu__link--parent{% endif %}"
+                class="mega-menu__link {% if link.links != blank %}mega-menu__link--parent{% endif %}"
               >
                 <span class="mega-menu__link-title">{{- link.title -}}</span>
               </a>
