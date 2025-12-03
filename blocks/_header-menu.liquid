@@ -436,19 +436,23 @@
   }
 
   .mega-menu__link:has(.mega-menu__link-image) {
-    display: flex;
-    flex-direction: column;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--padding-2xs);
     padding-inline: 0;
-    padding-block: var(--padding-sm) 0;
+    padding-block: var(--padding-2xs) 0;
   }
 
   .mega-menu__link-image {
-    width: 100%;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
     position: relative;
-    aspect-ratio: 16 / 9;
-    margin-bottom: var(--padding-sm);
+    aspect-ratio: 1 / 1;
+    margin-bottom: 0;
     object-fit: cover;
-    border-radius: var(--menu-image-border-radius);
+    border-radius: 50%;
   }
 
   .mega-menu__link-title {
@@ -471,10 +475,12 @@
     .mega-menu__column
     > div
     > .mega-menu__link:not(:has(.mega-menu__link-image)) {
-    display: flex;
-    flex-direction: column;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--padding-2xs);
     padding-inline: 0;
-    padding-block: var(--padding-sm) 0;
+    padding-block: var(--padding-2xs) 0;
   }
 
   .mega-menu__grid:has(.mega-menu__link-image)
@@ -483,12 +489,14 @@
     > .mega-menu__link:not(:has(.mega-menu__link-image))::before {
     content: '';
     display: block;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    margin-bottom: var(--padding-sm);
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    aspect-ratio: 1 / 1;
+    margin-bottom: 0;
     background-color: var(--color-foreground-muted);
     opacity: 0.1;
-    border-radius: var(--menu-image-border-radius);
+    border-radius: 50%;
   }
 
   .mega-menu__grid {
@@ -591,6 +599,22 @@
 
   .mega-menu__content-list li {
     white-space: normal;
+  }
+
+  /* Ensure top-level mega menu links (Shop columns) show icon + text inline */
+  .header-menu .mega-menu__column > div > .mega-menu__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--padding-2xs);
+    padding-inline: 0;
+  }
+
+  .header-menu .mega-menu__column > div > .mega-menu__link img {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px;
+    object-fit: cover;
+    margin: 0;
   }
 
   /* mega more menu */
