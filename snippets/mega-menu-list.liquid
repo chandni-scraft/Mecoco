@@ -61,7 +61,7 @@
   class="mega-menu__list list-unstyled"
   style="--menu-image-border-radius: {{ image_border_radius }}px;"
 >
-  {% if parent_link.title == 'Shop' %}
+  {% if parent_link.title | strip | downcase == 'shop' %}
     {% comment %}
       Custom layout for the Shop mega menu:
       - First column: all direct submenu links under Shop (e.g. Shop All, Dry Fruits & Nuts, Dates...)
@@ -80,7 +80,7 @@
       {% assign first_parent = menu_links[first_parent_index] %}
     {% endif %}
 
-    <li class="mega-menu__column mega-menu__column--span-1">
+    <li class="mega-menu__column mega-menu__column--span-1 mega-menu__column--shop-main">
       <div>
         {% for link in menu_links %}
           <a
@@ -94,7 +94,7 @@
     </li>
 
     {% if first_parent_index >= 0 and first_parent.links != blank %}
-      <li class="mega-menu__column mega-menu__column--span-1">
+      <li class="mega-menu__column mega-menu__column--span-1 mega-menu__column--shop-children">
         <div>
           <ul class="list-unstyled">
             {% for childLink in first_parent.links %}
