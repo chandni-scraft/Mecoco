@@ -451,6 +451,20 @@
     border-radius: var(--menu-image-border-radius);
   }
 
+  .mega-menu__link-title {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--padding-2xs);
+  }
+
+  .mega-menu__link-title .menu_icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
   /* Fix alignment for collection image mode links without images */
   /* Target only top-level links (direct children of column > div) in collection image mode */
   .mega-menu__grid:has(.mega-menu__link-image)
