@@ -611,17 +611,17 @@
     white-space: normal;
   }
 
-  /* Ensure top-level mega menu links (Shop columns) show icon + text inline */
-  .header-menu .mega-menu__column > div > .mega-menu__link {
+  /* Ensure Shop main column links show icon + text inline while stacking vertically */
+  .header-menu .mega-menu__column--shop-main .mega-menu__link {
     display: inline-flex;
     align-items: center;
     gap: var(--padding-2xs);
     padding-inline: 0;
   }
 
-  .header-menu .mega-menu__column > div > .mega-menu__link img {
-    width: 24px !important;
-    height: 24px !important;
+  .header-menu .mega-menu__column--shop-main .mega-menu__link .menu_icon {
+    width: 24px;
+    height: 24px;
     min-width: 24px;
     object-fit: cover;
     margin: 0;

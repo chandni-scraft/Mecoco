@@ -82,14 +82,18 @@
 
     <li class="mega-menu__column mega-menu__column--span-1 mega-menu__column--shop-main">
       <div>
-        {% for link in menu_links %}
-          <a
-            href="{{ link.url }}"
-            class="mega-menu__link {% if link.links != blank %}mega-menu__link--parent{% endif %}"
-          >
-            <span class="mega-menu__link-title">{{- link.title -}}</span>
-          </a>
-        {% endfor %}
+        <ul class="list-unstyled">
+          {% for link in menu_links %}
+            <li>
+              <a
+                href="{{ link.url }}"
+                class="mega-menu__link {% if link.links != blank %}mega-menu__link--parent{% endif %}"
+              >
+                <span class="mega-menu__link-title">{{- link.title -}}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
       </div>
     </li>
 
