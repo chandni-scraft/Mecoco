@@ -61,7 +61,8 @@
   class="mega-menu__list list-unstyled"
   style="--menu-image-border-radius: {{ image_border_radius }}px;"
 >
-  {% if parent_link.title | strip | downcase == 'shop' %}
+  {% assign parent_title_downcase = parent_link.title | strip | downcase %}
+  {% if parent_title_downcase == 'shop' %}
     {% comment %}
       Custom layout for the Shop mega menu:
       - First column: all direct submenu links under Shop (e.g. Shop All, Dry Fruits & Nuts, Dates...)
