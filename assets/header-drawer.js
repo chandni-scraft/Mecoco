@@ -12,6 +12,7 @@ import { onAnimationEnd } from '@theme/utilities';
  */
 class HeaderDrawer extends Component {
   requiredRefs = ['details'];
+  /** @type {number | undefined} */
   #closeTimeoutId;
 
   connectedCallback() {
@@ -84,6 +85,10 @@ class HeaderDrawer extends Component {
       details.classList.add('menu-open');
       setTimeout(() => {
         trapFocus(details);
+
+        if (details === this.refs.details && this.classList.contains('header__drawer--mobile')) {
+          this.#openDefaultSubmenu();
+        }
       }, 0);
     });
   }
@@ -141,6 +146,23 @@ class HeaderDrawer extends Component {
     } else {
       performClose();
     }
+  }
+
+  /**
+   * Automatically open the default submenu (e.g. SHOP) for the mobile drawer
+   * when the main drawer is first opened.
+   */
+  #openDefaultSubmenu() {
+    const defaultDetails = this.querySelector('details[data-default-open-submenu="true"]');
+
+    if (!defaultDetails) return;
+
+    const summary = defaultDetails.querySelector('summary');
+    if (!summary) return;
+
+    // Simulate a user click on the submenu summary so native <details> behavior
+    // and header-drawer "open" handling are both triggered.
+    summary.click();
   }
 
   /**
