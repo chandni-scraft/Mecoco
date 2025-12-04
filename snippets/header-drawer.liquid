@@ -112,7 +112,7 @@
                         id="HeaderDrawer-{{ link.handle }}"
                         class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset"
                       >
-                        <span class="menu-drawer__menu-item-text">{{ link.title | escape }}</span>
+                        <span class="menu-drawer__menu-item-text">{{ link.title }}</span>
                         <span class="svg-wrapper icon-plus">
                           {{- 'icon-plus.svg' | inline_asset_content -}}
                         </span>
@@ -153,7 +153,7 @@
                                   sizes: 'auto, 400px'
                                 %}
                               {% endif %}
-                              <span class="menu-drawer__menu-item-text">{{ childlink.title | escape }}</span>
+                              <span class="menu-drawer__menu-item-text">{{ childlink.title }}</span>
                             </a>
                           </li>
                         {%- endfor -%}
@@ -172,7 +172,7 @@
                       aria-current="page"
                     {% endif %}
                   >
-                    <span class="menu-drawer__menu-item-text">{{ link.title | escape }}</span>
+                    <span class="menu-drawer__menu-item-text">{{ link.title }}</span>
                   </a>
                   {% liquid
                     assign render_link_image = false
@@ -206,7 +206,7 @@
                               sizes: 'auto, 400px'
                             %}
                           {% endif %}
-                          <span class="menu-drawer__menu-item-text">{{ childlink.title | escape }}</span>
+                          <span class="menu-drawer__menu-item-text">{{ childlink.title }}</span>
                         </a>
                       </li>
                     {%- endfor -%}
@@ -223,7 +223,7 @@
                       aria-current="page"
                     {% endif %}
                   >
-                    <span class="menu-drawer__menu-item-text">{{ link.title | escape }}</span>
+                    <span class="menu-drawer__menu-item-text">{{ link.title }}</span>
                   </a>
                 {% endif %}
               </li>
@@ -252,7 +252,7 @@
                       class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
                       on:click="header-drawer/open"
                     >
-                      <span class="menu-drawer__menu-item-text">{{ link.title | escape }}</span>
+                      <span class="menu-drawer__menu-item-text">{{ link.title }}</span>
                       <span class="svg-wrapper icon-caret icon-caret--forward">
                         {{- 'icon-caret.svg' | inline_asset_content -}}
                       </span>
@@ -274,7 +274,7 @@
                             <span class="svg-wrapper icon-caret icon-caret--backward">
                               {{- 'icon-caret.svg' | inline_asset_content -}}
                             </span>
-                            <span class="menu-drawer__menu-item-text">{{ link.title | escape }}</span>
+                            <span class="menu-drawer__menu-item-text">{{ link.title }}</span>
                           </button>
                           <button
                             class="button close-button menu-drawer__close-button"
@@ -334,9 +334,7 @@
                                       sizes: 'auto, 400px'
                                     %}
                                   {% endif %}
-                                  <span class="menu-drawer__menu-item-text">
-                                    {{- childlink.title | escape -}}
-                                  </span>
+                                  <span class="menu-drawer__menu-item-text">{{ childlink.title }}</span>
                                 </a>
                               {%- else -%}
                                 {% liquid
@@ -359,7 +357,7 @@
                                         id="HeaderDrawer-{{ link.handle }}-{{ childlink.handle }}"
                                         class="menu-drawer__menu-item menu-drawer__menu-item--parent focus-inset"
                                       >
-                                        <span class="menu-drawer__menu-item-text">{{ childlink.title | escape }}</span>
+                                        <span class="menu-drawer__menu-item-text">{{ childlink.title }}</span>
                                         <span class="svg-wrapper icon-plus">
                                           {{- 'icon-plus.svg' | inline_asset_content -}}
                                         </span>
@@ -400,9 +398,7 @@
                                                   sizes: 'auto, 400px'
                                                 %}
                                               {% endif %}
-                                              <span class="menu-drawer__menu-item-text">
-                                                {{- grandchildlink.title | escape -}}
-                                              </span>
+                                              <span class="menu-drawer__menu-item-text">{{ grandchildlink.title }}</span>
                                             </a>
                                           </li>
                                         {%- endfor -%}
@@ -418,7 +414,7 @@
                                     href="{{ childlink.url }}"
                                     class="menu-drawer__menu-item menu-drawer__menu-item--parent focus-inset{% if childlink.current %} menu-drawer__menu-item--active{% endif %}"
                                   >
-                                    <span class="menu-drawer__menu-item-text">{{ childlink.title | escape }}</span>
+                                    <span class="menu-drawer__menu-item-text">{{ childlink.title }}</span>
                                   </a>
                                   {% liquid
                                     assign render_link_image = false
@@ -456,9 +452,7 @@
                                               sizes: 'auto, 400px'
                                             %}
                                           {% endif %}
-                                          <span class="menu-drawer__menu-item-text">
-                                            {{- grandchildlink.title | escape -}}
-                                          </span>
+                                          <span class="menu-drawer__menu-item-text">{{ grandchildlink.title }}</span>
                                         </a>
                                       </li>
                                     {%- endfor -%}
@@ -527,7 +521,7 @@
                       aria-current="page"
                     {% endif %}
                   >
-                    <span class="menu-drawer__menu-item-text">{{ link.title | escape }}</span>
+                    <span class="menu-drawer__menu-item-text">{{ link.title }}</span>
                   </a>
                 {%- endif -%}
               </li>
