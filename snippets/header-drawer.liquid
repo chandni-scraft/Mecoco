@@ -244,7 +244,10 @@
                     Regardless of the Accordion setting, in menus with 3 levels of links, we use a details element to handle the top level of the menu for links that have children.
                   {%- endcomment -%}
                   {% liquid
-                    assign is_mobile_drawer = data_header_drawer_type == 'mobile-drawer'
+                    assign is_mobile_drawer = false
+                    if data_header_drawer_type == 'mobile-drawer'
+                      assign is_mobile_drawer = true
+                    endif
                     assign link_title_downcase = link.title | strip | downcase
                   %}
                   <details
