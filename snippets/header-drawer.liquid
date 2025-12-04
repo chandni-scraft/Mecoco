@@ -1023,8 +1023,20 @@
   }
 
   .menu-drawer__menu-item-text {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--padding-2xs);
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .menu-drawer__menu-item-text .menu_icon {
+    width: var(--icon-size-xs);
+    height: var(--icon-size-xs);
+    min-width: var(--icon-size-xs);
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
   }
 
   /** Styles when the country selector is hidden */
