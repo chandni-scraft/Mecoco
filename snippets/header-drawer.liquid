@@ -516,6 +516,26 @@
                             </ul>
                           </div>
                         {% endif %}
+                        {% if is_mobile_drawer and link_title_downcase == 'shop' %}
+                          <ul
+                            class="menu-drawer__menu menu-drawer__menu--siblings"
+                            role="list"
+                          >
+                            {%- for top_link in linklist.links -%}
+                              {% assign top_title_downcase = top_link.title | strip | downcase %}
+                              {% if top_title_downcase != 'shop' %}
+                                <li class="menu-drawer__list-item">
+                                  <a
+                                    href="{{ top_link.url }}"
+                                    class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset"
+                                  >
+                                    <span class="menu-drawer__menu-item-text">{{ top_link.title }}</span>
+                                  </a>
+                                </li>
+                              {% endif %}
+                            {%- endfor -%}
+                          </ul>
+                        {% endif %}
                       </div>
                     </div>
                   </details>
