@@ -98,7 +98,7 @@
                   {%- endcomment -%}
                   {% liquid
                     assign accordion_state = ''
-                    if first_accordion_open == false and block_settings.drawer_accordion_expand_first
+                    if first_accordion_open == false and block_settings.drawer_accordion_expand_first and data_header_drawer_type != 'mobile-drawer'
                       assign first_accordion_open = true
                       assign accordion_state = 'open'
                     endif
@@ -339,7 +339,7 @@
                               {%- else -%}
                                 {% liquid
                                   assign accordion_state = ''
-                                  if first_accordion_open == false and block_settings.drawer_accordion and block_settings.drawer_accordion_expand_first
+                                  if first_accordion_open == false and block_settings.drawer_accordion and block_settings.drawer_accordion_expand_first and data_header_drawer_type != 'mobile-drawer'
                                     assign first_accordion_open = true
                                     assign accordion_state = 'open'
                                   endif
