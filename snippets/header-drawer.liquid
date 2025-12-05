@@ -235,21 +235,21 @@
             {% assign animation_index = 0 %}
             {%- for link in linklist.links -%}
               {% assign animation_index = animation_index | plus: 1 %}
+              {% liquid
+                assign is_mobile_drawer = false
+                if data_header_drawer_type == 'mobile-drawer'
+                  assign is_mobile_drawer = true
+                endif
+                assign link_title_downcase = link.title | strip | downcase
+              %}
               <li
-                class="menu-drawer__list-item"
+                class="menu-drawer__list-item{% if is_mobile_drawer and link_title_downcase == 'shop' %} menu-drawer__list-item--shop-inline{% endif %}"
                 style="--menu-drawer-animation-index: {{ animation_index }};"
               >
                 {%- if link.links != blank -%}
                   {%- comment -%}
                     Handle top-level links that have children in menus with 3 levels of links.
                   {%- endcomment -%}
-                  {% liquid
-                    assign is_mobile_drawer = false
-                    if data_header_drawer_type == 'mobile-drawer'
-                      assign is_mobile_drawer = true
-                    endif
-                    assign link_title_downcase = link.title | strip | downcase
-                  %}
                   {% if is_mobile_drawer and link_title_downcase == 'shop' %}
                     {%- comment -%}
                       Mobile: render SHOP children inline under the SHOP top-level item.
@@ -897,6 +897,16 @@
   .menu-drawer__menu > .menu-drawer__list-item {
     display: flex;
     min-height: calc(2 * var(--padding-lg) + var(--icon-size-xs));
+  }
+
+  .menu-drawer__list-item--shop-inline {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .menu-drawer__list-item--shop-inline > .menu-drawer__menu {
+    width: 100%;
+    padding-inline-start: 0;
   }
 
   .menu-drawer__list-item--deep .menu-drawer__list-item,
