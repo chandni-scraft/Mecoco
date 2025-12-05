@@ -201,8 +201,8 @@
         "slide_BfKMdf": {
           "type": "slide",
           "settings": {
-            "desktop_image": "shopify://shop_images/Untitled_design_15_b6f6c986-cfbc-4ce2-83d7-79b2af234b7d.png",
-            "mobile_image": "shopify://shop_images/4.png",
+            "desktop_image": "shopify://shop_images/meecoco_-_Mobile_Banner_780x680_1.jpg",
+            "mobile_image": "shopify://shop_images/meecoco_-_Mobile_Banner_780x680_1.jpg",
             "slide_link": ""
           }
         }
@@ -2353,7 +2353,7 @@
         "item_KN7r9c"
       ],
       "custom_css": [
-        ".icons-text-grid__inner {max-width: 1200px;width:100%; margin: 0 auto; padding: 40px;}"
+        ".icons-text-grid__inner {max-width: 1200px; width: 100%; margin: 0 auto; padding: 40px;}"
       ],
       "name": "Icons & Text Grid",
       "settings": {
