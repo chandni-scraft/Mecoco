@@ -2492,6 +2492,7 @@
         "video_reel_QaAr9h",
         "video_reel_GpFetg"
       ],
+      "disabled": true,
       "custom_css": [
         ".section--page-width {max-width: 1400px !important; margin: 0 auto; width: 100%;}"
       ],
