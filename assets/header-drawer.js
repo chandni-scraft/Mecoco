@@ -20,6 +20,7 @@ class HeaderDrawer extends Component {
 
     this.addEventListener('keyup', this.#onKeyUp);
     this.#setupAnimatedElementListeners();
+    this.#setupSubmenuLinkHandlers();
   }
 
   disconnectedCallback() {
@@ -163,6 +164,20 @@ class HeaderDrawer extends Component {
     // Simulate a user click on the submenu summary so native <details> behavior
     // and header-drawer "open" handling are both triggered.
     summary.click();
+  }
+
+  #setupSubmenuLinkHandlers() {
+    const links = this.querySelectorAll('summary .drawer-submenu-link');
+    links.forEach((link) => {
+      link.addEventListener('click', (event) => {
+        if (!(link instanceof HTMLAnchorElement)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const href = link.href;
+        if (!href) return;
+        window.location.href = href;
+      });
+    });
   }
 
   /**
