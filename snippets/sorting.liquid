@@ -68,25 +68,31 @@
     </div>
   </div>
 
-  <accordion-custom
-    {% if filter_style == 'horizontal' %}
-      data-disable-animation-on-desktop="true"
-      data-close-with-escape="true"
-    {% endif %}
-  >
+  {% if suffix == 'overflow' %}
     <details
       ref="details"
       id="Sorting-{{ section_id }}"
       data-default-sort-by="{{ default_sort_by }}"
-      {% if suffix == 'overflow' %}
-        open
-      {% endif %}
+      open
       class="facets__panel {% if should_use_select_on_mobile %} mobile:hidden {% endif %}"
-      {% if suffix != 'overflow' %}
-        data-auto-close-details="desktop,mobile"
-      {% endif %}
       on:toggle="/handleToggle"
     >
+  {% else %}
+    <accordion-custom
+      {% if filter_style == 'horizontal' %}
+        data-disable-animation-on-desktop="true"
+        data-close-with-escape="true"
+      {% endif %}
+    >
+      <details
+        ref="details"
+        id="Sorting-{{ section_id }}"
+        data-default-sort-by="{{ default_sort_by }}"
+        class="facets__panel {% if should_use_select_on_mobile %} mobile:hidden {% endif %}"
+        data-auto-close-details="desktop,mobile"
+        on:toggle="/handleToggle"
+      >
+  {% endif %}
       <summary
         class="facets__summary"
         role="button"
@@ -150,7 +156,9 @@
         {% endfor %}
       </floating-panel-component>
     </details>
-  </accordion-custom>
+  {% if suffix != 'overflow' %}
+    </accordion-custom>
+  {% endif %}
 </sorting-filter-component>
 
 {% stylesheet %}
