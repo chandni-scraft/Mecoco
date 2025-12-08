@@ -82,7 +82,9 @@
         open
       {% endif %}
       class="facets__panel {% if should_use_select_on_mobile %} mobile:hidden {% endif %}"
-      data-auto-close-details="desktop,mobile"
+      {% if suffix != 'overflow' %}
+        data-auto-close-details="desktop,mobile"
+      {% endif %}
       on:toggle="/handleToggle"
     >
       <summary
