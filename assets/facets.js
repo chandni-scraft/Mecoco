@@ -564,6 +564,9 @@ class SortingFilterComponent extends Component {
   #closeDropdown() {
     const { details, summary } = this.refs;
     if (details instanceof HTMLDetailsElement) {
+      // Do not auto-close when used inside the filter drawer (overflow)
+      const inDrawer = this.closest('.facets--drawer');
+      if (inDrawer) return;
       // Reset focus to match the actual selected option
       const options = this.querySelectorAll('[role="option"]');
       const selectedOption = this.querySelector('[aria-selected="true"]');
@@ -632,10 +635,14 @@ class SortingFilterComponent extends Component {
       }
     }
 
-    // Close the details element when a value is selected
+    // Close the details element when a value is selected, except in the filter drawer
     const { details } = this.refs;
     if (!(details instanceof HTMLDetailsElement)) return;
-    details.open = false;
+
+    const inDrawer = this.closest('.facets--drawer');
+    if (!inDrawer) {
+      details.open = false;
+    }
   }
 
   /**
