@@ -226,6 +226,7 @@
                 </span>
               </div>
 
+
               {% if block_settings.enable_sorting %}
                 {% render 'sorting',
                   results: results,
@@ -237,6 +238,8 @@
                   section_id: section.id
                 %}
               {% endif %}
+          {% endif %}
+        </form>
 
               {% if block_settings.enable_grid_density %}
                 {% render 'grid-density-controls', viewport: 'desktop' %}
@@ -421,8 +424,6 @@
                 {% endcase %}
               {%- endfor -%}
             </div>
-          {% endif %}
-
           {% endif %}
 
         </form>
