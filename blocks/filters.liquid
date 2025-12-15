@@ -290,7 +290,7 @@
     {% endif %}
 
     <div class="facets-mobile-wrapper facets-controls-wrapper">
-      {% if block_settings.enable_filtering == false and block_settings.enable_sorting %}
+      {% if block_settings.enable_sorting %}
         <facets-form-component
           section-id="{{ section.id }}"
           id="FacetFiltersForm--{{ section.id }}-mobile-sorting-only"
