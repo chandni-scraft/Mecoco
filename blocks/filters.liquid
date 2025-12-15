@@ -255,7 +255,8 @@
       {{ facets_margin_style }}
     "
   >
-    {% if block_settings.enable_filtering %}
+    <div class="facets-toggle__inner-wrapper" style="display: flex; justify-content: space-between; width: 100%;">
+      {% if block_settings.enable_filtering %}
       <div class="facets-toggle__wrapper">
         <button
           class="button facets-toggle__button button-unstyled button-unstyled--with-icon"
@@ -290,7 +291,7 @@
     {% endif %}
 
     <div class="facets-mobile-wrapper facets-controls-wrapper">
-      {% if block_settings.enable_filtering == false and block_settings.enable_sorting %}
+      {% if block_settings.enable_sorting %}
         <facets-form-component
           section-id="{{ section.id }}"
           id="FacetFiltersForm--{{ section.id }}-mobile-sorting-only"
@@ -316,6 +317,7 @@
       {% endif %}
     </div>
   </div>
+</div>
 {% else %}
   <div></div>
 {% endif %}
@@ -421,16 +423,8 @@
             </div>
           {% endif %}
 
-          {% if block_settings.enable_sorting %}
-            {% render 'sorting',
-              results: results,
-              sort_by: sort_by,
-              filter_style: block_settings.filter_style,
-              suffix: 'overflow',
-              should_use_select_on_mobile: false,
-              section_id: section.id
-            %}
           {% endif %}
+
         </form>
       </facets-form-component>
 
