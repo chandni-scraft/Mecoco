@@ -290,7 +290,7 @@
     {% endif %}
 
     <div class="facets-mobile-wrapper facets-controls-wrapper">
-      {% if block_settings.enable_filtering == false and block_settings.enable_sorting %}
+      {% if block_settings.enable_sorting %}
         <facets-form-component
           section-id="{{ section.id }}"
           id="FacetFiltersForm--{{ section.id }}-mobile-sorting-only"
@@ -305,7 +305,7 @@
               sort_by: sort_by,
               filter_style: block_settings.filter_style,
               sort_position: 'mobile',
-              should_use_select_on_mobile: should_use_select_on_mobile,
+              should_use_select_on_mobile: false,
               section_id: section.id
             %}
           </form>
@@ -427,7 +427,7 @@
               sort_by: sort_by,
               filter_style: block_settings.filter_style,
               suffix: 'overflow',
-              should_use_select_on_mobile: should_use_select_on_mobile,
+              should_use_select_on_mobile: false,
               section_id: section.id
             %}
           {% endif %}
@@ -603,7 +603,7 @@
 
   .collection-wrapper:has(.product-grid-mobile--large) .facets-mobile-wrapper.facets-controls-wrapper {
     @media screen and (max-width: 749px) {
-      display: none;
+      display: flex;
     }
   }
 

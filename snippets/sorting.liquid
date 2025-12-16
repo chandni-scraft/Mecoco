@@ -68,20 +68,31 @@
     </div>
   </div>
 
-  <accordion-custom
-    {% if filter_style == 'horizontal' %}
-      data-disable-animation-on-desktop="true"
-      data-close-with-escape="true"
-    {% endif %}
-  >
+  {% if suffix == 'overflow' %}
     <details
       ref="details"
       id="Sorting-{{ section_id }}"
       data-default-sort-by="{{ default_sort_by }}"
+      open
       class="facets__panel {% if should_use_select_on_mobile %} mobile:hidden {% endif %}"
-      data-auto-close-details="desktop,mobile"
       on:toggle="/handleToggle"
     >
+  {% else %}
+    <accordion-custom
+      {% if filter_style == 'horizontal' %}
+        data-disable-animation-on-desktop="true"
+        data-close-with-escape="true"
+      {% endif %}
+    >
+      <details
+        ref="details"
+        id="Sorting-{{ section_id }}"
+        data-default-sort-by="{{ default_sort_by }}"
+        class="facets__panel {% if should_use_select_on_mobile %} mobile:hidden {% endif %}"
+        data-auto-close-details="desktop,mobile"
+        on:toggle="/handleToggle"
+      >
+  {% endif %}
       <summary
         class="facets__summary"
         role="button"
@@ -145,7 +156,9 @@
         {% endfor %}
       </floating-panel-component>
     </details>
-  </accordion-custom>
+  {% if suffix != 'overflow' %}
+    </accordion-custom>
+  {% endif %}
 </sorting-filter-component>
 
 {% stylesheet %}
@@ -288,7 +301,8 @@
   .facets-mobile-wrapper .sorting-filter .facets__label {
     margin-inline-end: var(--margin-2xs);
     font-size: var(--font-paragraph--size);
-    color: var(--color-foreground-muted);
+    color: var(--color-foreground);
+    font-weight: 600;
   }
 
   .facets-mobile-wrapper .sorting-filter__options {
@@ -317,7 +331,8 @@
 
   .facets-toggle .sorting-filter__container .facets__label {
     @media screen and (max-width: 749px) {
-      display: none;
+      display: inline-flex;
+      align-items: center;
     }
   }
 
@@ -328,9 +343,7 @@
   }
 
   .facets--drawer .sorting-filter {
-    @media screen and (min-width: 750px) {
-      display: none;
-    }
+    display: none !important;
   }
 
   .sorting-filter__options {
@@ -357,5 +370,11 @@
     &:focus-within {
       overflow-y: visible;
     }
+  }
+
+  .facets--drawer .sorting-filter__options {
+    block-size: auto;
+    opacity: 1;
+    overflow-y: visible;
   }
 {% endstylesheet %}
